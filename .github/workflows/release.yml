@@ -18,16 +18,17 @@ jobs:
       matrix:
         arch: [x64, arm64]
         os:
-          - name: macos
-            image: macos-latest
-            shell: bash
-            forge_platform: darwin
+          # FIXME: macos cannot be built at this moment
+          # - name: macos
+          #   image: macos-latest
+          #   shell: bash
+          #   forge_platform: darwin
           - name: linux
             image: ubuntu-22.04
             shell: bash
             forge_platform: linux
           - name: windows
-            image: windows-latest
+            image: windows-latest # FIXME: signing
             shell: cmd
             forge_platform: win32
     runs-on: ${{ matrix.os.image }}

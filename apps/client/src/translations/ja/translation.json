@@ -1,1 +1,23 @@
-{}
+{
+    "about": {
+        "title": "Trilium Notesについて",
+        "close": "閉じる",
+        "homepage": "ホームページ:",
+        "app_version": "アプリのヴァージョン:",
+        "db_version": "データベースのヴァージョン:",
+        "sync_version": "同期のヴァージョン:",
+        "build_date": "Build の日時:",
+        "build_revision": "Build のヴァージョン:",
+        "data_directory": "データの場所:"
+    },
+    "toast": {
+        "critical-error": {
+            "title": "致命的なエラー",
+            "message": "致命的なエラーのせいでアプリをスタートできません:\n\n{{message}}\n\nおそらくスクリプトが予期しないバグを含んでいると思われます。アプリをセーフモードでスタートしてみて下さい。"
+        },
+        "widget-error": {
+            "title": "ウィジェットを初期化できませんでした",
+            "message-custom": "ノートID”{{id}}”, ノートタイトル “{{title}}” のカスタムウィジェットを初期化できませんでした:\n\n{{message}}"
+        }
+    }
+}

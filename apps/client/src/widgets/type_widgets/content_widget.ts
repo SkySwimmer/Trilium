@@ -38,7 +38,6 @@ import LocalizationOptions from "./options/i18n/i18n.js";
 import CodeBlockOptions from "./options/text_notes/code_block.js";
 import EditorOptions from "./options/text_notes/editor.js";
 import ShareSettingsOptions from "./options/other/share_settings.js";
-import AiSettingsOptions from "./options/ai_settings.js";
 import type FNote from "../../entities/fnote.js";
 import type NoteContextAwareWidget from "../note_context_aware_widget.js";
 import { t } from "../../services/i18n.js";
@@ -71,7 +70,7 @@ const TPL = /*html*/`<div class="note-detail-content-widget note-detail-printabl
     <div class="note-detail-content-widget-content"></div>
 </div>`;
 
-export type OptionPages = "_optionsAppearance" | "_optionsShortcuts" | "_optionsTextNotes" | "_optionsCodeNotes" | "_optionsImages" | "_optionsSpellcheck" | "_optionsPassword" | "_optionsMFA" | "_optionsEtapi" | "_optionsBackup" | "_optionsSync" | "_optionsAi" | "_optionsOther" | "_optionsLocalization" | "_optionsAdvanced";
+export type OptionPages = "_optionsAppearance" | "_optionsShortcuts" | "_optionsTextNotes" | "_optionsCodeNotes" | "_optionsImages" | "_optionsSpellcheck" | "_optionsPassword" | "_optionsMFA" | "_optionsEtapi" | "_optionsBackup" | "_optionsSync" | "_optionsOther" | "_optionsLocalization" | "_optionsAdvanced";
 
 const CONTENT_WIDGETS: Record<OptionPages | "_backendLog", (typeof NoteContextAwareWidget)[]> = {
     _optionsAppearance: [
@@ -120,7 +119,6 @@ const CONTENT_WIDGETS: Record<OptionPages | "_backendLog", (typeof NoteContextAw
     _optionsSync: [
         SyncOptions
     ],
-    _optionsAi: [AiSettingsOptions],
     _optionsOther: [
         SearchEngineOptions,
         TrayOptions,

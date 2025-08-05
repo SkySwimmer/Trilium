@@ -94,19 +94,6 @@ const ALLOWED_OPTIONS = new Set<OptionNames>([
     "showLoginInShareTheme",
     "splitEditorOrientation",
 
-    // AI/LLM integration options
-    "aiEnabled",
-    "aiTemperature",
-    "aiSystemPrompt",
-    "aiSelectedProvider",
-    "openaiApiKey",
-    "openaiBaseUrl",
-    "openaiDefaultModel",
-    "anthropicApiKey",
-    "anthropicBaseUrl",
-    "anthropicDefaultModel",
-    "ollamaBaseUrl",
-    "ollamaDefaultModel",
     "mfaEnabled",
     "mfaMethod"
 ]);

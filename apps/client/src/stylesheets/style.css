@@ -1948,14 +1948,6 @@ footer.webview-footer button {
     margin: 5px;
 }
 
-/* AI Chat Widget Styles */
-.chat-widget {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    overflow: hidden;
-}
-
 .chat-header {
     display: flex;
     justify-content: space-between;

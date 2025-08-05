@@ -68,16 +68,6 @@ export default function buildLaunchBarConfig() {
             attributes: [{ type: "label", name: "desktopOnly" }]
         },
         { id: "_lbNoteMap", title: t("hidden-subtree.note-map-title"), type: "launcher", targetNoteId: "_globalNoteMap", icon: "bx bxs-network-chart" },
-        {
-            id: "_lbLlmChat",
-            title: t("hidden-subtree.llm-chat-title"),
-            type: "launcher",
-            builtinWidget: "aiChatLauncher",
-            icon: "bx bx-bot",
-            attributes: [
-                { type: "label", name: "desktopOnly" }
-            ]
-        },
         { id: "_lbCalendar", ...sharedLaunchers.calendar },
         { id: "_lbRecentChanges", ...sharedLaunchers.recentChanges },
         { id: "_lbSpacer1", title: t("hidden-subtree.spacer-title"), type: "launcher", builtinWidget: "spacer", baseSize: "50", growthFactor: "0" },

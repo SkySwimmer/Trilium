@@ -485,9 +485,6 @@ importers:
         specifier: 12.2.0
         version: 12.2.0
     devDependencies:
-      '@anthropic-ai/sdk':
-        specifier: 0.57.0
-        version: 0.57.0
       '@braintree/sanitize-url':
         specifier: 7.1.1
         version: 7.1.1
@@ -725,12 +722,6 @@ importers:
       normalize-strings:
         specifier: 1.1.1
         version: 1.1.1
-      ollama:
-        specifier: 0.5.16
-        version: 0.5.16
-      openai:
-        specifier: 5.11.0
-        version: 5.11.0(ws@8.18.3(bufferutil@4.0.9)(utf-8-validate@6.0.5))(zod@3.24.4)
       rand-token:
         specifier: 1.0.1
         version: 1.0.1
@@ -1406,10 +1397,6 @@ packages:
 
   '@antfu/utils@8.1.1':
     resolution: {integrity: sha512-Mex9nXf9vR6AhcXmMrlz/HVgYYZpVGJ6YlPgwl7UnaFpnshXs6EK/oa5Gpf3CzENMjkvEx2tQtntGnb7UtSTOQ==}
-
-  '@anthropic-ai/sdk@0.57.0':
-    resolution: {integrity: sha512-z5LMy0MWu0+w2hflUgj4RlJr1R+0BxKXL7ldXTO8FasU8fu599STghO+QKwId2dAD0d464aHtU+ChWuRHw4FNw==}
-    hasBin: true
 
   '@apidevtools/json-schema-ref-parser@9.1.2':
     resolution: {integrity: sha512-r1w81DpR+KyRWd3f+rk6TNqMgedmAxZP5v5KWlXQWlgMUUtyEJch0DKEci1SorPMiSeM8XPl7MZ3miJ60JIpQg==}
@@ -11533,9 +11520,6 @@ packages:
     resolution: {integrity: sha512-y0W+X7Ppo7oZX6eovsRkuzcSM40Bicg2JEJkDJ4irIt1wsYAP5MLSNv+QAogO8xivMffw/9OvV3um1pxXgt1uA==}
     engines: {node: ^10.13.0 || >=12.0.0}
 
-  ollama@0.5.16:
-    resolution: {integrity: sha512-OEbxxOIUZtdZgOaTPAULo051F5y+Z1vosxEYOoABPnQKeW7i4O8tJNlxCB+xioyoorVqgjkdj+TA1f1Hy2ug/w==}
-
   omggif@1.0.10:
     resolution: {integrity: sha512-LMJTtvgc/nugXj0Vcrrs68Mn2D1r0zf630VNtqtpI1FEO7e+O9FP4gqs9AcnBaSEeoHIPm28u6qgPR0oyEpGSw==}
 
@@ -11568,18 +11552,6 @@ packages:
   open@8.4.2:
     resolution: {integrity: sha512-7x81NCL719oNbsq/3mh+hVrAWmFuEYUqrq/Iw3kUzH8ReypT9QQ0BLoJS7/G9k6N81XjW4qHWtjWwe/9eLy1EQ==}
     engines: {node: '>=12'}
-
-  openai@5.11.0:
-    resolution: {integrity: sha512-+AuTc5pVjlnTuA9zvn8rA/k+1RluPIx9AD4eDcnutv6JNwHHZxIhkFy+tmMKCvmMFDQzfA/r1ujvPWB19DQkYg==}
-    hasBin: true
-    peerDependencies:
-      ws: ^8.18.0
-      zod: ^3.23.8
-    peerDependenciesMeta:
-      ws:
-        optional: true
-      zod:
-        optional: true
 
   openapi-types@12.1.3:
     resolution: {integrity: sha512-N4YtSYJqghVu4iek2ZUvcN/0aqH1kRDuNqzcycDxhOUpg7GdvLa2F3DgS6yBNhInhv2r/6I0Flkn7CqL8+nIcw==}
@@ -15227,9 +15199,6 @@ packages:
     resolution: {integrity: sha512-6qN4hJdMwfYBtE3YBTTHhoeuUrDBPZmbQaxWAqSALV/MeEnR5z1xd8UKud2RAkFoPkmB+hli1TZSnyi84xz1vQ==}
     engines: {node: '>=18'}
 
-  whatwg-fetch@3.6.20:
-    resolution: {integrity: sha512-EqhiFU6daOA8kpjOWTL0olhVOF3i7OrFzSYiGsEMB8GcXS+RrzauAERX65xMeNWVqxA6HXH2m69Z9LaKKdisfg==}
-
   whatwg-mimetype@2.3.0:
     resolution: {integrity: sha512-M4yMwr6mAnQz76TbJm914+gPpB/nCwvZbJU28cUD6dR004SAxDLOOSUaB1JDRqLtaOV/vi0IC5lEAGFgrjGv/g==}
 
@@ -15548,8 +15517,6 @@ snapshots:
       tinyexec: 0.3.2
 
   '@antfu/utils@8.1.1': {}
-
-  '@anthropic-ai/sdk@0.57.0': {}
 
   '@apidevtools/json-schema-ref-parser@9.1.2':
     dependencies:
@@ -16853,6 +16820,8 @@ snapshots:
       '@ckeditor/ckeditor5-core': 46.0.0
       '@ckeditor/ckeditor5-upload': 46.0.0
       ckeditor5: 46.0.0(patch_hash=8331a09d41443b39ea1c784daaccfeb0da4f9065ed556e7de92e9c77edd9eb41)
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-ai@46.0.0':
     dependencies:
@@ -16977,12 +16946,16 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 46.0.0
       '@ckeditor/ckeditor5-widget': 46.0.0
       es-toolkit: 1.39.5
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-cloud-services@46.0.0':
     dependencies:
       '@ckeditor/ckeditor5-core': 46.0.0
       '@ckeditor/ckeditor5-utils': 46.0.0
       ckeditor5: 46.0.0(patch_hash=8331a09d41443b39ea1c784daaccfeb0da4f9065ed556e7de92e9c77edd9eb41)
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-code-block@46.0.0(patch_hash=2361d8caad7d6b5bddacc3a3b4aa37dbfba260b1c1b22a450413a79c1bb1ce95)':
     dependencies:
@@ -17208,6 +17181,8 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 46.0.0
       ckeditor5: 46.0.0(patch_hash=8331a09d41443b39ea1c784daaccfeb0da4f9065ed556e7de92e9c77edd9eb41)
       es-toolkit: 1.39.5
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-editor-classic@46.0.0':
     dependencies:
@@ -17217,6 +17192,8 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 46.0.0
       ckeditor5: 46.0.0(patch_hash=8331a09d41443b39ea1c784daaccfeb0da4f9065ed556e7de92e9c77edd9eb41)
       es-toolkit: 1.39.5
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-editor-decoupled@46.0.0':
     dependencies:
@@ -17226,6 +17203,8 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 46.0.0
       ckeditor5: 46.0.0(patch_hash=8331a09d41443b39ea1c784daaccfeb0da4f9065ed556e7de92e9c77edd9eb41)
       es-toolkit: 1.39.5
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-editor-inline@46.0.0':
     dependencies:
@@ -17235,6 +17214,8 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 46.0.0
       ckeditor5: 46.0.0(patch_hash=8331a09d41443b39ea1c784daaccfeb0da4f9065ed556e7de92e9c77edd9eb41)
       es-toolkit: 1.39.5
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-editor-multi-root@46.0.0':
     dependencies:
@@ -17313,8 +17294,6 @@ snapshots:
       '@ckeditor/ckeditor5-ui': 46.0.0
       '@ckeditor/ckeditor5-utils': 46.0.0
       ckeditor5: 46.0.0(patch_hash=8331a09d41443b39ea1c784daaccfeb0da4f9065ed556e7de92e9c77edd9eb41)
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-export-word@46.0.0':
     dependencies:
@@ -17339,6 +17318,8 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 46.0.0
       ckeditor5: 46.0.0(patch_hash=8331a09d41443b39ea1c784daaccfeb0da4f9065ed556e7de92e9c77edd9eb41)
       es-toolkit: 1.39.5
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-font@46.0.0':
     dependencies:
@@ -17402,6 +17383,8 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 46.0.0
       '@ckeditor/ckeditor5-widget': 46.0.0
       ckeditor5: 46.0.0(patch_hash=8331a09d41443b39ea1c784daaccfeb0da4f9065ed556e7de92e9c77edd9eb41)
+    transitivePeerDependencies:
+      - supports-color
 
   '@ckeditor/ckeditor5-html-embed@46.0.0':
     dependencies:
@@ -17461,8 +17444,6 @@ snapshots:
       '@ckeditor/ckeditor5-ui': 46.0.0
       '@ckeditor/ckeditor5-utils': 46.0.0
       ckeditor5: 46.0.0(patch_hash=8331a09d41443b39ea1c784daaccfeb0da4f9065ed556e7de92e9c77edd9eb41)
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-indent@46.0.0':
     dependencies:
@@ -17585,8 +17566,6 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 46.0.0
       ckeditor5: 46.0.0(patch_hash=8331a09d41443b39ea1c784daaccfeb0da4f9065ed556e7de92e9c77edd9eb41)
       es-toolkit: 1.39.5
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-merge-fields@46.0.0':
     dependencies:
@@ -17599,8 +17578,6 @@ snapshots:
       '@ckeditor/ckeditor5-widget': 46.0.0
       ckeditor5: 46.0.0(patch_hash=8331a09d41443b39ea1c784daaccfeb0da4f9065ed556e7de92e9c77edd9eb41)
       es-toolkit: 1.39.5
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-minimap@46.0.0':
     dependencies:
@@ -17609,8 +17586,6 @@ snapshots:
       '@ckeditor/ckeditor5-ui': 46.0.0
       '@ckeditor/ckeditor5-utils': 46.0.0
       ckeditor5: 46.0.0(patch_hash=8331a09d41443b39ea1c784daaccfeb0da4f9065ed556e7de92e9c77edd9eb41)
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-operations-compressor@46.0.0':
     dependencies:
@@ -17663,8 +17638,6 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 46.0.0
       '@ckeditor/ckeditor5-widget': 46.0.0
       ckeditor5: 46.0.0(patch_hash=8331a09d41443b39ea1c784daaccfeb0da4f9065ed556e7de92e9c77edd9eb41)
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-pagination@46.0.0':
     dependencies:
@@ -17771,8 +17744,6 @@ snapshots:
       '@ckeditor/ckeditor5-ui': 46.0.0
       '@ckeditor/ckeditor5-utils': 46.0.0
       ckeditor5: 46.0.0(patch_hash=8331a09d41443b39ea1c784daaccfeb0da4f9065ed556e7de92e9c77edd9eb41)
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-slash-command@46.0.0':
     dependencies:
@@ -17785,8 +17756,6 @@ snapshots:
       '@ckeditor/ckeditor5-ui': 46.0.0
       '@ckeditor/ckeditor5-utils': 46.0.0
       ckeditor5: 46.0.0(patch_hash=8331a09d41443b39ea1c784daaccfeb0da4f9065ed556e7de92e9c77edd9eb41)
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-source-editing-enhanced@46.0.0':
     dependencies:
@@ -17834,8 +17803,6 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 46.0.0
       ckeditor5: 46.0.0(patch_hash=8331a09d41443b39ea1c784daaccfeb0da4f9065ed556e7de92e9c77edd9eb41)
       es-toolkit: 1.39.5
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-table@46.0.0':
     dependencies:
@@ -17848,8 +17815,6 @@ snapshots:
       '@ckeditor/ckeditor5-widget': 46.0.0
       ckeditor5: 46.0.0(patch_hash=8331a09d41443b39ea1c784daaccfeb0da4f9065ed556e7de92e9c77edd9eb41)
       es-toolkit: 1.39.5
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-template@46.0.0':
     dependencies:
@@ -17960,8 +17925,6 @@ snapshots:
       '@ckeditor/ckeditor5-engine': 46.0.0
       '@ckeditor/ckeditor5-utils': 46.0.0
       es-toolkit: 1.39.5
-    transitivePeerDependencies:
-      - supports-color
 
   '@ckeditor/ckeditor5-widget@46.0.0':
     dependencies:
@@ -17981,8 +17944,6 @@ snapshots:
       '@ckeditor/ckeditor5-utils': 46.0.0
       ckeditor5: 46.0.0(patch_hash=8331a09d41443b39ea1c784daaccfeb0da4f9065ed556e7de92e9c77edd9eb41)
       es-toolkit: 1.39.5
-    transitivePeerDependencies:
-      - supports-color
 
   '@codemirror/autocomplete@6.18.6':
     dependencies:
@@ -29325,10 +29286,6 @@ snapshots:
 
   oidc-token-hash@5.1.0: {}
 
-  ollama@0.5.16:
-    dependencies:
-      whatwg-fetch: 3.6.20
-
   omggif@1.0.10: {}
 
   on-finished@2.4.1:
@@ -29363,11 +29320,6 @@ snapshots:
       define-lazy-prop: 2.0.0
       is-docker: 2.2.1
       is-wsl: 2.2.0
-
-  openai@5.11.0(ws@8.18.3(bufferutil@4.0.9)(utf-8-validate@6.0.5))(zod@3.24.4):
-    optionalDependencies:
-      ws: 8.18.3(bufferutil@4.0.9)(utf-8-validate@6.0.5)
-      zod: 3.24.4
 
   openapi-types@12.1.3: {}
 
@@ -33730,8 +33682,6 @@ snapshots:
   whatwg-encoding@3.1.1:
     dependencies:
       iconv-lite: 0.6.3
-
-  whatwg-fetch@3.6.20: {}
 
   whatwg-mimetype@2.3.0: {}
 

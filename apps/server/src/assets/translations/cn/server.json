@@ -256,8 +256,6 @@
         "user-guide": "用户指南",
         "localization": "语言和区域",
         "jump-to-note-title": "跳转到……",
-        "llm-chat-title": "与笔记对话",
-        "ai-llm-title": "AI/LLM",
         "inbox-title": "收件箱"
     },
     "notes": {

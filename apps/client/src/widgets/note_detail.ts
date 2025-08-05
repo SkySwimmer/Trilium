@@ -32,7 +32,6 @@ import utils from "../services/utils.js";
 import type { NoteType } from "../entities/fnote.js";
 import type TypeWidget from "./type_widgets/type_widget.js";
 import { MermaidTypeWidget } from "./type_widgets/mermaid.js";
-import AiChatTypeWidget from "./type_widgets/ai_chat.js";
 
 const TPL = /*html*/`
 <div class="note-detail">
@@ -70,7 +69,6 @@ const typeWidgetClasses = {
     attachmentDetail: AttachmentDetailTypeWidget,
     attachmentList: AttachmentListTypeWidget,
     mindMap: MindMapWidget,
-    aiChat: AiChatTypeWidget,
 
     // Split type editors
     mermaid: MermaidTypeWidget

@@ -44,18 +44,6 @@ interface Message {
     lastModifiedMs?: number;
     filePath?: string;
 
-    // LLM streaming specific fields
-    chatNoteId?: string;
-    content?: string;
-    thinking?: string;
-    toolExecution?: {
-        action?: string;
-        tool?: string;
-        toolCallId?: string;
-        result?: string | Record<string, any>;
-        error?: string;
-        args?: Record<string, unknown>;
-    };
     done?: boolean;
     error?: string;
     raw?: unknown;
@@ -118,10 +106,7 @@ function sendMessageToAllClients(message: Message) {
     const jsonStr = JSON.stringify(message);
 
     if (webSocketServer) {
-        // Special logging for LLM streaming messages
-        if (message.type === "llm-stream") {
-            log.info(`[WS-SERVER] Sending LLM stream message: chatNoteId=${message.chatNoteId}, content=${!!message.content}, thinking=${!!message.thinking}, toolExecution=${!!message.toolExecution}, done=${!!message.done}`);
-        } else if (message.type !== "sync-failed" && message.type !== "api-log-messages") {
+        if (message.type !== "sync-failed" && message.type !== "api-log-messages") {
             log.info(`Sending message to all clients: ${jsonStr}`);
         }
 
@@ -132,11 +117,6 @@ function sendMessageToAllClients(message: Message) {
                 clientCount++;
             }
         });
-
-        // Log WebSocket client count for debugging
-        if (message.type === "llm-stream") {
-            log.info(`[WS-SERVER] Sent LLM stream message to ${clientCount} clients`);
-        }
     }
 }
 

@@ -15,6 +15,7 @@ import type { EventImpl } from "@fullcalendar/core/internal";
 import debounce, { type DebouncedFunction } from "debounce";
 import type { TouchBarItem } from "../../components/touch_bar.js";
 import type { SegmentedControlSegment } from "electron";
+import ws from "../../services/ws.js";
 
 const TPL = /*html*/`
 <div class="calendar-view">
@@ -224,6 +225,10 @@ export default class CalendarView extends ViewMode<{}> {
                 if (!this.isCalendarRoot) {
                     return;
                 }
+
+                // Check connection
+                if (!ws.uiVerifyConnection())
+                    return;
 
                 const note = await date_notes.getDayNote(e.dateStr);
                 if (note) {

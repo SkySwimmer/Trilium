@@ -9,6 +9,7 @@ import { t } from "../services/i18n.js";
 import type ForceGraph from "force-graph";
 import type { GraphData, LinkObject, NodeObject } from "force-graph";
 import type FNote from "../entities/fnote.js";
+import ws from "../services/ws.js";
 
 const esc = utils.escapeHtml;
 
@@ -312,6 +313,9 @@ export default class NoteMapWidget extends NoteContextAwareWidget {
             })
             .onNodeRightClick((node, e) => {
                 if (node.id) {
+                    if (!ws.uiVerifyConnection())
+                        return;
+
                     linkContextMenuService.openContextMenu((node as Node).id, e);
                 }
             });

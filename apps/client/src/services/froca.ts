@@ -1,11 +1,14 @@
+import utils from "./utils.js";
 import FBranch, { type FBranchRow } from "../entities/fbranch.js";
 import FNote, { type FNoteRow } from "../entities/fnote.js";
 import FAttribute, { type FAttributeRow } from "../entities/fattribute.js";
 import server from "./server.js";
 import appContext from "../components/app_context.js";
+import protectedSessionHolder from "./protected_session_holder.js";
 import FBlob, { type FBlobRow } from "../entities/fblob.js";
 import FAttachment, { type FAttachmentRow } from "../entities/fattachment.js";
 import type { Froca } from "./froca-interface.js";
+import ws from "./ws.js";
 
 interface SubtreeResponse {
     notes: FNoteRow[];
@@ -74,7 +77,7 @@ class FrocaImpl implements Froca {
         for (const noteRow of noteRows) {
             const { noteId } = noteRow;
 
-            let note = this.notes[noteId];
+            const note = this.notes[noteId];
 
             if (note) {
                 note.update(noteRow);
@@ -399,4 +402,231 @@ class FrocaImpl implements Froca {
 
 const froca = new FrocaImpl();
 
+// Refresher downloader
+async function refreshNoteDownload(note: FNote, content: string, timestamp: number) {
+    // Try syncing note
+
+    // Compute info
+    const data = content;
+    const serverEditTimestamp = timestamp;
+
+    // Update user information
+    note.lastLocalData = data;
+    note.lastLocalEdits = serverEditTimestamp;
+
+    // Update server information
+    note.lastRemoteData = data;
+    note.lastRemoteEdits = serverEditTimestamp;
+
+    // Success
+    return true;
+}
+
+// Refresher uploader
+async function refreshNoteUpload(note: FNote, content: string) {
+    // Try syncing note upstream
+    console.debug(utils.now(), "Uploading changes of note " + note.noteId + "...");
+
+    // Update on server
+    if (!await server.put(`notes/${note.noteId}/data`, { content: content }).then(() => true).catch((e) => {
+        console.error(utils.now(), `Note refresh failure! Upload of ${note.noteId} failed! Exception: `, e);
+        return false;
+    })) {
+        // Failed
+        return false;
+    }
+
+    // Update user information
+    note.lastLocalData = content;
+    note.lastLocalEdits = Date.now();
+
+    // Download blob
+    const blob = await froca.getBlob("notes", note.noteId).catch((e) => {
+        console.error(utils.now(), `Note refresh failure! Redownload of ${note.noteId} failed! Exception: `, e);
+        return null;
+    });
+
+    // Check result
+    if (blob != null) {
+        // Update note sync data to match server
+        note.lastLocalData = blob.content;
+        note.lastLocalEdits = Date.parse(blob.utcDateModified);
+    } else {
+        // Failed
+        return false;
+    }
+
+    // Success
+    console.debug(utils.now(), "Uploading changes of note " + note.noteId + " completed successfully!");
+    return true;
+}
+
+// Note refresh function
+// Run whenever the client reconnects
+async function refreshNotes() {
+    // Called whenever the connection re-establishes
+    console.log(utils.now(), "Attempting note refresh...");
+
+    // Active note refreshes, this part of the code deals with refreshing note data, either uploading or downloading active notes
+    // Depending on the server content, if the upstream is newer, itll need to be downloaded, if the upstream matches the cache but the contents changed, itll need upload
+    let anyNotesChanged = false;
+    const refreshedNotes: FNote[] = [];
+    for (const noteID in froca.notes) {
+        // Get note
+        const note = froca.notes[noteID];
+        if (note == null)
+            continue;
+
+        // Check if last edits metadata is available
+        // This data is used to compare with the remote server, to properly sync edits before reload, so user data isnt lost
+        if (note.lastEditsDataAvailable) {
+            // Handle protected session
+            // If the remote end ended the session but the local session still has it open, skip protected notes
+            // If both ends still have it open, its safe to sync, so only ignore when the server disabled when the local end hasnt
+            // By this time isProtectedSessionAvailable will be false should the remote end have disabled it
+            if (note.isProtected && !protectedSessionHolder.isProtectedSessionAvailable())
+                continue; // Skip syncing this note to avoid errors
+
+            // Touch protected session
+            protectedSessionHolder.touchProtectedSessionIfNecessary(note);
+
+            // Load local note edit metadata
+            const lastLocalData = note.lastLocalData; // Current note contents (updated on user edit and whenever it syncs)
+            const lastLocalEditTime = note.lastLocalEdits; // Current edit timestamp, the time when the note was last edited (updated on user edit and whenever it syncs)
+            const lastRemoteData = note.lastRemoteData; // Last successfully-exchanged note data, this is the data that was on the server prior to disconnect
+
+            // Load remote data
+            // Calling manually so deleted blobs wont cause issues
+            const blob = await server.getWithSilentNotFound<FBlobRow>("notes/" + note.noteId + "/blob").then((row) => new FBlob(row)).catch(() => null);
+            if (!blob) {
+                // Check if its a connection error
+                const connected: boolean = await server.get("connectiontest").then((data: any) => {
+                    return data.connected;
+                }).catch((e) => {
+                    console.error(utils.now(), `Note refresh failure! Connection to server unavailable! Exception: `, e);
+                    return false;
+                });
+
+                // Check result
+                if (!connected) {
+                    // Connection error, abort
+                    return false;
+                }
+
+                // Note no longer present likely
+                continue; // Skip
+            }
+            const serverSidedData = blob.content; // Current serversided note contents
+            const serverSidedEditTime = Date.parse(blob.utcDateModified); // Current serversided note update timestamp
+
+            // Compare note against remote
+            const remoteChangedSinceDisconnect = lastRemoteData !== serverSidedData; // Checks if the server side has changed by comparing the last synced data to the current data
+            const localChangedSinceDisconnect = lastLocalData !== lastRemoteData; // Checks if the local note has been altered by the user since the disconnect
+            if (remoteChangedSinceDisconnect) {
+                // Remote end has changed since our disconnect
+
+                // Check conflict
+                if (localChangedSinceDisconnect) {
+                    // Conflict
+
+                    // Check times
+                    console.debug(utils.now(), "Note " + note.noteId + " has gone out of sync! (local changed, upstream changed)");
+                    console.debug(utils.now(), "Conflict detected with note refresh, performing resolution!");
+                    if (lastLocalEditTime > serverSidedEditTime) {
+                        // Current is newer
+                        console.debug(utils.now(), "Local note changes are newer than upstream changes");
+
+                        // Sync local data to upsream
+                        if (!await refreshNoteUpload(note, lastLocalData))
+                            return false;
+                        refreshedNotes.push(note);
+                        anyNotesChanged = true;
+                    } else {
+                        // Upstream is newer
+                        console.debug(utils.now(), "Upstream note changes are newer than local changes");
+
+                        // Download upstream data to local
+                        if (!await refreshNoteDownload(note, serverSidedData, serverSidedEditTime))
+                            return false;
+                        refreshedNotes.push(note);
+                        anyNotesChanged = true;
+                    }
+                } else {
+                    // Download upstream data to local
+                    console.debug(utils.now(), "Note " + note.noteId + " has gone out of sync! (local unchanged, upstream changed)");
+                    if (!await refreshNoteDownload(note, serverSidedData, serverSidedEditTime))
+                        return false;
+                    refreshedNotes.push(note);
+                    anyNotesChanged = true;
+                }
+            } else if (localChangedSinceDisconnect) {
+                // Remote end unchanged but local end has changed
+
+                // Sync local data to upsream
+                console.debug(utils.now(), "Note " + note.noteId + " has gone out of sync! (local changed, upstream unchanged)");
+                if (!await refreshNoteUpload(note, lastLocalData))
+                    return false;
+                refreshedNotes.push(note);
+                anyNotesChanged = true;
+            }
+        }
+    }
+
+    // Log done
+    console.log(utils.now(), "Note refresh finished");
+
+    // Check if any changed
+    if (anyNotesChanged) {
+        // After that, the remaining notes in memory need refreshing
+        // Otherwise desyncs will heavily break things
+        console.log(utils.now(), "Refreshing notes in UI...");
+        const refreshedIds: string[] = [];
+        const allIds: string[] = [];
+        for (const noteID in froca.notes) {
+            // Add tree refresh
+            allIds.push(froca.notes[noteID].noteId);
+        }
+        for (const note of refreshedNotes) {
+            // Add to refresh list
+            refreshedIds.push(note.noteId);
+        }
+
+        // Reload notes via froca
+        // This will also trigger ui reload without a full window reload
+        console.log(utils.now(), "Reloading tree...");
+        await froca.loadInitialTree();
+        console.log(utils.now(), "Reloading updated notes...");
+        await froca.reloadNotes(refreshedIds);
+        console.log(utils.now(), "Reloading all notes...");
+        await froca.reloadNotes(allIds);
+        console.log(utils.now(), "Calling froca reload...");
+        await appContext.triggerEvent("frocaReloaded", {});
+
+        // Now the active notes and tree have been reloaded
+        // This however doesnt take care of themes and launchbar entries
+        // I need to still figure that out
+        // FIXME
+
+        // Successfully finished
+        console.log(utils.now(), "Reload finished");
+    }
+    return true;
+}
+
+// Bind to ws service' reconnect handshaker
+// This isnt needed on initial connect, only reconnect
+ws.subscribeToPreReconnectHandshake({
+    main: async () => {
+        // Refresh notes whenever the connection reconnects
+
+        // Refresh the notes
+        if (!await refreshNotes())
+            return false;
+
+        // Success
+        return true;
+    }
+});
+
+// Export froca
 export default froca;

@@ -484,6 +484,9 @@ function FrontendScriptApi(this: Api, startNote: FNote, currentNote: FNote, orig
     };
 
     this.openTabWithNote = async (notePath, activate) => {
+        if (!ws.uiVerifyConnection())
+            return;
+
         await ws.waitForMaxKnownEntityChangeId();
 
         await appContext.tabManager.openTabWithNoteWithHoisting(notePath, { activate });
@@ -494,6 +497,9 @@ function FrontendScriptApi(this: Api, startNote: FNote, currentNote: FNote, orig
     };
 
     this.openSplitWithNote = async (notePath, activate) => {
+        if (!ws.uiVerifyConnection())
+            return;
+
         await ws.waitForMaxKnownEntityChangeId();
 
         const subContexts = appContext.tabManager.getActiveContext()?.getSubContexts();

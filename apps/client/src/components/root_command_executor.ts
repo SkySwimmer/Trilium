@@ -4,11 +4,9 @@ import dateNoteService from "../services/date_notes.js";
 import treeService from "../services/tree.js";
 import openService from "../services/open.js";
 import protectedSessionService from "../services/protected_session.js";
-import options from "../services/options.js";
 import froca from "../services/froca.js";
 import utils from "../services/utils.js";
-import toastService from "../services/toast.js";
-import noteCreateService from "../services/note_create.js";
+import ws from "../services/ws.js";
 
 export default class RootCommandExecutor extends Component {
     editReadOnlyNoteCommand() {
@@ -20,6 +18,9 @@ export default class RootCommandExecutor extends Component {
     }
 
     async showSQLConsoleCommand() {
+        if (!ws.uiVerifyConnection())
+            return;
+
         const sqlConsoleNote = await dateNoteService.createSqlConsole();
         if (!sqlConsoleNote) {
             return;
@@ -31,6 +32,9 @@ export default class RootCommandExecutor extends Component {
     }
 
     async searchNotesCommand({ searchString, ancestorNoteId }: CommandListenerData<"searchNotes">) {
+        if (!ws.uiVerifyConnection())
+            return;
+
         const searchNote = await dateNoteService.createSearchNote({ searchString, ancestorNoteId });
         if (!searchNote) {
             return;
@@ -89,6 +93,9 @@ export default class RootCommandExecutor extends Component {
     }
 
     async showBackendLogCommand() {
+        if (!ws.uiVerifyConnection())
+            return;
+
         await appContext.tabManager.openTabWithNoteWithHoisting("_backendLog", { activate: true });
     }
 
@@ -133,6 +140,9 @@ export default class RootCommandExecutor extends Component {
     }
 
     async showNoteSourceCommand() {
+        if (!ws.uiVerifyConnection())
+            return;
+
         const notePath = appContext.tabManager.getActiveContextNotePath();
 
         if (notePath) {
@@ -146,6 +156,9 @@ export default class RootCommandExecutor extends Component {
     }
 
     async showAttachmentsCommand() {
+        if (!ws.uiVerifyConnection())
+            return;
+
         const notePath = appContext.tabManager.getActiveContextNotePath();
 
         if (notePath) {
@@ -159,6 +172,9 @@ export default class RootCommandExecutor extends Component {
     }
 
     async showAttachmentDetailCommand() {
+        if (!ws.uiVerifyConnection())
+            return;
+
         const notePath = appContext.tabManager.getActiveContextNotePath();
 
         if (notePath) {

@@ -21,6 +21,10 @@ interface RequestData {
     resolve: (value: unknown) => any;
     reject: (reason: unknown) => any;
     silentNotFound: boolean;
+    requestUrl: string;
+    requestMethod: string;
+    requestHeaders: Headers;
+    requestData: any;
 }
 
 export interface StandardResponse {
@@ -60,6 +64,62 @@ async function getHeaders(headers?: Headers) {
 
 async function getWithSilentNotFound<T>(url: string, componentId?: string) {
     return await call<T>("GET", url, componentId, { silentNotFound: true });
+}
+
+let serverTimeOffset = Date.now();
+let hasSyncedTime = false;
+
+const dateCallOrig = Date.now;
+Date.now = () => {
+    // Get current
+    let current = dateCallOrig();
+
+    // Sync with server
+    current = current + serverTimeOffset;
+
+    // Return
+    return current;
+};
+
+// Time sync
+async function resyncTime() {
+    // Get current server time
+    let serverTime = 0;
+    let serverTimeReceived = false;
+    await get("servertime").then((data: any) => {
+        serverTime = data.time;
+        serverTimeReceived = true;
+        return serverTime;
+    }).catch((e) => {
+        console.error(utils.now(), `Failed to sync to server time! Exception: `, e);
+        return null;
+    });
+    if (!serverTimeReceived) {
+        // Request failed
+        return false;
+    }
+
+    // Get current client time
+    const clientTime = dateCallOrig();
+
+    // Resync
+    serverTimeOffset = serverTime - clientTime;
+
+    // Return
+    return true;
+}
+
+async function resyncTimeInitial() {
+    serverTimeOffset = dateCallOrig();
+    if (!await resyncTime()) {
+        // Schedule retry
+        setTimeout(async () => {
+            // Retry
+            console.log(utils.now(), "Attempting server time resync...");
+            resyncTime();
+        }, 5000);
+    }
+    return;
 }
 
 /**
@@ -106,6 +166,8 @@ const idToRequestMap: Record<string, RequestData> = {};
 
 let maxKnownEntityChangeId = 0;
 
+let lastTraffic = 0;
+
 interface CallOptions {
     data?: unknown;
     silentNotFound?: boolean;
@@ -114,8 +176,18 @@ interface CallOptions {
 }
 
 async function call<T>(method: string, url: string, componentId?: string, options: CallOptions = {}) {
-    let resp;
+    // Sync time if needed
+    if (!hasSyncedTime)
+    {
+        // Mark and sync
+        hasSyncedTime = true;
+        await resyncTimeInitial();
+    }
 
+    // Update traffic timer
+    lastTraffic = Date.now()
+
+    let resp;
     const headers = await getHeaders({
         "trilium-component-id": componentId
     });
@@ -129,7 +201,11 @@ async function call<T>(method: string, url: string, componentId?: string, option
             idToRequestMap[requestId] = {
                 resolve,
                 reject,
-                silentNotFound: !!options.silentNotFound
+                silentNotFound: !!options.silentNotFound,
+                requestMethod: method,
+                requestHeaders: headers,
+                requestUrl: url,
+                requestData: data
             };
 
             ipc.send("server-request", {
@@ -141,7 +217,7 @@ async function call<T>(method: string, url: string, componentId?: string, option
             });
         })) as any;
     } else {
-        resp = await ajax(url, method, data, headers, !!options.silentNotFound, options.raw);
+        resp = await ajax(url, method, data, headers, !!options.silentNotFound, options.raw, componentId);
     }
 
     const maxEntityChangeIdStr = resp.headers["trilium-max-entity-change-id"];
@@ -153,10 +229,44 @@ async function call<T>(method: string, url: string, componentId?: string, option
     return resp.body as T;
 }
 
+setInterval(async () => {
+    // Check last traffic time
+    if (Date.now() - lastTraffic > 5000) {
+        // Poll
+        const connected: boolean = await get("connectiontest").then((data: any) => {
+            return data.connected;
+        }).catch((e) => {
+            return false;
+        });
+        if (!connected) {
+            // Disconnect websocket if needed
+            const ws = (await import("./ws.js")).default;
+            if (ws.isConnected()) {
+                // Close and trigger reauth check
+                ws.getConnection().close();
+            }
+        } else {
+            // Verify auth status
+            const authResult: any = await get("auth/verify").catch(() => null);
+            if (authResult && !authResult.auth_status) {
+                // Try reauthentication
+                const result: any = await get("auth/reauthenticate").catch(() => null);
+                if (result && !result.success) {
+                    const ws = (await import("./ws.js")).default;
+                    if (ws.isConnected()) {
+                        // Close and trigger reauth check
+                        ws.getConnection().close();
+                    }
+                }
+            }
+        }
+    }
+}, 5000);
+
 /**
  * @param raw if `true`, the value will be returned as a string instead of a JavaScript object if JSON, XMLDocument if XML, etc.
  */
-function ajax(url: string, method: string, data: unknown, headers: Headers, silentNotFound: boolean, raw?: boolean): Promise<Response> {
+function ajax(url: string, method: string, data: unknown, headers: Headers, silentNotFound: boolean, raw?: boolean, componentId?: string): Promise<Response> {
     return new Promise((res, rej) => {
         const options: JQueryAjaxSettings = {
             url: window.glob.baseApiUrl + url,
@@ -191,6 +301,27 @@ function ajax(url: string, method: string, data: unknown, headers: Headers, sile
                 } else if (silentNotFound && jqXhr.status === 404) {
                     // report nothing
                 } else {
+                    // Check auth
+                    const authResult: any = await get("auth/verify").catch(() => null);
+                    if (authResult && !authResult.auth_status) {
+                        // Try reauthentication
+                        const result: any = await get("auth/reauthenticate").catch(() => null);
+                        if (result && !result.success) {
+                            const ws = (await import("./ws.js")).default;
+                            if (ws.isConnected()) {
+                                // Close and trigger reauth check
+                                ws.getConnection().close();
+                            }
+                            rej(jqXhr.responseText);
+                            return;
+                        }
+
+                        // Rerun
+                        res(await call(method, url, componentId, options));
+                        return;
+                    }
+
+                    // Report error
                     await reportError(method, url, jqXhr.status, jqXhr.responseText);
                 }
 
@@ -225,6 +356,34 @@ if (utils.isElectron()) {
             if (arg.statusCode === 404 && idToRequestMap[arg.requestId]?.silentNotFound) {
                 // report nothing
             } else {
+                // Check auth
+                const authResult: any = await get("auth/verify").catch(() => null);
+                if (authResult && !authResult.auth_status) {
+                    // Try reauthentication
+                    const result: any = await get("auth/reauthenticate").catch(() => null);
+                    if (result && !result.success) {
+                        const ws = (await import("./ws.js")).default;
+                        if (ws.isConnected()) {
+                            // Close and trigger reauth check
+                            ws.getConnection().close();
+                        }
+                        idToRequestMap[arg.requestId].reject(new Error(`Server responded with ${arg.statusCode}`));
+                        delete idToRequestMap[arg.requestId];
+                        return;
+                    }
+
+                    // Rerun
+                    await ipc.send("server-request", {
+                        requestId: arg.requestId,
+                        headers: idToRequestMap[arg.requestId].requestHeaders,
+                        method: idToRequestMap[arg.requestId].requestMethod,
+                        url: `/${window.glob.baseApiUrl}${idToRequestMap[arg.requestId].requestUrl}`,
+                        data: idToRequestMap[arg.requestId].requestData
+                    });
+                    return;
+                }
+
+                // Report error
                 await reportError(arg.method, arg.url, arg.statusCode, arg.body);
             }
 
@@ -289,6 +448,7 @@ export default {
     patch,
     remove,
     upload,
+    resyncTime,
     // don't remove, used from CKEditor image upload!
     getHeaders,
     getMaxKnownEntityChangeId: () => maxKnownEntityChangeId

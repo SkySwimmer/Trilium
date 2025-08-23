@@ -30,6 +30,7 @@ import type CodeMirror from "@triliumnext/codemirror";
 import { StartupChecks } from "./startup_checks.js";
 import type { CreateNoteOpts } from "../services/note_create.js";
 import { ColumnComponent } from "tabulator-tables";
+import ws from "../services/ws.js";
 
 interface Layout {
     getRootWidget: (appContext: AppContext) => RootWidget;
@@ -684,6 +685,8 @@ $(window).on("hashchange", function () {
     const { notePath, ntxId, viewScope, searchString } = linkService.parseNavigationStateFromUrl(window.location.href);
 
     if (notePath || ntxId) {
+        if (!ws.uiVerifyConnection())
+            return;
         appContext.tabManager.switchToNoteContext(ntxId, notePath, viewScope);
     } else if (searchString) {
         appContext.triggerCommand("searchNotes", { searchString });

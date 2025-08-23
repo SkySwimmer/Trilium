@@ -2,7 +2,9 @@ import { t } from "../services/i18n.js";
 import NoteContextAwareWidget from "./note_context_aware_widget.js";
 import protectedSessionHolder from "../services/protected_session_holder.js";
 import SpacedUpdate from "../services/spaced_update.js";
+import froca from "../services/froca.js";
 import server from "../services/server.js";
+import ws from "../services/ws.js";
 import appContext, { type CommandListenerData, type EventData } from "../components/app_context.js";
 import keyboardActionsService from "../services/keyboard_actions.js";
 import noteCreateService from "../services/note_create.js";
@@ -114,18 +116,41 @@ export default class NoteDetailWidget extends NoteContextAwareWidget {
 
             const { noteId } = note;
 
-            const data = await this.getTypeWidget().getData();
+            const data: any = await this.getTypeWidget().getData();
 
             // for read only notes
             if (data === undefined) {
                 return;
             }
 
+            // Update user information
+            note.lastLocalData = data.content;
+            note.lastLocalEdits = Date.now();
+
+            // Touch protected session
             protectedSessionHolder.touchProtectedSessionIfNecessary(note);
 
-            await server.put(`notes/${noteId}/data`, data, this.componentId);
+            // Check connection
+            // Update shouldnt be attempted at all if the connection isnt available
+            if (ws.isConnected()) {
+                // Update on server
+                await server.put(`notes/${noteId}/data`, data, this.componentId);
 
+                // Download blob
+                const blob = await froca.getBlob("notes", noteId);
+                if (blob != null)
+                {
+                    // Update note sync data to match server
+                    note.lastLocalData = blob.content;
+                    note.lastLocalEdits = Date.parse(blob.utcDateModified);
+                }
+            }
+
+            // Call data saved
             this.getTypeWidget().dataSaved();
+
+            // Mark edit metadata available
+            note.lastEditsDataAvailable = true;
         });
 
         appContext.addBeforeUnloadListener(this);

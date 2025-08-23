@@ -87,11 +87,24 @@ class FNote {
     childToBranch: Record<string, string>;
     attachments: FAttachment[] | null;
 
+    // note edit times
+    lastRemoteEdits: number; // Timestamp of last edits synced from/to the server, only up to date when the server is
+    lastLocalEdits: number; // Timestamp of last edits made by user, including those made while the server connection was down
+    lastRemoteData: string; // String data of the last edits synced from/to the server, up to date as long as the connection is present
+    lastLocalData: string; // String data of the last edits made by the user, up to date most of the time
+    lastEditsDataAvailable: boolean;
+
     // Managed by Froca.
     searchResultsLoaded?: boolean;
     highlightedTokens?: string[];
 
     constructor(froca: Froca, row: FNoteRow) {
+        this.lastRemoteEdits = 0;
+        this.lastLocalEdits = 0;
+        this.lastRemoteData = "";
+        this.lastLocalData = "";
+        this.lastEditsDataAvailable = false;
+
         this.froca = froca;
         this.attributes = [];
         this.targetRelations = [];
@@ -906,7 +919,31 @@ class FNote {
     }
 
     async getBlob() {
-        return await this.froca.getBlob("notes", this.noteId);
+        return await this.froca.getBlob("notes", this.noteId).then((res) => {
+            // Check connection
+            // Update shouldnt be attempted at all if the connection isnt available as otherwise itll corrupt user information during resync
+            if (ws.isConnected() && res != null) {
+                // Fetch success
+
+                // Compute info
+                const data = res.content;
+                const serverEditTimestamp = Date.parse(res.utcDateModified);
+
+                // Update user information
+                this.lastLocalData = data;
+                this.lastLocalEdits = serverEditTimestamp;
+
+                // Update server information
+                this.lastRemoteData = data;
+                this.lastRemoteEdits = serverEditTimestamp;
+
+                // Mark edit metadata available
+                this.lastEditsDataAvailable = true;
+            }
+
+            // Return
+            return res;
+        });
     }
 
     toString() {

@@ -246,6 +246,9 @@ export default class NoteTreeWidget extends NoteContextAwareWidget {
                     e.stopPropagation();
                     e.preventDefault();
 
+                    if (!ws.uiVerifyConnection())
+                        return;
+
                     appContext.tabManager.openTabWithNoteWithHoisting(notePath, {
                         activate: e.shiftKey ? true : false
                     });
@@ -405,6 +408,9 @@ export default class NoteTreeWidget extends NoteContextAwareWidget {
 
                         node.setFocus(true);
                     } else if (ctrlKey) {
+                        if (!ws.uiVerifyConnection())
+                            return false;
+
                         const notePath = treeService.getNotePath(node);
                         appContext.tabManager.openTabWithNoteWithHoisting(notePath, {
                             activate: event.shiftKey ? true : false
@@ -444,6 +450,18 @@ export default class NoteTreeWidget extends NoteContextAwareWidget {
             activate: async (event, data) => {
                 // click event won't propagate so let's close context menu manually
                 contextMenu.hide();
+
+                // Check connection
+                if (this.noteId == data.node.data.noteId && !ws.isConnected())
+                    return;
+                if (!ws.uiVerifyConnection()) {
+                    if (this.noteId) {
+                        const notes = this.getNodesByNoteId(this.noteId);
+                        if (notes.length >= 1)
+                            notes[0].setActive(true);
+                    }
+                    return;
+                }
 
                 // hide all dropdowns, fix calendar widget dropdown doesn't close when click on a note
                 $('.dropdown-menu').parent('.dropdown').find('[data-bs-toggle="dropdown"]').dropdown('hide');
@@ -716,6 +734,10 @@ export default class NoteTreeWidget extends NoteContextAwareWidget {
                 if (!utils.isCtrlKey(e)) {
                     this.showContextMenu(e);
                 } else {
+                    // Check connection
+                    if (!ws.uiVerifyConnection())
+                        return;
+
                     const node = $.ui.fancytree.getNode(e as unknown as Event);
                     const notePath = treeService.getNotePath(node);
                     appContext.triggerCommand("openInPopup", { noteIdOrPath: notePath });
@@ -742,6 +764,11 @@ export default class NoteTreeWidget extends NoteContextAwareWidget {
     }
 
     showContextMenu(e: PointerEvent | JQuery.TouchStartEvent | JQuery.ContextMenuEvent) {
+        // Check connection
+        if (!ws.uiVerifyConnection())
+            return;
+
+        // Open menu
         const node = $.ui.fancytree.getNode(e as unknown as Event);
         const note = froca.getNoteFromCache(node.data.noteId);
 

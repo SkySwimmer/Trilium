@@ -6,6 +6,7 @@ import contentRenderer from "../../services/content_renderer.js";
 import utils from "../../services/utils.js";
 import options from "../../services/options.js";
 import attributes from "../../services/attributes.js";
+import ws from "../../services/ws.js";
 
 export default class AbstractTextTypeWidget extends TypeWidget {
     doRender() {
@@ -32,7 +33,7 @@ export default class AbstractTextTypeWidget extends TypeWidget {
     }
 
     async openImageInCurrentTab($img: JQuery<HTMLElement>) {
-        const parsedImage  = await this.parseFromImage($img);
+        const parsedImage = await this.parseFromImage($img);
 
         if (parsedImage) {
             appContext.tabManager.getActiveContext()?.setNote(parsedImage.noteId, { viewScope: parsedImage.viewScope });
@@ -42,6 +43,9 @@ export default class AbstractTextTypeWidget extends TypeWidget {
     }
 
     async openImageInNewTab($img: JQuery<HTMLElement>, activate: boolean = false) {
+        if (!ws.uiVerifyConnection())
+            return;
+
         const parsedImage = await this.parseFromImage($img);
 
         if (parsedImage) {
@@ -124,8 +128,7 @@ export default class AbstractTextTypeWidget extends TypeWidget {
         if (loadResults.getAttributeRows().find((attr) =>
             attr.type === "label" &&
             attr.name === "language" &&
-            attributes.isAffecting(attr, this.note)))
-        {
+            attributes.isAffecting(attr, this.note))) {
             await this.onLanguageChanged();
         }
     }

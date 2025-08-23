@@ -5,6 +5,7 @@ import appContext from "../../../components/app_context.js";
 import utils from "../../../services/utils.js";
 import linkContextMenuService from "../../../menus/link_context_menu.js";
 import type FNote from "../../../entities/fnote.js";
+import ws from "../../../services/ws.js";
 
 // we're intentionally displaying the launcher title and icon instead of the target,
 // e.g. you want to make launchers to 2 mermaid diagrams which both have mermaid icon (ok),
@@ -23,6 +24,8 @@ export default class NoteLauncher extends AbstractLauncher {
             .onAuxClick((widget, evt) => this.launch(evt))
             .onContextMenu(async (evt) => {
                 let targetNoteId = await Promise.resolve(this.getTargetNoteId());
+                if (!ws.uiVerifyConnection())
+                    return;
 
                 if (!targetNoteId || !evt) {
                     return;

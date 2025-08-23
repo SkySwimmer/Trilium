@@ -2,8 +2,11 @@ import { t } from "../services/i18n.js";
 import contextMenu, { type ContextMenuEvent, type MenuItem } from "./context_menu.js";
 import appContext, { type CommandNames } from "../components/app_context.js";
 import type { ViewScope } from "../services/link.js";
+import ws from "../services/ws.js";
 
 function openContextMenu(notePath: string, e: ContextMenuEvent, viewScope: ViewScope = {}, hoistedNoteId: string | null = null) {
+    if (!ws.uiVerifyConnection())
+        return;
     contextMenu.show({
         x: e.pageX,
         y: e.pageY,
@@ -26,6 +29,10 @@ function handleLinkContextMenuItem(command: string | undefined, notePath: string
         hoistedNoteId = appContext.tabManager.getActiveContext()?.hoistedNoteId ?? null;
     }
 
+    // Check connection
+    if (!ws.uiVerifyConnection())
+        return;
+
     if (command === "openNoteInNewTab") {
         appContext.tabManager.openContextWithNote(notePath, { hoistedNoteId, viewScope });
     } else if (command === "openNoteInNewSplit") {
@@ -37,7 +44,6 @@ function handleLinkContextMenuItem(command: string | undefined, notePath: string
         }
 
         const { ntxId } = subContexts[subContexts.length - 1];
-
         appContext.triggerCommand("openNewNoteSplit", { ntxId, notePath, hoistedNoteId, viewScope });
     } else if (command === "openNoteInNewWindow") {
         appContext.triggerCommand("openInWindow", { notePath, hoistedNoteId, viewScope });

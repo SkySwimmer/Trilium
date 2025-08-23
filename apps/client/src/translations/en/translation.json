@@ -1625,7 +1625,13 @@
   "ws": {
     "sync-check-failed": "Sync check failed!",
     "consistency-checks-failed": "Consistency checks failed! See logs for details.",
-    "encountered-error": "Encountered error \"{{message}}\", check out the console."
+    "encountered-error": "Encountered error \"{{message}}\", check out the console.",
+    "connection-toast-title": "Server Connection",
+    "connection-toast-reestablished": "Connection to server re-established!",
+    "connection-toast-lost": "Connection to server was lost! Please reconnect prior to making further edits.",
+    "connection-toast-autherror": "Connection to server was lost!\n\nYour session has expired and Trilium was unable to automatically refresh the session, please copy your changes and refresh the page manually.",
+    "connection-toast-unavailable": "Server connection unavailable",
+    "connection-toast-reloadfailed-protectedsession": "The protected session has been closed since the application reconnected, unable to reload!\n\nThere are unsaved protected notes that have not been able to synchronize to the server, please copy the changes and refresh the application.\n\nTrilium is currently not able to upload changed protected notes if the server-sided session has ended."
   },
   "hoisted_note": {
     "confirm_unhoisting": "Requested note '{{requestedNote}}' is outside of hoisted note '{{hoistedNote}}' subtree and you must unhoist to access the note. Do you want to proceed with unhoisting?"

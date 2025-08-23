@@ -39,6 +39,9 @@ export default class Entrypoints extends Component {
     }
 
     async createNoteIntoInboxCommand() {
+        if (!ws.uiVerifyConnection())
+            return;
+
         const inboxNote = await dateNoteService.getInboxNote();
         if (!inboxNote) {
             console.warn("Missing inbox note.");

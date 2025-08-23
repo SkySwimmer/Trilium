@@ -368,6 +368,7 @@ function openHelp($button: JQuery<HTMLElement>) {
 }
 
 async function openInAppHelp($button: JQuery<HTMLElement>) {
+    const ws = (await import("./ws.js")).default;
     if ($button.length === 0) {
         return;
     }
@@ -387,6 +388,9 @@ async function openInAppHelp($button: JQuery<HTMLElement>) {
             viewMode: "contextual-help",
         };
         if (!helpSubcontext) {
+            if (!ws.uiVerifyConnection())
+                return;
+
             // The help is not already open, open a new split with it.
             const { ntxId } = subContexts[subContexts.length - 1];
             appContext.triggerCommand("openNewNoteSplit", {

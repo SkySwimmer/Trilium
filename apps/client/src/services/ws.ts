@@ -8,7 +8,15 @@ import { t } from "./i18n.js";
 import type { EntityChange } from "../server_types.js";
 
 type MessageHandler = (message: any) => void;
+type ConnectionHandler = (socket: WebSocket) => void;
+type PreconnectHandshakeHandler = { reset?: (socket: WebSocket) => Promise<boolean>, pre?: (socket: WebSocket) => Promise<boolean>, main?: (socket: WebSocket) => Promise<boolean>, post?: (socket: WebSocket) => Promise<boolean> };
+
 const messageHandlers: MessageHandler[] = [];
+const disconnectHandlers: ConnectionHandler[] = [];
+const connectHandlers: ConnectionHandler[] = [];
+const reconnectHandlers: ConnectionHandler[] = [];
+const preconnectHandshakeHandlers: PreconnectHandshakeHandler[] = [];
+const prereconnectHandshakeHandlers: PreconnectHandshakeHandler[] = [];
 
 let ws: WebSocket;
 let lastAcceptedEntityChangeId = window.glob.maxEntityChangeIdAtLoad;
@@ -16,6 +24,10 @@ let lastAcceptedEntityChangeSyncId = window.glob.maxEntityChangeSyncIdAtLoad;
 let lastProcessedEntityChangeId = window.glob.maxEntityChangeIdAtLoad;
 let lastPingTs: number;
 let frontendUpdateDataQueue: EntityChange[] = [];
+let connectionLostToastShown = false;
+let connectionActive = false;
+let connectionIsReconnect = false;
+let connectionFailed = false;
 
 export function logError(message: string) {
     console.error(utils.now(), message); // needs to be separate from .trace()
@@ -50,6 +62,27 @@ window.logInfo = logInfo;
 function subscribeToMessages(messageHandler: MessageHandler) {
     messageHandlers.push(messageHandler);
 }
+
+function subscribeToDisconnect(handler: ConnectionHandler) {
+    disconnectHandlers.push(handler);
+}
+
+function subscribeToReconnect(handler: ConnectionHandler) {
+    reconnectHandlers.push(handler);
+}
+
+function subscribeToConnect(handler: ConnectionHandler) {
+    connectHandlers.push(handler);
+}
+
+function subscribeToPreConnectHandshake(handler: PreconnectHandshakeHandler) {
+    preconnectHandshakeHandlers.push(handler);
+}
+
+function subscribeToPreReconnectHandshake(handler: PreconnectHandshakeHandler) {
+    prereconnectHandshakeHandlers.push(handler);
+}
+
 
 // used to serialize frontend update operations
 let consumeQueuePromise: Promise<void> | null = null;
@@ -107,6 +140,11 @@ async function executeFrontendUpdate(entityChanges: EntityChange[]) {
 }
 
 async function handleMessage(event: MessageEvent<any>) {
+    // Skip crashed
+    if (connectionFailed)
+        return;
+
+    // Read
     const message = JSON.parse(event.data);
 
     for (const messageHandler of messageHandlers) {
@@ -215,28 +253,261 @@ async function consumeFrontendUpdateData() {
     checkEntityChangeIdListeners();
 }
 
-function connectWebSocket() {
+function uiVerifyConnection() {
+    // Check connection
+    if (!connectionActive) {
+        // Error
+        toastService.showErrorTitleAndMessage(t("ws.connection-toast-title"), t("ws.connection-toast-unavailable"), 3000);
+        return false;
+    }
+    return true;
+}
+
+async function connectWebSocket() {
     const loc = window.location;
     const webSocketUri = `${loc.protocol === "https:" ? "wss:" : "ws:"}//${loc.host}${loc.pathname}`;
 
     // use wss for secure messaging
     const ws = new WebSocket(webSocketUri);
-    ws.onopen = () => console.debug(utils.now(), `Connected to server ${webSocketUri} with WebSocket`);
+    ws.onopen = () => handleConnected(webSocketUri);
     ws.onmessage = handleMessage;
     // we're not handling ws.onclose here because reconnection is done in sendPing()
 
+    // Verify authentication
+    await verifyAuth();
     return ws;
 }
 
+function terminateConnection() {
+    connectionFailed = true;
+    lastPingTs = 0;
+    closeSocket();
+}
+
+function closeSocket() {
+    try {
+        ws.send(
+            JSON.stringify({
+                type: "close",
+                lastEntityChangeId: lastAcceptedEntityChangeId
+            })
+        );
+    } catch { /* empty */ }
+    ws.close();
+}
+
+async function verifyAuth() {
+    const authResult: any = await server.get("auth/verify").catch(() => null);
+    if (authResult && !authResult.auth_status) {
+        // Try reauthentication
+        const result: any = await server.get("auth/reauthenticate").catch(() => null);
+        if (result && !result.success) {
+            // Reauthentication failed
+            // Terminate connection permanently with error
+            connectionFailed = true;
+            lastPingTs = 0;
+            closeSocket();
+            console.error(utils.now(), "Unable to reestablish connection to server due to having an expired session, retries cancelled");
+
+            // Close persistent
+            if (connectionLostToastShown)
+                toastService.closePersistent("clientConnectionLost");
+
+            // Show error
+            toastService.showPersistent({
+                id: "clientConnectionUnavailable",
+                title: t("ws.connection-toast-title"),
+                icon: "alert",
+                message: t("ws.connection-toast-autherror"),
+                preventUserClose: true,
+                color: "red"
+            });
+            return false;
+        }
+    }
+    return true;
+}
+
+async function handleConnected(webSocketUri: string) {
+    // Debug log
+    console.debug(utils.now(), `Connected to server ${webSocketUri} with WebSocket`);
+    console.log(utils.now(), "WS connection established");
+
+    // Resync time
+    if (!await server.resyncTime()) {
+        // Connection issue
+        // Close and let the pinger reconnect
+        lastPingTs = 0;
+        closeSocket();
+        return;
+    }
+
+    // Verify authentication
+    if (!await verifyAuth()) {
+        // Connection already aborted
+        return;
+    }
+
+    // Dispatch connect handshake
+    for (const handler of preconnectHandshakeHandlers) {
+        if (handler.reset && !await handler.reset(ws)) {
+            // Connection issue
+            // Close and let the pinger reconnect
+            lastPingTs = 0;
+            closeSocket();
+            return;
+        }
+    }
+    for (const handler of preconnectHandshakeHandlers) {
+        if (handler.pre && !await handler.pre(ws)) {
+            // Connection issue
+            // Close and let the pinger reconnect
+            lastPingTs = 0;
+            closeSocket();
+            return;
+        }
+    }
+    for (const handler of preconnectHandshakeHandlers) {
+        if (handler.main && !await handler.main(ws)) {
+            // Connection issue
+            // Close and let the pinger reconnect
+            lastPingTs = 0;
+            closeSocket();
+            return;
+        }
+    }
+    for (const handler of preconnectHandshakeHandlers) {
+        if (handler.post && !await handler.post(ws)) {
+            // Connection issue
+            // Close and let the pinger reconnect
+            lastPingTs = 0;
+            closeSocket();
+            return;
+        }
+    }
+
+    // Dispatch reconnect handshake
+    if (connectionIsReconnect) {
+        for (const handler of prereconnectHandshakeHandlers) {
+            if (handler.reset && !await handler.reset(ws)) {
+                // Connection issue
+                // Close and let the pinger reconnect
+                lastPingTs = 0;
+                closeSocket();
+                return;
+            }
+        }
+        for (const handler of prereconnectHandshakeHandlers) {
+            if (handler.pre && !await handler.pre(ws)) {
+                // Connection issue
+                // Close and let the pinger reconnect
+                lastPingTs = 0;
+                closeSocket();
+                return;
+            }
+        }
+        for (const handler of prereconnectHandshakeHandlers) {
+            if (handler.main && !await handler.main(ws)) {
+                // Connection issue
+                // Close and let the pinger reconnect
+                lastPingTs = 0;
+                closeSocket();
+                return;
+            }
+        }
+        for (const handler of prereconnectHandshakeHandlers) {
+            if (handler.post && !await handler.post(ws)) {
+                // Connection issue
+                // Close and let the pinger reconnect
+                lastPingTs = 0;
+                closeSocket();
+                return;
+            }
+        }
+    }
+
+    // Mark active
+    connectionActive = true;
+
+    // Dispatch connect
+    for (const handler of connectHandlers) {
+        handler(ws);
+    }
+
+
+    // Dispatch reconnect
+    if (connectionIsReconnect) {
+        for (const handler of reconnectHandlers) {
+            handler(ws);
+        }
+    }
+
+    // Mark non-reconnect
+    connectionIsReconnect = false;
+
+    // Close toast if needed
+    if (connectionLostToastShown) {
+        // Done
+        connectionLostToastShown = false;
+
+        // Close
+        toastService.closePersistent("clientConnectionLost");
+
+        // Show reestablished
+        toastService.toast({
+            id: "clientConnectionReestablished",
+            title: t("ws.connection-toast-title"),
+            icon: "alert",
+            message: t("ws.connection-toast-reestablished"),
+            autohide: true,
+            closeAfter: 3,
+            color: "green"
+        });
+    }
+}
+
 async function sendPing() {
-    if (Date.now() - lastPingTs > 30000) {
+    // This method primarily handles pinging and timeouts
+
+    // Connection timeout handler
+    let wasTimeout = false;
+    if (Date.now() - lastPingTs > 15000 && !connectionFailed) {
         console.log(
             utils.now(),
             "Lost websocket connection to the backend. If you keep having this issue repeatedly, you might want to check your reverse proxy (nginx, apache) configuration and allow/unblock WebSocket."
         );
+
+        // Close if needed
+        closeSocket();
+        connectionIsReconnect = true;
+        lastPingTs = Date.now(); // Prevent loop
+
+        // Make sure the popup doesnt show unless the connection fails to establish a second time
+        wasTimeout = true;
+
+        // Show popup if needed
+        setTimeout(() => {
+            if ((ws.readyState === ws.CLOSED || ws.readyState === ws.CLOSING || ws.readyState === ws.CONNECTING) && !connectionFailed) {
+                // Show toast if needed
+                if (!connectionLostToastShown) {
+                    // Show toast
+                    connectionLostToastShown = true
+                    toastService.showPersistent({
+                        id: "clientConnectionLost",
+                        title: t("ws.connection-toast-title"),
+                        icon: "alert",
+                        message: t("ws.connection-toast-lost"),
+                        preventUserClose: true,
+                        color: "red"
+                    });
+                }
+            }
+        }, 5000);
     }
 
+    // Check state
     if (ws.readyState === ws.OPEN) {
+        // Send ping
         ws.send(
             JSON.stringify({
                 type: "ping",
@@ -244,17 +515,51 @@ async function sendPing() {
             })
         );
     } else if (ws.readyState === ws.CLOSED || ws.readyState === ws.CLOSING) {
-        console.log(utils.now(), "WS closed or closing, trying to reconnect");
+        // Mark inactive
+        if (connectionActive) {
+            // Dispatch disconnect
+            for (const handler of disconnectHandlers) {
+                handler(ws);
+            }
+        }
+        connectionActive = false;
 
-        ws = connectWebSocket();
+        // Show toast if needed
+        if (!connectionLostToastShown && !wasTimeout && !connectionFailed) {
+            // Show toast
+            connectionLostToastShown = true
+            toastService.showPersistent({
+                id: "clientConnectionLost",
+                title: t("ws.connection-toast-title"),
+                icon: "alert",
+                message: t("ws.connection-toast-lost"),
+                preventUserClose: true,
+                color: "red"
+            });
+        }
+
+        // Log
+        if (!connectionFailed) {
+            console.log(utils.now(), "WS closed or closing, trying to reconnect");
+
+            // Try reconnect
+            connectionIsReconnect = true;
+            ws = await connectWebSocket();
+        }
     }
 }
 
-setTimeout(() => {
-    ws = connectWebSocket();
+setTimeout(async () => {
+    // Resync time
+    server.resyncTime();
 
+    // Connect
+    ws = await connectWebSocket();
+
+    // Reset last ping
     lastPingTs = Date.now();
 
+    // Start pinger
     setInterval(sendPing, 1000);
 }, 0);
 
@@ -267,6 +572,16 @@ export function throwError(message: string) {
 export default {
     logError,
     subscribeToMessages,
+    subscribeToConnect,
+    subscribeToDisconnect,
+    subscribeToReconnect,
+    subscribeToPreConnectHandshake,
+    subscribeToPreReconnectHandshake,
     waitForMaxKnownEntityChangeId,
-    getMaxKnownEntityChangeSyncId: () => lastAcceptedEntityChangeSyncId
+    terminateConnection,
+    uiVerifyConnection,
+    connectionLostToastShown: () => connectionLostToastShown,
+    getMaxKnownEntityChangeSyncId: () => lastAcceptedEntityChangeSyncId,
+    isConnected: () => connectionActive,
+    getConnection: () => ws
 };

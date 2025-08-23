@@ -86,6 +86,11 @@ function register(app: express.Application) {
         skipSuccessfulRequests: true // successful auth to rate-limited ETAPI routes isn't counted. However, successful auth to /login is still counted!
     });
 
+    route(GET, '/api/servertime', [], () => { return { time: Date.now() }; }, apiResultHandler);
+    route(GET, '/api/connectiontest', [], () => { return { connected: true }; }, apiResultHandler);
+    route(GET, '/api/auth/verify', [], auth.checkAuthRequest, apiResultHandler);
+    route(GET, '/api/auth/reauthenticate', [], auth.attemptReauthenticate, apiResultHandler);
+
     route(PST, "/login", [loginRateLimiter], loginRoute.login);
     route(PST, "/logout", [csrfMiddleware, auth.checkAuth], loginRoute.logout);
     route(PST, "/set-password", [auth.checkAppInitialized, auth.checkPasswordNotSet], loginRoute.setPassword);
@@ -261,6 +266,7 @@ function register(app: express.Application) {
 
     route(PST, "/api/login/sync", [loginRateLimiter], loginApiRoute.loginSync, apiResultHandler);
     // this is for entering protected mode so user has to be already logged-in (that's the reason we don't require username)
+    apiRoute(GET, "/api/protected/status", loginApiRoute.protectedSessionStatus);
     apiRoute(PST, "/api/login/protected", loginApiRoute.loginToProtectedSession);
     apiRoute(PST, "/api/login/protected/touch", loginApiRoute.touchProtectedSession);
     apiRoute(PST, "/api/logout/protected", loginApiRoute.logoutFromProtectedSession);

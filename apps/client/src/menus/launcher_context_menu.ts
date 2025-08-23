@@ -7,6 +7,7 @@ import { t } from "../services/i18n.js";
 import type { SelectMenuItemEventListener } from "../components/events.js";
 import type NoteTreeWidget from "../widgets/note_tree.js";
 import type { FilteredCommandNames, ContextMenuCommandData } from "../components/app_context.js";
+import ws from "../services/ws.js";
 
 type LauncherCommandNames = FilteredCommandNames<ContextMenuCommandData>;
 
@@ -75,6 +76,10 @@ export default class LauncherContextMenu implements SelectMenuItemEventListener<
 
             return;
         }
+
+        // Check connection
+        if (!ws.uiVerifyConnection())
+            return;
 
         this.treeWidget.triggerCommand(command, {
             node: this.node,

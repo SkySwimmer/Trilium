@@ -1,6 +1,6 @@
 {
   "name": "@triliumnext/client",
-  "version": "0.97.2-noai",
+  "version": "0.97.3-noai",
   "description": "JQuery-based client for TriliumNext, used for both web and desktop (via Electron)",
   "private": true,
   "license": "AGPL-3.0-only",

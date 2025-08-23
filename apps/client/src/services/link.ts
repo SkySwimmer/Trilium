@@ -3,6 +3,7 @@ import linkContextMenuService from "../menus/link_context_menu.js";
 import appContext, { type NoteCommandData } from "../components/app_context.js";
 import froca from "./froca.js";
 import utils from "./utils.js";
+import ws from "../services/ws.js";
 
 // Be consistent with `allowedSchemes` in `src\services\html_sanitizer.ts`
 // TODO: Deduplicate with server once we can.
@@ -297,6 +298,10 @@ function goToLinkExt(evt: MouseEvent | JQuery.ClickEvent | JQuery.MouseDownEvent
     evt?.preventDefault();
     evt?.stopPropagation();
 
+    // Check connection
+    if (!ws.uiVerifyConnection())
+        return true;
+
     if (hrefLink && hrefLink.startsWith("#") && !hrefLink.startsWith("#root/") && $link) {
         if (handleAnchor(hrefLink, $link)) {
             return true;
@@ -381,6 +386,12 @@ function handleAnchor(hrefLink: string, $link: JQuery<HTMLElement>) {
 }
 
 function linkContextMenu(e: PointerEvent) {
+    // Check connection
+    if (!ws.uiVerifyConnection()) {
+        e.preventDefault();
+        return;
+    }
+
     const $link = $(e.target as any).closest("a");
     const url = $link.attr("href") || $link.attr("data-href");
 

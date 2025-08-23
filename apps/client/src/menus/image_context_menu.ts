@@ -2,6 +2,7 @@ import { t } from "../services/i18n.js";
 import utils from "../services/utils.js";
 import contextMenu from "./context_menu.js";
 import imageService from "../services/image.js";
+import ws from "../services/ws.js";
 
 const PROP_NAME = "imageContextMenuInstalled";
 
@@ -30,6 +31,10 @@ function setupContextMenu($image: JQuery<HTMLElement>) {
                 }
             ],
             selectMenuItemHandler: async ({ command }) => {
+                // Check connection
+                if (!ws.uiVerifyConnection())
+                    return;
+
                 if (command === "copyImageReferenceToClipboard") {
                     imageService.copyImageReferenceToClipboard($image);
                 } else if (command === "copyImageToClipboard") {

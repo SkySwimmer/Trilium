@@ -14,6 +14,82 @@ import type { NextFunction, Request, Response } from "express";
 let noAuthentication = false;
 refreshAuth();
 
+function attemptReauthenticate(req: Request) {
+    // To implement
+
+    // Check setup
+    if (!sqlInit.isDbInitialized()) {
+        return { success: false };
+    }
+
+    // Check status
+    const currentTotpStatus = totp.isTotpEnabled();
+    const currentSsoStatus = openID.isOpenIDEnabled();
+    const lastAuthState = req.session.lastAuthState || { totpEnabled: false, ssoEnabled: false };
+
+    // Verify session
+    if (isElectron || noAuthentication) {
+        // Success
+        return { success: true };
+    } else if (currentTotpStatus !== lastAuthState.totpEnabled || currentSsoStatus !== lastAuthState.ssoEnabled) {
+        // Session invalid, user reauth needed
+        req.session.destroy((err) => {
+            if (err) console.error('Error destroying session:', err);
+        });
+        return { success: false };
+    } else if (currentSsoStatus && !req.oidc?.isAuthenticated()) {
+        // Not valid and cant automatically refresh
+        return { success: false };
+    } else if (!req.session.loggedIn && !noAuthentication) {
+        // Not valid and cant automatically refresh and noauth is disabled
+        return { success: false };
+    } else if (req.session.loggedIn) {
+        // Logged in
+        return { success: true };
+    }
+
+    // Could not automatically reauthenticate
+    return { success: false };
+}
+
+function checkAuthRequest(req: Request) {
+    // Verify authentication
+
+    // Check setup
+    if (!sqlInit.isDbInitialized()) {
+        return { auth_status: false };
+    }
+
+    // Check status
+    const currentTotpStatus = totp.isTotpEnabled();
+    const currentSsoStatus = openID.isOpenIDEnabled();
+    const lastAuthState = req.session.lastAuthState || { totpEnabled: false, ssoEnabled: false };
+
+    // Check state
+    if (isElectron || noAuthentication) {
+        // Allow always
+        return { auth_status: true };
+    } else if (currentTotpStatus !== lastAuthState.totpEnabled || currentSsoStatus !== lastAuthState.ssoEnabled) {
+        // Settings changed
+        req.session.destroy((err) => {
+            if (err) console.error('Error destroying session:', err);
+        });
+        return { auth_status: false };
+    } else if (currentSsoStatus && !req.oidc?.isAuthenticated()) {
+        // OpenID failed or isnt authenticated
+        return { auth_status: false };
+    } else if (!req.session.loggedIn && !noAuthentication) {
+        // Not logged in
+        return { auth_status: false };
+    } else if (req.session.loggedIn) {
+        // Logged in
+        return { auth_status: true };
+    }
+
+    // Not authenticated
+    return { auth_status: false };
+}
+
 function checkAuth(req: Request, res: Response, next: NextFunction) {
     if (!sqlInit.isDbInitialized()) {
         return res.redirect('setup');
@@ -173,5 +249,7 @@ export default {
     checkAppNotInitialized,
     checkApiAuthOrElectron,
     checkEtapiToken,
-    checkCredentials
+    checkCredentials,
+    checkAuthRequest,
+    attemptReauthenticate
 };

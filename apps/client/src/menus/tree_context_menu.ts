@@ -13,6 +13,7 @@ import type NoteTreeWidget from "../widgets/note_tree.js";
 import type FAttachment from "../entities/fattachment.js";
 import type { SelectMenuItemEventListener } from "../components/events.js";
 import utils from "../services/utils.js";
+import ws from "../services/ws.js";
 
 // TODO: Deduplicate once client/server is well split.
 interface ConvertToAttachmentResponse {
@@ -220,6 +221,10 @@ export default class TreeContextMenu implements SelectMenuItemEventListener<Tree
         if (utils.isMobile()) {
             this.treeWidget.triggerCommand("setActiveScreen", { screen: "detail" });
         }
+
+        // Check connection
+        if (!ws.uiVerifyConnection())
+            return;
 
         if (command === "openInTab") {
             appContext.tabManager.openTabWithNoteWithHoisting(notePath);

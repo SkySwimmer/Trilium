@@ -81,6 +81,8 @@ Stack: ${message.stack}`);
                 log.info(`JS Info: ${message.info}`);
             } else if (message.type === "ping") {
                 await syncMutexService.doExclusively(() => sendPing(ws));
+            } else if (message.type === "close") {
+                ws.close()
             } else {
                 log.error("Unrecognized message: ");
                 log.error(message);

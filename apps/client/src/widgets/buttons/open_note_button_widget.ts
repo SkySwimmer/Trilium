@@ -3,6 +3,7 @@ import linkContextMenuService from "../../menus/link_context_menu.js";
 import utils from "../../services/utils.js";
 import appContext from "../../components/app_context.js";
 import type FNote from "../../entities/fnote.js";
+import ws from "../../services/ws.js";
 
 export default class OpenNoteButtonWidget extends OnClickButtonWidget {
 
@@ -19,6 +20,9 @@ export default class OpenNoteButtonWidget extends OnClickButtonWidget {
             .onAuxClick((widget, evt) => this.launch(evt))
             .onContextMenu((evt) => {
                 if (evt) {
+                    if (!ws.uiVerifyConnection())
+                        return;
+
                     linkContextMenuService.openContextMenu(this.noteToOpen.noteId, evt);
                 }
             });

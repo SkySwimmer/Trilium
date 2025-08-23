@@ -12,6 +12,7 @@ import { t } from "../../services/i18n.js";
 import type FNote from "../../entities/fnote.js";
 import type { ConnectionMadeEventInfo, jsPlumbInstance, OverlaySpec } from "jsplumb";
 import "../../stylesheets/relation_map.css";
+import ws from "../../services/ws.js";
 
 declare module "jsplumb" {
 
@@ -233,6 +234,9 @@ export default class RelationMapTypeWidget extends TypeWidget {
     }
 
     async contextMenuHandler(command: MenuCommands | undefined, originalTarget: HTMLElement) {
+        if (!ws.uiVerifyConnection())
+            return;
+
         const $noteBox = $(originalTarget).closest(".note-box");
         const $title = $noteBox.find(".title a");
         const noteId = this.idToNoteId($noteBox.prop("id"));
@@ -619,8 +623,8 @@ export default class RelationMapTypeWidget extends TypeWidget {
         this.jsPlumbInstance.getContainer().appendChild($noteBox[0]);
 
         this.jsPlumbInstance.draggable($noteBox[0], {
-            start: (params) => {},
-            drag: (params) => {},
+            start: (params) => { },
+            drag: (params) => { },
             stop: (params) => {
                 const noteId = this.idToNoteId(params.el.id);
 

@@ -3,6 +3,7 @@ import type { CommandNames } from "../../components/app_context.js";
 import keyboardActionsService from "../../services/keyboard_actions.js";
 import AbstractButtonWidget, { type AbstractButtonWidgetSettings } from "./abstract_button.js";
 import type { ButtonNoteIdProvider } from "./button_from_note.js";
+import ws from "../../services/ws.js";
 
 let actions: ActionKeyboardShortcut[];
 
@@ -35,6 +36,9 @@ export default class CommandButtonWidget extends AbstractButtonWidget<CommandBut
         if (this.settings.command) {
             this.$widget.on("click", () => {
                 this.tooltip.hide();
+
+                if (!ws.uiVerifyConnection())
+                    return;
 
                 if (this._command) {
                     this.triggerCommand(this._command);

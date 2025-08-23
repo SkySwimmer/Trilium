@@ -118,6 +118,12 @@ function loginSync(req: Request) {
     };
 }
 
+function protectedSessionStatus() {
+    return {
+        session_active: protectedSessionService.isProtectedSessionAvailable()
+    };
+}
+
 function loginToProtectedSession(req: Request) {
     const password = req.body.password;
 
@@ -176,6 +182,7 @@ function token(req: Request) {
 
 export default {
     loginSync,
+    protectedSessionStatus,
     loginToProtectedSession,
     logoutFromProtectedSession,
     touchProtectedSession,

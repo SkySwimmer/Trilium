@@ -9,6 +9,8 @@ export interface ToastOptions {
     delay?: number;
     autohide?: boolean;
     closeAfter?: number;
+    color?: string;
+    preventUserClose?: boolean;
 }
 
 function toast(options: ToastOptions) {
@@ -33,6 +35,13 @@ function toast(options: ToastOptions) {
     }
 
     $("#toast-container").append($toast);
+
+    if (options.preventUserClose) {
+        $toast.find(".btn-close").remove()
+    }
+    if (options.color) {
+        $toast.css("background-color", options.color);
+    }
 
     $toast.toast({
         delay: options.delay || 3000,
@@ -60,6 +69,8 @@ function showPersistent(options: ToastOptions) {
     if (options.closeAfter) {
         setTimeout(() => $toast.remove(), options.closeAfter);
     }
+
+    return $toast;
 }
 
 function closePersistent(id: string) {
@@ -69,7 +80,7 @@ function closePersistent(id: string) {
 function showMessage(message: string, delay = 2000) {
     console.debug(utils.now(), "message:", message);
 
-    toast({
+    return toast({
         title: "Info",
         icon: "check",
         message: message,
@@ -81,7 +92,7 @@ function showMessage(message: string, delay = 2000) {
 export function showError(message: string, delay = 10000) {
     console.log(utils.now(), "error: ", message);
 
-    toast({
+    return toast({
         title: "Error",
         icon: "alert",
         message: message,
@@ -93,7 +104,7 @@ export function showError(message: string, delay = 10000) {
 function showErrorTitleAndMessage(title: string, message: string, delay = 10000) {
     console.log(utils.now(), "error: ", message);
 
-    toast({
+    return toast({
         title: title,
         icon: "alert",
         message: message,
@@ -103,6 +114,7 @@ function showErrorTitleAndMessage(title: string, message: string, delay = 10000)
 }
 
 export default {
+    toast,
     showMessage,
     showError,
     showErrorTitleAndMessage,

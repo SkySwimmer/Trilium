@@ -25,6 +25,11 @@ export class SQLiteSessionStore extends Store {
             let session = null;
             if (data) {
                 session = JSON.parse(data);
+
+                // Check expiry
+                const expires = sql.getValue<number>(/*sql*/`SELECT expires FROM sessions WHERE id = ?`, sid);
+                if (Date.now() >= expires)
+                    session = null; // Session expired
             }
             return callback(null, session);
         } catch (e: unknown) {
@@ -63,14 +68,21 @@ export class SQLiteSessionStore extends Store {
     }
 
     touch(sid: string, session: session.SessionData, callback?: (err?: any) => void): void {
-        // For now it's only for session cookies ("Remember me" unchecked).
+        // Check if expires tag is present
+        let expires = Date.now() + SESSION_COOKIE_EXPIRY;
         if (session.cookie?.expires) {
-            callback?.();
-            return;
+            // With remembered sessions we need to update the cookie expiry time based on max age
+            // Otherwise they will be removed even if the user actively uses the session
+            // We also update the cookie so the in-browser session doesnt end
+            expires = Date.now() + config.Session.cookieMaxAge * 1000;
+
+            // Update cookie
+            // Otherwise the cookie can be erased too soon
+            session.cookie.expires = new Date(expires);
         }
 
         try {
-            const expires = Date.now() + SESSION_COOKIE_EXPIRY;
+            // Update expiry
             sql.execute(/*sql*/`UPDATE sessions SET expires = ? WHERE id = ?`, [expires, sid]);
             callback?.();
         } catch (e) {
@@ -107,6 +119,7 @@ const sessionParser: express.RequestHandler = session({
     cookie: {
         path: "/",
         httpOnly: true,
+        sameSite: "strict",
         maxAge: config.Session.cookieMaxAge * 1000 // needs value in milliseconds
     },
     name: "trilium.sid",

@@ -350,6 +350,13 @@
     "add-include-note-to-text": "Ajouter une note inclusion au texte",
     "edit-read-only-note": "Modifier une note en lecture seule",
     "add-new-label": "Ajouter une nouvelle étiquette",
-    "add-new-relation": "Ajouter une nouvelle relation"
+    "add-new-relation": "Ajouter une nouvelle relation",
+    "toggle-ribbon-tab-classic-editor": "Basculer l'onglet Mise en forme de l'éditeur avec la barre d'outils fixe",
+    "toggle-ribbon-tab-basic-properties": "Afficher/masquer les Propriétés de base de la note",
+    "toggle-ribbon-tab-book-properties": "Afficher/masquer les Propriétés du Livre",
+    "toggle-ribbon-tab-file-properties": "Afficher/masquer les Propriétés du fichier",
+    "toggle-ribbon-tab-image-properties": "Afficher/masquer les Propriétés de l'image",
+    "toggle-ribbon-tab-owned-attributes": "Afficher/masquer les Attributs propres",
+    "toggle-ribbon-tab-inherited-attributes": "Afficher/masquer les Attributs hérités"
   }
 }

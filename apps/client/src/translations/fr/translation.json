@@ -1680,6 +1680,16 @@
     "n_notes_queued_2": "",
     "notes_indexed_0": "{{ count }} note indexée",
     "notes_indexed_1": "{{ count }} notes indexées",
-    "notes_indexed_2": ""
+    "notes_indexed_2": "",
+    "anthropic_url_description": "URL de base pour l'API Anthropic (par défaut : https ://api.anthropic.com)",
+    "anthropic_model_description": "Modèles Anthropic Claude pour la complétion",
+    "voyage_settings": "Réglages d'IA Voyage",
+    "ollama_settings": "Réglages Ollama",
+    "ollama_url_description": "URL pour l'API Ollama (par défaut: http://localhost:11434)",
+    "ollama_model_description": "Model Ollama utilisé pour la complétion",
+    "anthropic_configuration": "Configuration Anthropic",
+    "voyage_configuration": "Configuration IA Voyage",
+    "voyage_url_description": "Défaut: https://api.voyageai.com/v1",
+    "ollama_configuration": "Configuration Ollama"
   }
 }

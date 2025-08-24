@@ -2014,5 +2014,11 @@
   },
   "units": {
     "percentage": "%"
+  },
+  "ui-performance": {
+    "title": "性能",
+    "enable-motion": "启用过渡和动画",
+    "enable-shadows": "启用阴影",
+    "enable-backdrop-effects": "启用菜单、弹窗和面板的背景效果"
   }
 }

@@ -1643,13 +1643,13 @@
     "failed_notes": "失敗筆記",
     "last_processed": "最後處理時間",
     "refresh_stats": "更新統計資料",
-    "enable_ai_features": "啟用 AI / LLM 功能",
+    "enable_ai_features": "啟用 AI/LLM 功能",
     "enable_ai_description": "啟用筆記摘要、內容生成等 AI 功能及其他 LLM 能力",
     "openai_tab": "OpenAI",
     "anthropic_tab": "Anthropic",
     "voyage_tab": "Voyage AI",
     "ollama_tab": "Ollama",
-    "enable_ai": "啟用 AI / LLM 功能",
+    "enable_ai": "啟用 AI/LLM 功能",
     "enable_ai_desc": "啟用筆記摘要、內容生成等 AI 功能及其他 LLM 能力",
     "provider_configuration": "AI 提供者設定",
     "provider_precedence": "提供者優先級",
@@ -2014,5 +2014,11 @@
   },
   "units": {
     "percentage": "%"
+  },
+  "ui-performance": {
+    "title": "效能",
+    "enable-motion": "啟用轉場與動畫",
+    "enable-shadows": "啟用陰影",
+    "enable-backdrop-effects": "啟用選單、彈出視窗和面板的背景特效"
   }
 }

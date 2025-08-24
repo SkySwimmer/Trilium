@@ -2018,5 +2018,11 @@
   },
   "book": {
     "no_children_help": "В этой коллекции нет дочерних заметок, поэтому отображать нечего. Подробности см. на <a href=\"https://triliumnext.github.io/Docs/Wiki/book-note.html\">wiki</a>."
+  },
+  "ui-performance": {
+    "title": "Производительность",
+    "enable-motion": "Включить визуальные эффекты и анимации",
+    "enable-shadows": "Включить тени",
+    "enable-backdrop-effects": "Включить эффекты размытия фона меню, всплывающих окон и панелей"
   }
 }

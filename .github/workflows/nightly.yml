@@ -131,3 +131,4 @@ jobs:
           files: upload/*.*
           tag_name: nightly
           name: Nightly Build
+          body: Nightly release, commit ${{ github.sha }}

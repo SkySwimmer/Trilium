@@ -692,7 +692,8 @@
     "placeholder_search": "ノート名で検索",
     "dialog_title": "埋め込みノート",
     "box_size_prompt": "埋め込みノート枠のサイズ：",
-    "button_include": "埋め込みノート"
+    "button_include": "埋め込みノート",
+    "label_note": "ノート"
   },
   "ancestor": {
     "placeholder": "ノート名で検索"

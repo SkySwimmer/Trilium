@@ -333,6 +333,21 @@
     "show-backend-log": "Zeige Backend-Protokoll",
     "show-help": "Zeige Hilfe",
     "show-cheatsheet": "Zeige Cheatsheet",
-    "add-link-to-text": "Link zum Text hinzufügen"
+    "add-link-to-text": "Link zum Text hinzufügen",
+    "cut-into-note": "In neue Notiz verschieben",
+    "add-new-label": "Neues Label hinzufügen",
+    "add-new-relation": "Neue Beziehung hinzufügen",
+    "print-active-note": "Drucke aktive Notiz",
+    "export-active-note-as-pdf": "Exportiere aktive Notiz als PDF",
+    "move-note-up-in-hierarchy": "Notiz in der Hierarchie nach oben verschieben",
+    "move-note-down-in-hierarchy": "Notiz in der Hierarchie nach unten verschieben",
+    "edit-branch-prefix": "Zweigpräfix bearbeiten",
+    "select-all-notes-in-parent": "Alle Notizen in übergeordnetem Element auswählen",
+    "duplicate-subtree": "Unterbaum duplizieren",
+    "follow-link-under-cursor": "Folge Link unterhalb des Mauszeigers",
+    "insert-date-and-time-to-text": "Datum und Uhrzeit in Text einfügen",
+    "paste-markdown-into-text": "Markdown in Text einfügen",
+    "add-include-note-to-text": "Notiz in Text einfügen",
+    "edit-read-only-note": "Schreibgeschützte Notiz bearbeiten"
   }
 }

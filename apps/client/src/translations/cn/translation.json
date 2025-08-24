@@ -1871,7 +1871,12 @@
     "selected_provider": "已选提供商",
     "selected_provider_description": "选择用于聊天和补全功能的AI提供商",
     "select_model": "选择模型...",
-    "select_provider": "选择提供商..."
+    "select_provider": "选择提供商...",
+    "ai_enabled": "已启用 AI 功能",
+    "ai_disabled": "已禁用 AI 功能",
+    "no_models_found_online": "找不到模型。请检查您的 API 密钥及设置。",
+    "no_models_found_ollama": "找不到 Ollama 模型。请确认 Ollama 是否正在运行。",
+    "error_fetching": "获取模型失败：{{error}}"
   },
   "code-editor-options": {
     "title": "编辑器"
@@ -1999,5 +2004,15 @@
     "next_theme_message": "当前使用旧版主题，要试用新主题吗？",
     "next_theme_button": "试用新主题",
     "dismiss": "关闭"
+  },
+  "settings": {
+    "related_settings": "相关设置"
+  },
+  "settings_appearance": {
+    "related_code_blocks": "文本笔记中代码块的色彩方案",
+    "related_code_notes": "代码笔记的色彩方案"
+  },
+  "units": {
+    "percentage": "%"
   }
 }

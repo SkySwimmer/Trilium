@@ -10,51 +10,17 @@ export interface Locale {
 }
 
 const UNSORTED_LOCALES: Locale[] = [
-    {
-        id: "en",
-        name: "English",
-        electronLocale: "en"
-    },
-    {
-        id: "de",
-        name: "Deutsch",
-        electronLocale: "de"
-    },
-    {
-        id: "es",
-        name: "Español",
-        electronLocale: "es"
-    },
-    {
-        id: "fr",
-        name: "Français",
-        electronLocale: "fr"
-    },
-    {
-        id: "cn",
-        name: "简体中文",
-        electronLocale: "zh_CN"
-    },
-    {
-        id: "tw",
-        name: "繁體中文",
-        electronLocale: "zh_TW"
-    },
-    {
-        id: "ro",
-        name: "Română",
-        electronLocale: "ro"
-    },
-    {
-        id: "ru",
-        name: "Русский",
-        electronLocale: "ru"
-    },
-    {
-        id: "ja",
-        name: "日本語",
-        electronLocale: "ja"
-    },
+    { id: "cn", name: "简体中文", electronLocale: "zh_CN" },
+    { id: "de", name: "Deutsch", electronLocale: "de" },
+    { id: "en", name: "English", electronLocale: "en" },
+    { id: "es", name: "Español", electronLocale: "es" },
+    { id: "fr", name: "Français", electronLocale: "fr" },
+    { id: "ja", name: "日本語", electronLocale: "ja" },
+    { id: "pt_BR", name: "Português (Brasil)", electronLocale: "pt-BR" },
+    { id: "ro", name: "Română", electronLocale: "ro" },
+    { id: "ru", name: "Русский", electronLocale: "ru" },
+    { id: "tw", name: "繁體中文", electronLocale: "zh_TW" },
+    { id: "uk", name: "Українська", electronLocale: "uk" },
 
     /*
      * Right to left languages

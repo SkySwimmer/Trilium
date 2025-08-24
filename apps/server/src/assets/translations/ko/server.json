@@ -1,1 +1,5 @@
-{}
+{
+  "keyboard_actions": {
+    "back-in-note-history": "이전으로 돌아가기"
+  }
+}

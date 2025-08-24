@@ -120,7 +120,8 @@ async function executeFrontendUpdate(entityChanges: EntityChange[]) {
             }
         }
 
-        sendPing();
+        if (ws)
+            sendPing();
 
         // first wait for all the preceding consumers to finish
         while (consumeQueuePromise) {
@@ -371,6 +372,7 @@ async function verifyAuth() {
     return true;
 }
 
+let firstReconnect = false;
 async function handleConnected(webSocketUri: string) {
     // Debug log
     console.debug(utils.now(), `Connected to server ${webSocketUri} with WebSocket`);
@@ -471,6 +473,7 @@ async function handleConnected(webSocketUri: string) {
 
     // Mark active
     connectionActive = true;
+    firstReconnect = false;
 
     // Dispatch connect
     for (const handler of connectHandlers) {
@@ -566,21 +569,47 @@ async function sendPing() {
             for (const handler of disconnectHandlers) {
                 handler(ws);
             }
-        }
+            firstReconnect = true;
+        } else
+            firstReconnect = false;
         connectionActive = false;
 
         // Show toast if needed
         if (!connectionLostToastShown && !wasTimeout && !connectionFailed && !utils.isElectron()) {
-            // Show toast
-            connectionLostToastShown = true
-            toastService.showPersistent({
-                id: "clientConnectionLost",
-                title: t("ws.connection-toast-title"),
-                icon: "alert",
-                message: t("ws.connection-toast-lost"),
-                preventUserClose: true,
-                color: "red"
-            });
+            // Check reconnect
+            if (!firstReconnect) {
+                // Show toast right away, connection error during reconnect
+                connectionLostToastShown = true
+                toastService.showPersistent({
+                    id: "clientConnectionLost",
+                    title: t("ws.connection-toast-title"),
+                    icon: "alert",
+                    message: t("ws.connection-toast-lost"),
+                    preventUserClose: true,
+                    color: "red"
+                });
+            } else {
+                // This is a reconnect
+                // Lets first try to let it automatically reconnect, and only if its still not connected after 5 seconds, bring up the popup
+                // So when eg. the device waking from sleep mode wont trigger the popup unless an error happens
+                setTimeout(() => {
+                    if ((ws.readyState === ws.CLOSED || ws.readyState === ws.CLOSING || ws.readyState === ws.CONNECTING) && !connectionFailed) {
+                        // Show toast if needed
+                        if (!connectionLostToastShown) {
+                            // Show toast
+                            connectionLostToastShown = true
+                            toastService.showPersistent({
+                                id: "clientConnectionLost",
+                                title: t("ws.connection-toast-title"),
+                                icon: "alert",
+                                message: t("ws.connection-toast-lost"),
+                                preventUserClose: true,
+                                color: "red"
+                            });
+                        }
+                    }
+                }, 5000);
+            }
         }
 
         // Log
@@ -605,8 +634,27 @@ setTimeout(async () => {
     lastPingTs = Date.now();
 
     // Start pinger
-    setInterval(sendPing, 1000);
+    setTimeout(pingerTimer, 1000);
 }, 0);
+
+async function pingerTimer() {
+    // Alternate implementation for the ping interval
+    // As otherwise the pinger will be re-called while the connection is still being re-established, this will cause issues and double connection attempts while one remains unfinished
+
+    // Send ping and track how long it took
+    const start = Date.now();
+    await sendPing();
+    const time = Date.now() - start;
+
+    // Check time
+    if (time >= 1000) {
+        // Run now
+        setTimeout(pingerTimer, 0);
+    } else {
+        // Run later
+        setTimeout(pingerTimer, 1000 - time);
+    }
+}
 
 export function throwError(message: string) {
     logError(message);

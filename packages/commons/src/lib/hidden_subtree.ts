@@ -5,8 +5,7 @@ enum Command {
     searchNotes,
     createNoteIntoInbox,
     showRecentChanges,
-    showOptions,
-    createAiChat
+    showOptions
 }
 
 export interface HiddenSubtreeAttribute {
@@ -32,16 +31,15 @@ export interface HiddenSubtreeItem {
     growthFactor?: string;
     targetNoteId?: "_backendLog" | "_globalNoteMap";
     builtinWidget?:
-        | "todayInJournal"
-        | "bookmarks"
-        | "spacer"
-        | "backInHistoryButton"
-        | "forwardInHistoryButton"
-        | "syncStatus"
-        | "protectedSession"
-        | "calendar"
-        | "quickSearch"
-        | "aiChatLauncher";
+    | "todayInJournal"
+    | "bookmarks"
+    | "spacer"
+    | "backInHistoryButton"
+    | "forwardInHistoryButton"
+    | "syncStatus"
+    | "protectedSession"
+    | "calendar"
+    | "quickSearch";
     command?: keyof typeof Command;
     /**
      * If set to true, then branches will be enforced to be in the correct place.

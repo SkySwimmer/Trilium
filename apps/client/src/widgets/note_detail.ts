@@ -89,8 +89,7 @@ type ExtendedNoteType =
     | "editableCode"
     | "attachmentDetail"
     | "attachmentList"
-    | "protectedSession"
-    | "aiChat";
+    | "protectedSession";
 
 export default class NoteDetailWidget extends NoteContextAwareWidget {
 

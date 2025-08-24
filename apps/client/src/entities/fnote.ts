@@ -26,8 +26,7 @@ const NOTE_TYPE_ICONS = {
     launcher: "bx bx-link",
     doc: "bx bxs-file-doc",
     contentWidget: "bx bxs-widget",
-    mindMap: "bx bx-sitemap",
-    aiChat: "bx bx-bot"
+    mindMap: "bx bx-sitemap"
 };
 
 /**
@@ -35,7 +34,7 @@ const NOTE_TYPE_ICONS = {
  * end user. Those types should be used only for checking against, they are
  * not for direct use.
  */
-export type NoteType = "file" | "image" | "search" | "noteMap" | "launcher" | "doc" | "contentWidget" | "text" | "relationMap" | "render" | "canvas" | "mermaid" | "book" | "webView" | "code" | "mindMap" | "aiChat";
+export type NoteType = "file" | "image" | "search" | "noteMap" | "launcher" | "doc" | "contentWidget" | "text" | "relationMap" | "render" | "canvas" | "mermaid" | "book" | "webView" | "code" | "mindMap";
 
 export interface NotePathRecord {
     isArchived: boolean;

@@ -1670,16 +1670,5 @@
   },
   "modal": {
     "close": "Fermer"
-  },
-  "ai_llm": {
-    "not_started": "Non démarré",
-    "title": "Paramètres IA",
-    "processed_notes": "Notes traitées",
-    "n_notes_queued_0": "{{ count }} note en attente d’indexation",
-    "n_notes_queued_1": "{{ count }} notes en attente d’indexation",
-    "n_notes_queued_2": "",
-    "notes_indexed_0": "{{ count }} note indexée",
-    "notes_indexed_1": "{{ count }} notes indexées",
-    "notes_indexed_2": ""
   }
 }

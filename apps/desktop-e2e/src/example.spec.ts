@@ -1,14 +1,23 @@
 import { test, expect, _electron as electron, type ElectronApplication, request } from '@playwright/test';
 import { join } from 'path';
 import App from './support';
+import fs from 'fs';
 
 let app: ElectronApplication;
 
 test.beforeAll(async () => {
+    // Setup data folder
+    const work = join(__dirname, "../../client/data/testdata")
+    if (fs.existsSync(work))
+        fs.rmdirSync(work, { recursive: true });
+    fs.mkdirSync(work, { recursive: true });
+
+    // Run electron
     const distPath = join(__dirname, '../../desktop/dist/main.cjs');
     console.log("Dir", join(__dirname, 'traces'));
     app = await electron.launch({
-        args: [ distPath ]
+        args: [distPath],
+        cwd: work
     });
 });
 
@@ -60,7 +69,7 @@ test('First setup', async () => {
     // Verify the shared link is valid
     const requestContext = await request.newContext();
     const response = await requestContext.get(linkUrl!);
-    expect(response).toBeOK();
+    await expect(response).toBeOK();
 
     await mainWindow.waitForTimeout(5000);
 });

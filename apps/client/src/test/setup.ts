@@ -1,6 +1,10 @@
 import { beforeAll, vi } from "vitest";
 import $ from "jquery";
 
+type MessageHandler = (message: any) => void;
+type ConnectionHandler = (socket: WebSocket) => void;
+type PreconnectHandshakeHandler = { reset?: (socket: WebSocket) => Promise<boolean>, pre?: (socket: WebSocket) => Promise<boolean>, main?: (socket: WebSocket) => Promise<boolean>, post?: (socket: WebSocket) => Promise<boolean> };
+
 injectGlobals();
 
 beforeAll(() => {
@@ -20,8 +24,27 @@ function injectGlobals() {
 function mockWebsocket() {
     return {
         default: {
-            subscribeToMessages(callback: (message: unknown) => void) {
+            subscribeToMessages(messageHandler: MessageHandler) {
                 // Do nothing.
+            },
+            subscribeToDisconnect(handler: ConnectionHandler) {
+                // Do nothing.
+            },
+            subscribeToReconnect(handler: ConnectionHandler) {
+                // Do nothing.
+            },
+            subscribeToConnect(handler: ConnectionHandler) {
+                // Do nothing.
+            },
+            subscribeToPreConnectHandshake(handler: PreconnectHandshakeHandler) {
+                // Do nothing.
+            },
+            subscribeToPreReconnectHandshake(handler: PreconnectHandshakeHandler) {
+                // Do nothing.
+            },
+            uiVerifyConnection() {
+                // Do nothing
+                return true;
             }
         }
     }

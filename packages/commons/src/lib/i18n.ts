@@ -16,7 +16,7 @@ const UNSORTED_LOCALES: Locale[] = [
     { id: "es", name: "Español", electronLocale: "es" },
     { id: "fr", name: "Français", electronLocale: "fr" },
     { id: "ja", name: "日本語", electronLocale: "ja" },
-    { id: "pt_BR", name: "Português (Brasil)", electronLocale: "pt-BR" },
+    { id: "pt_br", name: "Português (Brasil)", electronLocale: "pt-BR" },
     { id: "ro", name: "Română", electronLocale: "ro" },
     { id: "ru", name: "Русский", electronLocale: "ru" },
     { id: "tw", name: "繁體中文", electronLocale: "zh_TW" },

@@ -7,7 +7,17 @@ permissions:
   contents: write
 
 jobs:
-  compiletest:
+  checks:
+    name: Merge conflict checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if PRs have conflicts
+        uses: eps1lon/actions-label-merge-conflict@v3
+        if: github.repository == ${{ vars.REPO_MAIN }}
+        with:
+          dirtyLabel: "merge-conflicts"
+          repoToken: "${{ secrets.MERGE_CONFLICT_LABEL_PAT }}"
+  compileattempt:
     name: Attempt build
     strategy:
       fail-fast: false
@@ -43,19 +53,7 @@ jobs:
       - uses: nrwl/nx-set-shas@v4
 
       - name: Update build info
-        shell: ${{ matrix.os.shell }}
         run: npm run chore:update-build-info
 
       - name: Attempt server build
-        shell: ${{ matrix.os.shell }}
         run: pnpm exec nx run server:build
-  checks:
-    name: Merge conflict checks
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check if PRs have conflicts
-        uses: eps1lon/actions-label-merge-conflict@v3
-        if: github.repository == ${{ vars.REPO_MAIN }}
-        with:
-          dirtyLabel: "merge-conflicts"
-          repoToken: "${{ secrets.MERGE_CONFLICT_LABEL_PAT }}"

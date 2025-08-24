@@ -1858,5 +1858,21 @@
     "next_theme_message": "您正在使用舊版主題，要試用新主題嗎？",
     "next_theme_button": "試用新主題",
     "dismiss": "關閉"
+  },
+  "settings": {
+    "related_settings": "相關設定"
+  },
+  "settings_appearance": {
+    "related_code_blocks": "文字筆記中程式碼區塊的配色方案",
+    "related_code_notes": "程式碼筆記的配色方案"
+  },
+  "units": {
+    "percentage": "%"
+  },
+  "ui-performance": {
+    "title": "效能",
+    "enable-motion": "啟用轉場與動畫",
+    "enable-shadows": "啟用陰影",
+    "enable-backdrop-effects": "啟用選單、彈出視窗和面板的背景特效"
   }
 }

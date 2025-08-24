@@ -1858,5 +1858,21 @@
     "next_theme_message": "当前使用旧版主题，要试用新主题吗？",
     "next_theme_button": "试用新主题",
     "dismiss": "关闭"
+  },
+  "settings": {
+    "related_settings": "相关设置"
+  },
+  "settings_appearance": {
+    "related_code_blocks": "文本笔记中代码块的色彩方案",
+    "related_code_notes": "代码笔记的色彩方案"
+  },
+  "units": {
+    "percentage": "%"
+  },
+  "ui-performance": {
+    "title": "性能",
+    "enable-motion": "启用过渡和动画",
+    "enable-shadows": "启用阴影",
+    "enable-backdrop-effects": "启用菜单、弹窗和面板的背景效果"
   }
 }

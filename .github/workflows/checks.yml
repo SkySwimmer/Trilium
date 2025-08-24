@@ -3,13 +3,13 @@ on:
   push:
   pull_request_target:
     types: [synchronize]
+permissions:
+  contents: write
 
 jobs:
   checks:
     name: Merge conflict checks
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - name: Check if PRs have conflicts
         uses: eps1lon/actions-label-merge-conflict@v3
@@ -35,9 +35,10 @@ jobs:
             shell: bash
             forge_platform: linux
           - name: windows
-            image: windows-latest # FIXME: signing
+            image: windows-latest
             shell: cmd
             forge_platform: win32
+
     runs-on: ${{ matrix.os.image }}
     steps:
       - uses: actions/checkout@v5
@@ -57,6 +58,6 @@ jobs:
         shell: ${{ matrix.os.shell }}
         run: npm run chore:update-build-info
 
-      - name: Attempt build
+      - name: Attempt server build
         shell: ${{ matrix.os.shell }}
         run: pnpm exec nx run server:build

@@ -4,8 +4,7 @@ import { randomSecureToken, isWindows } from "./utils.js";
 import log from "./log.js";
 import dateUtils from "./date_utils.js";
 import keyboardActions from "./keyboard_actions.js";
-import type { KeyboardShortcutWithRequiredActionName, OptionMap, OptionNames } from "@triliumnext/commons";
-import { DEFAULT_ALLOWED_TAGS } from "./html_sanitizer.js";
+import { SANITIZER_DEFAULT_ALLOWED_TAGS, type KeyboardShortcutWithRequiredActionName, type OptionMap, type OptionNames } from "@triliumnext/commons";
 
 function initDocumentOptions() {
     optionService.createOption("documentId", randomSecureToken(16), false);
@@ -126,6 +125,7 @@ const defaultOptions: DefaultOption[] = [
     { name: "disableTray", value: "false", isSynced: false },
     { name: "eraseUnusedAttachmentsAfterSeconds", value: "2592000", isSynced: true }, // default 30 days
     { name: "eraseUnusedAttachmentsAfterTimeScale", value: "86400", isSynced: true }, // default 86400 seconds = Day
+    { name: "logRetentionDays", value: "90", isSynced: false }, // default 90 days
     { name: "customSearchEngineName", value: "DuckDuckGo", isSynced: true },
     { name: "customSearchEngineUrl", value: "https://duckduckgo.com/?q={keyword}", isSynced: true },
     { name: "promotedAttributesOpenInRibbon", value: "true", isSynced: true },
@@ -152,6 +152,10 @@ const defaultOptions: DefaultOption[] = [
         },
         isSynced: false
     },
+    { name: "motionEnabled", value: "true", isSynced: false },
+    { name: "shadowsEnabled", value: "true", isSynced: false },
+    { name: "backdropEffectsEnabled", value: "true", isSynced: false },
+
 
     // Internationalization
     { name: "locale", value: "en", isSynced: true },
@@ -183,10 +187,10 @@ const defaultOptions: DefaultOption[] = [
 
     // HTML import configuration
     { name: "layoutOrientation", value: "vertical", isSynced: false },
-    { name: "backgroundEffects", value: "false", isSynced: false },
+    { name: "backgroundEffects", value: "true", isSynced: false },
     {
         name: "allowedHtmlTags",
-        value: JSON.stringify(DEFAULT_ALLOWED_TAGS),
+        value: JSON.stringify(SANITIZER_DEFAULT_ALLOWED_TAGS),
         isSynced: true
     },
 

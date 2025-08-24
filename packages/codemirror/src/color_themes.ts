@@ -38,6 +38,11 @@ const themes: ThemeDefinition[] = [
         load: async () => (await import("@fsegurai/codemirror-theme-basic-light")).basicLight
     },
     {
+        id: "cobalt2",
+        name: "Cobalt2",
+        load: async () => (await import("@fsegurai/codemirror-theme-cobalt2")).cobalt2
+    },
+    {
         id: "forest",
         name: "Forest",
         load: async () => (await import("@fsegurai/codemirror-theme-forest")).forest

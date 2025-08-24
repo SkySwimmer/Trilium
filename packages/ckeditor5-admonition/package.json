@@ -35,11 +35,11 @@
     "@ckeditor/ckeditor5-dev-build-tools": "43.1.0",
     "@ckeditor/ckeditor5-inspector": ">=4.1.0",
     "@ckeditor/ckeditor5-package-tools": "^4.0.0",
-    "@typescript-eslint/eslint-plugin": "~8.39.0",
+    "@typescript-eslint/eslint-plugin": "~8.40.0",
     "@typescript-eslint/parser": "^8.0.0",
     "@vitest/browser": "^3.0.5",
     "@vitest/coverage-istanbul": "^3.0.5",
-    "ckeditor5": "46.0.0",
+    "ckeditor5": "46.0.2",
     "eslint": "^9.0.0",
     "eslint-config-ckeditor5": ">=9.1.0",
     "http-server": "^14.1.0",
@@ -53,7 +53,7 @@
     "webdriverio": "^9.0.7"
   },
   "peerDependencies": {
-    "ckeditor5": "46.0.0"
+    "ckeditor5": "46.0.2"
   },
   "author": "Elian Doran <contact@eliandoran.me>",
   "license": "GPL-2.0-or-later",

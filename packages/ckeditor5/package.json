@@ -35,8 +35,8 @@
     "@triliumnext/ckeditor5-keyboard-marker": "workspace:*",
     "@triliumnext/ckeditor5-math": "workspace:*",
     "@triliumnext/ckeditor5-mermaid": "workspace:*",
-    "ckeditor5": "46.0.0",
-    "ckeditor5-premium-features": "46.0.0"
+    "ckeditor5": "46.0.2",
+    "ckeditor5-premium-features": "46.0.2"
   },
   "devDependencies": {
     "@types/jquery": "3.5.32"

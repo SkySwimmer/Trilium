@@ -83,6 +83,7 @@
 
     --menu-text-color: #272727;
     --menu-background-color: #ffffffd9;
+    --menu-background-color-no-backdrop: #fdfdfd;
     --menu-item-icon-color: #727272;
     --menu-item-disabled-opacity: 0.6;
     --menu-item-keyboard-shortcut-color: #666666a8;

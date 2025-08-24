@@ -4841,30 +4841,37 @@
                         {
                             "type": "relation",
                             "name": "internalLink",
-                            "value": "wy8So3yZZlH9",
+                            "value": "eIg8jdvaoNNd",
                             "isInheritable": false,
                             "position": 50
                         },
                         {
                             "type": "relation",
                             "name": "internalLink",
-                            "value": "CdNpE2pqjmI6",
+                            "value": "wy8So3yZZlH9",
                             "isInheritable": false,
                             "position": 60
                         },
                         {
                             "type": "relation",
                             "name": "internalLink",
-                            "value": "tAassRL4RSQL",
+                            "value": "CdNpE2pqjmI6",
                             "isInheritable": false,
                             "position": 70
                         },
                         {
                             "type": "relation",
                             "name": "internalLink",
-                            "value": "cbkrhQjrkKrh",
+                            "value": "tAassRL4RSQL",
                             "isInheritable": false,
                             "position": 80
+                        },
+                        {
+                            "type": "relation",
+                            "name": "internalLink",
+                            "value": "cbkrhQjrkKrh",
+                            "isInheritable": false,
+                            "position": 90
                         },
                         {
                             "type": "label",
@@ -9134,16 +9141,23 @@
                                 {
                                     "type": "relation",
                                     "name": "internalLink",
-                                    "value": "tAassRL4RSQL",
+                                    "value": "bnyigUA2UK7s",
                                     "isInheritable": false,
                                     "position": 10
                                 },
                                 {
                                     "type": "relation",
                                     "name": "internalLink",
-                                    "value": "x59R8J8KV5Bp",
+                                    "value": "9yEHzMyFirZR",
                                     "isInheritable": false,
                                     "position": 20
+                                },
+                                {
+                                    "type": "relation",
+                                    "name": "internalLink",
+                                    "value": "x59R8J8KV5Bp",
+                                    "isInheritable": false,
+                                    "position": 30
                                 },
                                 {
                                     "type": "label",
@@ -9151,27 +9165,18 @@
                                     "value": "error-logs",
                                     "isInheritable": false,
                                     "position": 30
+                                },
+                                {
+                                    "type": "label",
+                                    "name": "iconClass",
+                                    "value": "bx bx-comment-error",
+                                    "isInheritable": false,
+                                    "position": 60
                                 }
                             ],
                             "format": "markdown",
                             "dataFileName": "Error logs.md",
                             "attachments": [
-                                {
-                                    "attachmentId": "8b6d0LUU1aMl",
-                                    "title": "image.png",
-                                    "role": "image",
-                                    "mime": "image/jpg",
-                                    "position": 10,
-                                    "dataFileName": "Error logs_image.png"
-                                },
-                                {
-                                    "attachmentId": "krunYsa4JeyV",
-                                    "title": "error-logs-firefox-context-men.png",
-                                    "role": "image",
-                                    "mime": "image/png",
-                                    "position": 10,
-                                    "dataFileName": "Error logs_error-logs-fire.png"
-                                },
                                 {
                                     "attachmentId": "ReQzLPod6UtU",
                                     "title": "error-logs-export-subtree.png",
@@ -9179,6 +9184,103 @@
                                     "mime": "image/png",
                                     "position": 10,
                                     "dataFileName": "Error logs_error-logs-expo.png"
+                                }
+                            ],
+                            "dirFileName": "Error logs",
+                            "children": [
+                                {
+                                    "isClone": false,
+                                    "noteId": "bnyigUA2UK7s",
+                                    "notePath": [
+                                        "pOsGYCXsbNQG",
+                                        "BgmBlOIl72jZ",
+                                        "qzNzp9LYQyPT",
+                                        "bnyigUA2UK7s"
+                                    ],
+                                    "title": "Backend (server) logs",
+                                    "notePosition": 10,
+                                    "prefix": null,
+                                    "isExpanded": false,
+                                    "type": "text",
+                                    "mime": "text/html",
+                                    "attributes": [
+                                        {
+                                            "type": "relation",
+                                            "name": "internalLink",
+                                            "value": "x3i7MxGccDuM",
+                                            "isInheritable": false,
+                                            "position": 10
+                                        },
+                                        {
+                                            "type": "relation",
+                                            "name": "internalLink",
+                                            "value": "tAassRL4RSQL",
+                                            "isInheritable": false,
+                                            "position": 20
+                                        },
+                                        {
+                                            "type": "relation",
+                                            "name": "internalLink",
+                                            "value": "Gzjqa934BdH4",
+                                            "isInheritable": false,
+                                            "position": 30
+                                        },
+                                        {
+                                            "type": "label",
+                                            "name": "iconClass",
+                                            "value": "bx bx-server",
+                                            "isInheritable": false,
+                                            "position": 40
+                                        }
+                                    ],
+                                    "format": "markdown",
+                                    "dataFileName": "Backend (server) logs.md",
+                                    "attachments": []
+                                },
+                                {
+                                    "isClone": false,
+                                    "noteId": "9yEHzMyFirZR",
+                                    "notePath": [
+                                        "pOsGYCXsbNQG",
+                                        "BgmBlOIl72jZ",
+                                        "qzNzp9LYQyPT",
+                                        "9yEHzMyFirZR"
+                                    ],
+                                    "title": "Frontend logs",
+                                    "notePosition": 20,
+                                    "prefix": null,
+                                    "isExpanded": false,
+                                    "type": "text",
+                                    "mime": "text/html",
+                                    "attributes": [
+                                        {
+                                            "type": "label",
+                                            "name": "iconClass",
+                                            "value": "bx bx-window-alt",
+                                            "isInheritable": false,
+                                            "position": 10
+                                        }
+                                    ],
+                                    "format": "markdown",
+                                    "dataFileName": "Frontend logs.md",
+                                    "attachments": [
+                                        {
+                                            "attachmentId": "vRup2YTDpWPM",
+                                            "title": "image.png",
+                                            "role": "image",
+                                            "mime": "image/jpg",
+                                            "position": 10,
+                                            "dataFileName": "Frontend logs_image.png"
+                                        },
+                                        {
+                                            "attachmentId": "Y05WqmS4uMMt",
+                                            "title": "error-logs-firefox-context-men.png",
+                                            "role": "image",
+                                            "mime": "image/png",
+                                            "position": 10,
+                                            "dataFileName": "Frontend logs_error-logs-f.png"
+                                        }
+                                    ]
                                 }
                             ]
                         },

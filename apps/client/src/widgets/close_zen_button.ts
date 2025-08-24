@@ -1,5 +1,6 @@
 import BasicWidget from "./basic_widget.js";
 import { t } from "../services/i18n.js";
+import utils from "../services/utils.js";
 
 const TPL = /*html*/`\
 <div class="close-zen-container">
@@ -26,6 +27,10 @@ const TPL = /*html*/`\
         right: 2px;
         z-index: 9999;
         -webkit-app-region: no-drag;
+    }
+
+    body.zen.mobile .close-zen-container {
+        top: -2px;
     }
 
     body.zen.electron:not(.platform-darwin):not(.native-titlebar) .close-zen-container {

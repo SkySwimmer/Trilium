@@ -8,7 +8,9 @@ import { RESOURCE_DIR } from "../services/resource_dir";
 
 export default function register(app: Application) {
     const etapiDocument = yaml.load(readFileSync(join(RESOURCE_DIR, "etapi.openapi.yaml"), "utf8")) as JsonObject;
-    const apiDocument = JSON.parse(readFileSync(join(RESOURCE_DIR, "openapi.json"), "utf-8"));
+    
+    // Load the comprehensive API documentation from YAML
+    const apiDocument = yaml.load(readFileSync(join(RESOURCE_DIR, "api-openapi.yaml"), "utf8")) as JsonObject;
 
     app.use(
         "/etapi/docs/",
@@ -24,7 +26,8 @@ export default function register(app: Application) {
         swaggerUi.serveFiles(apiDocument),
         swaggerUi.setup(apiDocument, {
             explorer: true,
-            customSiteTitle: "TriliumNext Internal API Documentation"
+            customSiteTitle: "TriliumNext Internal API Documentation",
+            customCss: '.swagger-ui .topbar { display: none }'
         })
     );
 }

@@ -30,6 +30,7 @@ import ClassicEditorToolbar from "../widgets/ribbon_widgets/classic_editor_toolb
 import PromotedAttributesWidget from "../widgets/ribbon_widgets/promoted_attributes.js";
 import NoteDetailWidget from "../widgets/note_detail.js";
 import NoteListWidget from "../widgets/note_list.js";
+import { CallToActionDialog } from "../widgets/dialogs/call_to_action.jsx";
 
 export function applyModals(rootContainer: RootContainer) {
     rootContainer
@@ -66,4 +67,5 @@ export function applyModals(rootContainer: RootContainer) {
                 .child(new PromotedAttributesWidget())
                 .child(new NoteDetailWidget())
                 .child(new NoteListWidget(true)))
+        .child(new CallToActionDialog());
 }

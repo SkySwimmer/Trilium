@@ -28,6 +28,28 @@
     --ck-mention-list-max-height: 500px;
 }
 
+body#trilium-app.motion-disabled *,
+body#trilium-app.motion-disabled *::before,
+body#trilium-app.motion-disabled *::after {
+    /* Disable transitions and animations */
+    transition: none !important;
+    animation: none !important;
+}
+
+body#trilium-app.shadows-disabled *,
+body#trilium-app.shadows-disabled *::before,
+body#trilium-app.shadows-disabled *::after {
+    /* Disable shadows */
+    box-shadow: none !important;
+}
+
+body#trilium-app.backdrop-effects-disabled *,
+body#trilium-app.backdrop-effects-disabled *::before,
+body#trilium-app.backdrop-effects-disabled *::after {
+    /* Disable backdrop effects */
+    backdrop-filter: none !important;
+}
+
 .table {
     --bs-table-bg: transparent !important;
 }
@@ -137,6 +159,15 @@ textarea,
 
 .form-text {
     color: var(--muted-text-color);
+}
+
+.form-group.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.form-group {
+    margin-bottom: 15px;
 }
 
 /* Add a gap between consecutive radios / check boxes */
@@ -346,7 +377,7 @@ body.desktop .tabulator-popup-container {
 
 @supports (animation-fill-mode: forwards) {
     /* Delay the opening of submenus */
-    body.desktop .dropdown-submenu .dropdown-menu {
+    body.desktop:not(.motion-disabled) .dropdown-submenu .dropdown-menu {
         opacity: 0;
         animation-fill-mode: forwards;
         animation-delay: var(--submenu-opening-delay);
@@ -640,6 +671,10 @@ table.promoted-attributes-in-tooltip th {
 .tooltip {
     font-size: var(--main-font-size) !important;
     z-index: calc(var(--ck-z-panel) - 1) !important;
+}
+
+.tooltip.tooltip-top {
+    z-index: 32767 !important;
 }
 
 .tooltip-trigger {
@@ -1734,14 +1769,10 @@ button.close:hover {
     margin-bottom: 10px;
 }
 
-.options-number-input {
+.options-section input[type="number"] {
     /* overriding settings from .form-control */
     width: 10em !important;
     flex-grow: 0 !important;
-}
-
-.options-mime-types {
-    column-width: 250px;
 }
 
 textarea {
@@ -1886,6 +1917,7 @@ body.zen #launcher-container,
 body.zen #launcher-pane,
 body.zen #left-pane,
 body.zen #right-pane,
+body.zen #mobile-sidebar-wrapper,
 body.zen .tab-row-container,
 body.zen .tab-row-widget,
 body.zen .ribbon-container:not(:has(.classic-toolbar-widget.visible)),
@@ -1893,7 +1925,8 @@ body.zen .ribbon-container:has(.classic-toolbar-widget.visible) .ribbon-top-row,
 body.zen .ribbon-container .ribbon-body:not(:has(.classic-toolbar-widget.visible)),
 body.zen .note-icon-widget,
 body.zen .title-row .button-widget,
-body.zen .floating-buttons-children > *:not(.bx-edit-alt) {
+body.zen .floating-buttons-children > *:not(.bx-edit-alt),
+body.zen .action-button {
     display: none !important;
 }
 
@@ -1933,6 +1966,10 @@ body.zen .note-title-widget,
 body.zen .note-title-widget input {
     font-size: 1rem !important;
     background: transparent !important;
+}
+
+body.zen #detail-container {
+    width: 100%;
 }
 
 /* Content renderer */
@@ -2235,6 +2272,13 @@ footer.webview-footer button {
 .content-floating-buttons button.bx {
     font-size: 130%;
     padding: 1px 10px 1px 10px;
+}
+
+/* Search result highlighting */
+.search-result-title b,
+.search-result-content b {
+    font-weight: 900;
+    color: var(--admonition-warning-accent-color);
 }
 
 /* Customized icons */

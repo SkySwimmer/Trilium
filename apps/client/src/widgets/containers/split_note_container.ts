@@ -2,6 +2,7 @@ import FlexContainer from "./flex_container.js";
 import appContext, { type CommandData, type CommandListenerData, type EventData, type EventNames, type NoteSwitchedContext } from "../../components/app_context.js";
 import type BasicWidget from "../basic_widget.js";
 import type NoteContext from "../../components/note_context.js";
+import Component from "../../components/component.js";
 
 interface NoteContextEvent {
     noteContext: NoteContext;
@@ -152,6 +153,8 @@ export default class SplitNoteContainer extends FlexContainer<SplitNoteWidget> {
         for (const ntxId of ntxIds) {
             this.$widget.find(`[data-ntx-id="${ntxId}"]`).remove();
 
+            const widget = this.widgets[ntxId];
+            recursiveCleanup(widget);
             delete this.widgets[ntxId];
         }
     }
@@ -235,5 +238,14 @@ export default class SplitNoteContainer extends FlexContainer<SplitNoteWidget> {
         this.refresh();
 
         return Promise.all(promises);
+    }
+}
+
+function recursiveCleanup(widget: Component) {
+    for (const child of widget.children) {
+        recursiveCleanup(child);
+    }
+    if ("cleanup" in widget && typeof widget.cleanup === "function") {
+        widget.cleanup();
     }
 }

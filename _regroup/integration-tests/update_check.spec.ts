@@ -8,5 +8,5 @@ test("Displays update badge when there is a version available", async ({ page })
     await page.getByText(`Version ${expectedVersion} is available,`).click();
 
     const page1 = await page.waitForEvent("popup");
-    expect(page1.url()).toBe(`https://github.com/TriliumNext/Trilium/releases/tag/v${expectedVersion}`);
+    expect(page1.url()).toBe(`https://github.com/SkySwimmer/Trilium/releases/tag/v${expectedVersion}`);
 });

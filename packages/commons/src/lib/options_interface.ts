@@ -85,6 +85,7 @@ export interface OptionDefinitions extends KeyboardShortcutsOptions<KeyboardActi
     minTocHeadings: number;
     eraseUnusedAttachmentsAfterSeconds: number;
     eraseUnusedAttachmentsAfterTimeScale: number;
+    logRetentionDays: number;
     firstDayOfWeek: number;
     firstWeekOfYear: number;
     minDaysInFirstWeek: number;
@@ -92,6 +93,9 @@ export interface OptionDefinitions extends KeyboardShortcutsOptions<KeyboardActi
 
     // Appearance
     splitEditorOrientation: "horziontal" | "vertical";
+    motionEnabled: boolean;
+    shadowsEnabled: boolean;
+    backdropEffectsEnabled: boolean;
     codeNoteTheme: string;
 
     initialized: boolean;

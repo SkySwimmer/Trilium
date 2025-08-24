@@ -117,11 +117,11 @@ export const downloadMatrix: DownloadMatrix = {
                 },
                 tarX64: {
                     name: "x86 (.tar.xz)",
-                    url: `https://github.com/TriliumNext/Trilium/releases/download/v${version}/TriliumNotes-Server-v${version}-linux-x64.tar.xz`
+                    url: `https://github.com/SkySwimmer/Trilium/releases/download/v${version}/TriliumNotes-Server-v${version}-linux-x64.tar.xz`
                 },
                 tarArm64: {
                     name: "ARM (.tar.xz)",
-                    url: `https://github.com/TriliumNext/Trilium/releases/download/v${version}/TriliumNotes-Server-v${version}-linux-arm64.tar.xz`
+                    url: `https://github.com/SkySwimmer/Trilium/releases/download/v${version}/TriliumNotes-Server-v${version}-linux-arm64.tar.xz`
                 },
                 nixos: {
                     name: "NixOS module",
@@ -150,7 +150,7 @@ export const downloadMatrix: DownloadMatrix = {
 export function buildDownloadUrl(app: App, platform: Platform, format: string, architecture: Architecture): string {
     if (app === "desktop") {
         return downloadMatrix.desktop[platform]?.downloads[format].url ??
-            `https://github.com/TriliumNext/Trilium/releases/download/v${version}/TriliumNotes-v${version}-${platform}-${architecture}.${format}`;
+            `https://github.com/SkySwimmer/Trilium/releases/download/v${version}/TriliumNotes-v${version}-${platform}-${architecture}.${format}`;
     } else if (app === "server") {
         return downloadMatrix.server[platform]?.downloads[format].url ?? "#";
     } else {

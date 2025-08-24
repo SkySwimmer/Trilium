@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { buildNote, buildNotes } from "../../test/easy-froca.js";
-import CalendarView from "./calendar_view.js";
+import CalendarView, { getFullCalendarLocale } from "./calendar_view.js";
+import { LOCALES } from "@triliumnext/commons";
 
 describe("Building events", () => {
     it("supports start date", async () => {
@@ -173,4 +174,22 @@ describe("Promoted attributes", () => {
         expect(events[1]).toMatchObject({ title: "Note 2", start: "2025-05-07T13:36:00", end: "2025-05-08" });
     });
 
+});
+
+describe("Building locales", () => {
+    it("every language has a locale defined", async () => {
+        for (const { id, contentOnly } of LOCALES) {
+            if (contentOnly) {
+                continue;
+            }
+
+            const fullCalendarLocale = await getFullCalendarLocale(id);
+
+            if (id !== "en") {
+                expect(fullCalendarLocale, `For locale ${id}`).toBeDefined();
+            } else {
+                expect(fullCalendarLocale).toBeUndefined();
+            }
+        }
+    });
 });

@@ -63,6 +63,9 @@ const ALLOWED_OPTIONS = new Set<OptionNames>([
     "dailyBackupEnabled",
     "weeklyBackupEnabled",
     "monthlyBackupEnabled",
+    "motionEnabled",
+    "shadowsEnabled",
+    "backdropEffectsEnabled",
     "maxContentWidth",
     "compressImages",
     "downloadImagesAutomatically",
@@ -93,6 +96,7 @@ const ALLOWED_OPTIONS = new Set<OptionNames>([
     "redirectBareDomain",
     "showLoginInShareTheme",
     "splitEditorOrientation",
+    "seenCallToActions",
 
     "mfaEnabled",
     "mfaMethod"

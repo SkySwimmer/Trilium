@@ -162,3 +162,27 @@ runs:
         echo "Found ZIP: $zip_file"
         echo "Note: ZIP files are not code signed, but their contents should be"
       fi
+
+  # Disabled since we cant sign due to not having same keys
+  #
+  # - name: Sign the RPM
+  #   if: inputs.os == 'linux'
+  #   shell: ${{ inputs.shell }}
+  #   run: |
+  #     echo -n "$GPG_SIGNING_KEY" | base64 --decode | gpg --import
+
+  #     # Import the key into RPM for verification
+  #     gpg --export -a > pubkey
+  #     rpm --import pubkey
+  #     rm pubkey
+
+  #     # Sign the RPM
+  #     rpm_file=$(find ./apps/desktop/upload -name "*.rpm" -print -quit)
+  #     rpmsign --define "_gpg_name Trilium Notes Signing Key <triliumnotes@outlook.com>" --addsign "$rpm_file"
+  #     rpm -Kv "$rpm_file"
+
+  #     # Validate code signing
+  #     if ! rpm -K "$rpm_file" | grep -q "digests signatures OK"; then
+  #       echo .rpm file not signed
+  #       exit 1
+  #     fi

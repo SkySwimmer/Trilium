@@ -1,6 +1,5 @@
 {
     "about": {
-        "close": "Chiudi",
         "app_version": "Versione dell'app:",
         "db_version": "Versione DB:",
         "sync_version": "Versione Sync:",
@@ -27,7 +26,6 @@
     },
     "add_link": {
         "add_link": "Aggiungi un collegamento",
-        "close": "Chiudi",
         "note": "Nota",
         "search_note": "cerca una nota per nome",
         "link_title_mirrors": "il titolo del collegamento rispecchia il titolo della nota corrente",
@@ -39,14 +37,12 @@
     "branch_prefix": {
         "edit_branch_prefix": "Modifica il prefisso del ramo",
         "help_on_tree_prefix": "Aiuto sui prefissi dell'Albero",
-        "close": "Chiudi",
         "prefix": "Prefisso: ",
         "save": "Salva",
         "branch_prefix_saved": "Il prefisso del ramo è stato salvato."
     },
     "bulk_actions": {
         "bulk_actions": "Azioni massive",
-        "close": "Chiudi",
         "affected_notes": "Note influenzate",
         "include_descendants": "Includi i discendenti della nota selezionata",
         "available_actions": "Azioni disponibili",
@@ -61,7 +57,6 @@
     },
     "clone_to": {
         "clone_notes_to": "Clona note in...",
-        "close": "Chiudi",
         "help_on_links": "Aiuto sui collegamenti",
         "notes_to_clone": "Note da clonare",
         "target_parent_note": "Nodo padre obiettivo",
@@ -73,7 +68,6 @@
         "note_cloned": "La nota \"{{clonedTitle}}\" è stata clonata in \"{{targetTitle}}\""
     },
     "confirm": {
-        "close": "Chiudi",
         "cancel": "Annulla",
         "ok": "OK",
         "confirmation": "Conferma",
@@ -87,52 +81,37 @@
         "delete_notes_preview": "Anteprima di eliminazione delle note",
         "delete_all_clones_description": "Elimina anche tutti i cloni (può essere disfatto tramite i cambiamenti recenti)",
         "erase_notes_description": "L'eliminazione normale (soft) marca le note come eliminate e potranno essere recuperate entro un certo lasso di tempo (dalla finestra dei cambiamenti recenti). Selezionando questa opzione le note si elimineranno immediatamente e non sarà possibile recuperarle.",
-        "erase_notes_warning": "Elimina le note in modo permanente (non potrà essere disfatto), compresi tutti i cloni. Ciò forzerà un nuovo caricamento dell'applicazione."
+        "erase_notes_warning": "Elimina le note in modo permanente (non potrà essere disfatto), compresi tutti i cloni. Ciò forzerà un nuovo caricamento dell'applicazione.",
+        "cancel": "Annulla",
+        "notes_to_be_deleted": "Le seguenti note saranno eliminate ({{- noteCount}})",
+        "no_note_to_delete": "Nessuna nota sarà eliminata (solo i cloni).",
+        "broken_relations_to_be_deleted": "Le seguenti relazioni saranno interrotte ed eliminate ({{- relationCount}})",
+        "deleted_relation_text": "La nota {{- note}} (da eliminare) è referenziata dalla relazione {{- relation}} originata da {{- source}}."
     },
     "info": {
         "okButton": "OK",
         "closeButton": "Chiudi"
     },
     "export": {
-        "close": "Chiudi"
-    },
-    "help": {
-        "close": "Chiudi"
-    },
-    "import": {
-        "close": "Chiudi"
-    },
-    "include_note": {
-        "close": "Chiudi"
-    },
-    "jump_to_note": {
-        "close": "Chiudi"
-    },
-    "markdown_import": {
-        "close": "Chiudi"
-    },
-    "move_to": {
-        "close": "Chiudi"
-    },
-    "note_type_chooser": {
-        "close": "Chiudi"
+        "close": "Chiudi",
+        "export_note_title": "Esporta la nota",
+        "export_status": "Stato dell'esportazione",
+        "export": "Esporta",
+        "choose_export_type": "Scegli prima il tipo di esportazione, per favore",
+        "export_in_progress": "Esportazione in corso: {{progressCount}}",
+        "export_finished_successfully": "Esportazione terminata con successo.",
+        "format_pdf": "PDF- allo scopo di stampa o esportazione.",
+        "export_type_subtree": "Questa nota e tutti i suoi discendenti",
+        "format_html": "HTML - raccomandato in quanto mantiene tutti i formati",
+        "format_html_zip": "HTML in archivio ZIP - questo è raccomandato in quanto conserva tutta la formattazione.",
+        "format_markdown": "MArkdown - questo conserva la maggior parte della formattazione."
     },
     "password_not_set": {
-        "close": "Chiudi",
         "body1": "Le note protette sono crittografate utilizzando una password utente, ma la password non è stata ancora impostata.",
         "body2": "Per proteggere le note, fare clic su <a class=\"open-password-options-button\" href=\"javascript:\">qui</a> per aprire la finestra di dialogo Opzioni e impostare la password."
     },
     "protected_session_password": {
         "close_label": "Chiudi"
-    },
-    "prompt": {
-        "close": "Chiudi"
-    },
-    "recent_changes": {
-        "close": "Chiudi"
-    },
-    "revisions": {
-        "close": "Chiudi"
     },
     "abstract_bulk_action": {
         "remove_this_search_action": "Rimuovi questa azione di ricerca"
@@ -171,12 +150,23 @@
         "debug": "Debug"
     },
     "database_anonymization": {
-        "light_anonymization": "Anonimizzazione leggera"
+        "light_anonymization": "Anonimizzazione parziale",
+        "title": "Anonimizzazione del Database",
+        "full_anonymization": "Anonimizzazione completa",
+        "full_anonymization_description": "Questa azione creerà una nuova copia del database e lo anonimizzerà (rimuove tutti i contenuti delle note, lasciando solo la struttura e qualche metadato non sensibile) per condividerlo online allo scopo di debugging, senza paura di far trapelare i tuoi dati personali.",
+        "save_fully_anonymized_database": "Salva il database completamente anonimizzato",
+        "light_anonymization_description": "Questa azione creerà una nuova copia del database e lo anonimizzerà in parzialmente — in particolare, solo il contenuto delle note sarà rimosso, ma i titoli e gli attributi rimarranno. Inoltre, note con script personalizzati JS di frontend/backend e widget personalizzati lasciando rimarranno. Ciò mette a disposizione più contesto per il debug dei problemi.",
+        "choose_anonymization": "Puoi decidere da solo se fornire un database completamente o parzialmente anonimizzato. Anche un database completamente anonimizzato è molto utile, sebbene in alcuni casi i database parzialmente anonimizzati possono accelerare il processo di identificazione dei bug e la loro correzione.",
+        "no_anonymized_database_yet": "Nessun database ancora anonimizzato.",
+        "save_lightly_anonymized_database": "Salva il database parzialmente anonimizzato",
+        "successfully_created_fully_anonymized_database": "Database completamente anonimizzato creato in {{anonymizedFilePath}}",
+        "successfully_created_lightly_anonymized_database": "Database parzialmente anonimizzato creato in {{anonymizedFilePath}}"
     },
     "cpu_arch_warning": {
         "title": "Per favore scarica la versione ARM64",
         "continue_anyway": "Continua Comunque",
-        "dont_show_again": "Non mostrare più questo avviso"
+        "dont_show_again": "Non mostrare più questo avviso",
+        "download_link": "Scarica la Versione Nativa"
     },
     "editorfeatures": {
         "title": "Caratteristiche",
@@ -214,7 +204,8 @@
     },
     "delete_label": {
         "delete_label": "Elimina etichetta",
-        "label_name_placeholder": "nome dell'etichetta"
+        "label_name_placeholder": "nome dell'etichetta",
+        "label_name_title": "Sono ammessi i caratteri alfanumerici, il carattere di sottolineato e i due punti."
     },
     "tree-context-menu": {
         "move-to": "Muovi in...",
@@ -273,6 +264,82 @@
         "existing_backups": "Backup esistenti",
         "date-and-time": "Data e ora",
         "path": "Percorso",
-        "database_backed_up_to": "Il database è stato archiviato in {{backupFilePath}}"
+        "database_backed_up_to": "Il database è stato archiviato in {{backupFilePath}}",
+        "enable_daily_backup": "Abilita le archiviazioni giornaliere",
+        "no_backup_yet": "Ancora nessuna archiviazione"
+    },
+    "backend_log": {
+        "refresh": "Aggiorna"
+    },
+    "consistency_checks": {
+        "find_and_fix_button": "Trova e correggi i problemi di coerenza",
+        "finding_and_fixing_message": "In cerca e correzione dei problemi di coerenza...",
+        "issues_fixed_message": "Qualsiasi problema di coerenza che possa essere stato trovato ora è corretto."
+    },
+    "database_integrity_check": {
+        "check_button": "Controllo dell'integrità del database",
+        "checking_integrity": "Controllo dell'integrità del database in corso...",
+        "title": "Controllo di Integrità del database",
+        "description": "Controllerà che il database non sia corrotto a livello SQLite. Può durare un po' di tempo, a seconda della grandezza del DB.",
+        "integrity_check_failed": "Controllo di integrità fallito: {{results}}"
+    },
+    "sync": {
+        "title": "Sincronizza",
+        "force_full_sync_button": "Forza una sincronizzazione completa",
+        "failed": "Sincronizzazione fallita: {{message}}"
+    },
+    "sync_2": {
+        "config_title": "Configurazione per la Sincronizzazione",
+        "proxy_label": "Server Proxy per la sincronizzazione (opzionale)",
+        "test_title": "Test di sincronizzazione",
+        "timeout": "Timeout per la sincronizzazione",
+        "timeout_unit": "millisecondi",
+        "save": "Salva",
+        "help": "Aiuto"
+    },
+    "search_engine": {
+        "save_button": "Salva"
+    },
+    "sql_table_schemas": {
+        "tables": "Tabelle"
+    },
+    "tab_row": {
+        "close_tab": "Chiudi la scheda",
+        "add_new_tab": "Aggiungi una nuova scheda",
+        "close": "Chiudi",
+        "close_other_tabs": "Chiudi le altre schede",
+        "close_right_tabs": "Chiudi le schede a destra",
+        "close_all_tabs": "Chiudi tutte le schede",
+        "reopen_last_tab": "Riapri l'ultima scheda chiusa",
+        "move_tab_to_new_window": "Sposta questa scheda in una nuova finestra",
+        "copy_tab_to_new_window": "Copia questa scheda in una nuova finestra",
+        "new_tab": "Nuova scheda"
+    },
+    "toc": {
+        "table_of_contents": "Sommario"
+    },
+    "table_of_contents": {
+        "title": "Sommario"
+    },
+    "tray": {
+        "title": "Vassoio di Sistema",
+        "enable_tray": "Abilita il vassoio (Trilium necessita di essere riavviato affinché la modifica abbia effetto)"
+    },
+    "heading_style": {
+        "title": "Stile dell'Intestazione",
+        "plain": "Normale",
+        "underline": "Sottolineato",
+        "markdown": "Stile Markdown"
+    },
+    "highlights_list": {
+        "title": "Punti salienti"
+    },
+    "highlights_list_2": {
+        "title": "Punti salienti",
+        "options": "Opzioni"
+    },
+    "quick-search": {
+        "placeholder": "Ricerca rapida",
+        "searching": "Ricerca in corso..."
     }
 }

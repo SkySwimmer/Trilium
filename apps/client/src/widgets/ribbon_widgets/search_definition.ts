@@ -19,6 +19,7 @@ import bulkActionService from "../../services/bulk_action.js";
 import { Dropdown } from "bootstrap";
 import type FNote from "../../entities/fnote.js";
 import type { AttributeType } from "../../entities/fattribute.js";
+import { renderReactWidget } from "../react/ReactBasicWidget.jsx";
 
 const TPL = /*html*/`
 <div class="search-definition-widget">
@@ -306,7 +307,7 @@ export default class SearchDefinitionWidget extends NoteContextAwareWidget {
 
         const actions = bulkActionService.parseActions(this.note);
         const renderedEls = actions
-            .map((action) => action.render())
+            .map((action) => renderReactWidget(this, action.doRender()))
             .filter((e) => e) as JQuery<HTMLElement>[];
 
         this.$actionOptions.empty().append(...renderedEls);

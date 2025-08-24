@@ -31,6 +31,7 @@ import { StartupChecks } from "./startup_checks.js";
 import type { CreateNoteOpts } from "../services/note_create.js";
 import { ColumnComponent } from "tabulator-tables";
 import ws from "../services/ws.js";
+import { ChooseNoteTypeCallback } from "../widgets/dialogs/note_type_chooser.jsx";
 
 interface Layout {
     getRootWidget: (appContext: AppContext) => RootWidget;
@@ -367,6 +368,9 @@ export type CommandMappings = {
     };
     refreshTouchBar: CommandData;
     reloadTextEditor: CommandData;
+    chooseNoteType: CommandData & {
+        callback: ChooseNoteTypeCallback
+    }
 };
 
 type EventMappings = {

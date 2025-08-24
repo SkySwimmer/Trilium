@@ -1,7 +1,6 @@
 {
     "about": {
         "title": "O Trilium Belеškama",
-        "close": "Zatvori",
         "homepage": "Početna stranica:",
         "app_version": "Verzija aplikacije:",
         "db_version": "Verzija baze podataka:",
@@ -28,7 +27,6 @@
     "add_link": {
         "add_link": "Dodaj link",
         "help_on_links": "Pomoć na linkovima",
-        "close": "Zatvori",
         "note": "Beleška",
         "search_note": "potražite belešku po njenom imenu",
         "link_title_mirrors": "naziv linka preslikava trenutan naziv beleške",
@@ -39,14 +37,12 @@
     "branch_prefix": {
         "edit_branch_prefix": "Izmeni prefiks grane",
         "help_on_tree_prefix": "Pomoć na prefiksu Drveta",
-        "close": "Zatvori",
         "prefix": "Prefiks: ",
         "save": "Sačuvaj",
         "branch_prefix_saved": "Prefiks grane je sačuvan."
     },
     "bulk_actions": {
         "bulk_actions": "Grupne akcije",
-        "close": "Zatvori",
         "affected_notes": "Pogođene beleške",
         "include_descendants": "Obuhvati potomke izabranih beleški",
         "available_actions": "Dostupne akcije",
@@ -61,7 +57,6 @@
     },
     "clone_to": {
         "clone_notes_to": "Klonirajte beleške u...",
-        "close": "Zatvori",
         "help_on_links": "Pomoć na linkovima",
         "notes_to_clone": "Beleške za kloniranje",
         "target_parent_note": "Ciljna nadređena beleška",
@@ -74,7 +69,6 @@
     },
     "confirm": {
         "confirmation": "Potvrda",
-        "close": "Zatvori",
         "cancel": "Otkaži",
         "ok": "U redu",
         "are_you_sure_remove_note": "Da li ste sigurni da želite da uklonite belešku \"{{title}}\" iz mape odnosa? ",
@@ -113,8 +107,6 @@
         "format_pdf": "PDF - za namene štampanja ili deljenja."
     },
     "help": {
-        "fullDocumentation": "Pomoć (puna dokumentacija je dostupna <a class=\"external\" href=\"https://triliumnext.github.io/Docs/\">online</a>)",
-        "close": "Zatvori",
         "noteNavigation": "Navigacija beleški",
         "goUpDown": "<kbd>UP</kbd>, <kbd>DOWN</kbd> - kretanje gore/dole u listi sa beleškama",
         "collapseExpand": "<kbd>LEFT</kbd>, <kbd>RIGHT</kbd> - sakupi/proširi čvor",
@@ -122,12 +114,12 @@
         "goBackForwards": "idi u nazad/napred kroz istoriju",
         "showJumpToNoteDialog": "prikaži <a class=\"external\" href=\"https://triliumnext.github.io/Docs/Wiki/note-navigation.html#jump-to-note\">\"Idi na\" dijalog</a>",
         "scrollToActiveNote": "skroluj do aktivne beleške",
-        "jumpToParentNote": "<kbd>Backspace</kbd> - idi do nadređene beleške",
+        "jumpToParentNote": "idi do nadređene beleške",
         "collapseWholeTree": "sakupi celo drvo beleški",
         "collapseSubTree": "sakupi pod-drvo",
         "tabShortcuts": "Prečice na karticama",
-        "newTabNoteLink": "<kbd>Ctrl+click</kbd> - (ili <kbd>middle mouse click</kbd>) na link beleške otvara belešku u novoj kartici",
-        "newTabWithActivationNoteLink": "<kbd>Ctrl+Shift+click</kbd> - (ili <kbd>Shift+middle mouse click</kbd>) na link beleške otvara i aktivira belešku u novoj kartici",
+        "newTabNoteLink": "na link beleške otvara belešku u novoj kartici",
+        "newTabWithActivationNoteLink": "na link beleške otvara i aktivira belešku u novoj kartici",
         "onlyInDesktop": "Samo na dektop-u (Electron verzija)",
         "openEmptyTab": "otvori praznu karticu",
         "closeActiveTab": "zatvori aktivnu karticu",
@@ -142,14 +134,14 @@
         "moveNoteUpHierarchy": "pomeri belešku na gore u hijerarhiji",
         "multiSelectNote": "višestruki izbor beleški iznad/ispod",
         "selectAllNotes": "izaberi sve beleške u trenutnom nivou",
-        "selectNote": "<kbd>Shift+click</kbd> - izaberi belešku",
+        "selectNote": "izaberi belešku",
         "copyNotes": "kopiraj aktivnu belešku (ili trenutni izbor) u privremenu memoriju (koristi se za <a class=\"external\" href=\"https://triliumnext.github.io/Docs/Wiki/cloning-notes.html#cloning-notes\">kloniranje</a>)",
         "cutNotes": "iseci trenutnu belešku (ili trenutni izbor) u privremenu memoriju (koristi se za premeštanje beleški)",
         "pasteNotes": "nalepi belešku/e kao podbelešku u aktivnoj belešci (koja se ili premešta ili klonira u zavisnosti od toga da li je beleška kopirana ili isečena u privremenu memoriju)",
         "deleteNotes": "obriši belešku / podstablo",
         "editingNotes": "Izmena beleški",
         "editNoteTitle": "u ravni drveta će se prebaciti sa ravni drveta na naslov beleške. Ulaz sa naslova beleške će prebaciti fokus na uređivač teksta. <kbd>Ctrl+.</kbd> će se vratiti sa uređivača na ravan drveta.",
-        "createEditLink": "<kbd>Ctrl+K</kbd> - napravi / izmeni spoljašnji link",
+        "createEditLink": "napravi / izmeni spoljašnji link",
         "createInternalLink": "napravi unutrašnji link",
         "followLink": "prati link ispod kursora",
         "insertDateTime": "ubaci trenutan datum i vreme na poziciju kursora",
@@ -169,7 +161,6 @@
     },
     "import": {
         "importIntoNote": "Uvezi u belešku",
-        "close": "Zatvori",
         "chooseImportFile": "Izaberi datoteku za uvoz",
         "importDescription": "Sadržaj izabranih datoteka će biti uvezen kao podbeleške u",
         "options": "Opcije",
@@ -196,14 +187,13 @@
     },
     "include_note": {
         "dialog_title": "Uključi belešku",
-        "close": "Zatvori",
         "label_note": "Beleška",
         "placeholder_search": "pretraži belešku po njenom imenu",
         "box_size_prompt": "Veličina kutije priložene beleške:",
         "box_size_small": "mala (~ 10 redova)",
         "box_size_medium": "srednja (~ 30 redova)",
         "box_size_full": "puna (kutija prikazuje ceo tekst)",
-        "button_include": "Uključi belešku <kbd>enter</kbd>"
+        "button_include": "Uključi belešku"
     },
     "info": {
         "modalTitle": "Informativna poruka",
@@ -212,23 +202,20 @@
     },
     "jump_to_note": {
         "search_placeholder": "Pretraži belešku po njenom imenu ili unesi > za komande...",
-        "close": "Zatvori",
         "search_button": "Pretraga u punom tekstu <kbd>Ctrl+Enter</kbd>"
     },
     "markdown_import": {
         "dialog_title": "Uvoz za Markdown",
-        "close": "Zatvori",
         "modal_body_text": "Zbog Sandbox-a pretraživača nije moguće direktno učitati privremenu memoriju iz JavaScript-a. Molimo vas da nalepite Markdown za uvoz u tekstualno polje ispod i kliknete na dugme za uvoz",
-        "import_button": "Uvoz Ctrl+Enter",
+        "import_button": "Uvoz",
         "import_success": "Markdown sadržaj je učitan u dokument."
     },
     "move_to": {
         "dialog_title": "Premesti beleške u ...",
-        "close": "Zatvori",
         "notes_to_move": "Beleške za premeštanje",
         "target_parent_note": "Ciljana nadbeleška",
         "search_placeholder": "potraži belešku po njenom imenu",
-        "move_button": "Pređi na izabranu belešku <kbd>enter</kbd>",
+        "move_button": "Pređi na izabranu belešku",
         "error_no_path": "Nema putanje za premeštanje.",
         "move_success_message": "Izabrane beleške su premeštene u "
     },
@@ -236,19 +223,16 @@
         "change_path_prompt": "Promenite gde će se napraviti nova beleška:",
         "search_placeholder": "pretraži putanju po njenom imenu (podrazumevano ako je prazno)",
         "modal_title": "Izaberite tip beleške",
-        "close": "Zatvori",
         "modal_body": "Izaberite tip beleške / šablon za novu belešku:",
-        "templates": "Šabloni:"
+        "templates": "Šabloni"
     },
     "password_not_set": {
         "title": "Lozinka nije podešena",
-        "close": "Zatvori",
         "body1": "Zaštićene beleške su enkriptovane sa korisničkom lozinkom, ali lozinka još uvek nije podešena.",
         "body2": "Za biste mogli da sačuvate beleške, kliknite <a class=\"open-password-options-button\" href=\"javascript:\">ovde</a> da otvorite dijalog sa Opcijama i podesite svoju lozinku."
     },
     "prompt": {
         "title": "Upit",
-        "close": "Zatvori",
         "ok": "U redu <kbd>enter</kbd>",
         "defaultTitle": "Upit"
     },
@@ -257,12 +241,11 @@
         "help_title": "Pomoć za Zaštićene beleške",
         "close_label": "Zatvori",
         "form_label": "Da biste nastavili sa traženom akcijom moraćete započeti zaštićenu sesiju tako što ćete uneti lozinku:",
-        "start_button": "Započni zaštićenu sesiju <kbd>enter</kbd>"
+        "start_button": "Započni zaštićenu sesiju"
     },
     "recent_changes": {
         "title": "Nedavne promene",
         "erase_notes_button": "Obriši izabrane beleške odmah",
-        "close": "Zatvori",
         "deleted_notes_message": "Obrisane beleške su uklonjene.",
         "no_changes_message": "Još uvek nema izmena...",
         "undelete_link": "poništi brisanje",
@@ -273,7 +256,6 @@
         "delete_all_revisions": "Obriši sve revizije ove beleške",
         "delete_all_button": "Obriši sve revizije",
         "help_title": "Pomoć za Revizije beleški",
-        "close": "Zatvori",
         "revision_last_edited": "Ova revizija je poslednji put izmenjena {{date}}",
         "confirm_delete_all": "Da li želite da obrišete sve revizije ove beleške?",
         "no_revisions": "Još uvek nema revizija za ovu belešku...",
@@ -295,7 +277,6 @@
     },
     "sort_child_notes": {
         "sort_children_by": "Sortiranje podbeleški po...",
-        "close": "Zatvori",
         "sorting_criteria": "Kriterijum za sortiranje",
         "title": "naslov",
         "date_created": "datum kreiranja",
@@ -309,13 +290,12 @@
         "sort_with_respect_to_different_character_sorting": "sortiranje sa poštovanjem različitih pravila sortiranja karaktera i kolacija u različitim jezicima ili regionima.",
         "natural_sort_language": "Jezik za prirodno sortiranje",
         "the_language_code_for_natural_sort": "Kod jezika za prirodno sortiranje, npr. \"zh-CN\" za Kineski.",
-        "sort": "Sortiraj <kbd>enter</kbd>"
+        "sort": "Sortiraj"
     },
     "upload_attachments": {
         "upload_attachments_to_note": "Otpremite priloge uz belešku",
-        "close": "Zatvori",
         "choose_files": "Izaberite datoteke",
-        "files_will_be_uploaded": "Datoteke će biti otpremljene kao prilozi u",
+        "files_will_be_uploaded": "Datoteke će biti otpremljene kao prilozi u {{noteTitle}}",
         "options": "Opcije",
         "shrink_images": "Smanji slike",
         "upload": "Otpremi",

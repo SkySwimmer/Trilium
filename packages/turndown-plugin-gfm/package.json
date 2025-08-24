@@ -57,7 +57,7 @@
     }
   },
   "devDependencies": {
-    "turndown": "7.2.0",
+    "turndown": "7.2.1",
     "turndown-attendant": "0.0.3"
   }
 }

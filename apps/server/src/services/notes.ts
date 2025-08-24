@@ -931,10 +931,6 @@ function duplicateSubtree(origNoteId: string, newParentNoteId: string) {
 
     const noteIdMapping = getNoteIdMapping(origNote);
 
-    if (!origBranch) {
-        throw new Error("Unable to find original branch to duplicate.");
-    }
-
     const res = duplicateSubtreeInner(origNote, origBranch, newParentNoteId, noteIdMapping);
 
     const duplicateNoteSuffix = t("notes.duplicate-note-suffix");
@@ -966,7 +962,7 @@ function duplicateSubtreeWithoutRoot(origNoteId: string, newNoteId: string) {
     }
 }
 
-function duplicateSubtreeInner(origNote: BNote, origBranch: BBranch, newParentNoteId: string, noteIdMapping: Record<string, string>) {
+function duplicateSubtreeInner(origNote: BNote, origBranch: BBranch | null | undefined, newParentNoteId: string, noteIdMapping: Record<string, string>) {
     if (origNote.isProtected && !protectedSessionService.isProtectedSessionAvailable()) {
         throw new Error(`Cannot duplicate note '${origNote.noteId}' because it is protected and protected session is not available. Enter protected session and try again.`);
     }

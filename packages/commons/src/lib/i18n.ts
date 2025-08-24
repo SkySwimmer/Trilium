@@ -6,10 +6,10 @@ export interface Locale {
     /** `true` if the language is not supported by the application as a display language, but it is selectable by the user for the content. */
     contentOnly?: boolean;
     /** The value to pass to `--lang` for the Electron instance in order to set it as a locale. Not setting it will hide it from the list of supported locales. */
-    electronLocale?: string;
+    electronLocale?: "en" | "de" | "es" | "fr" | "zh_CN" | "zh_TW" | "ro" | "af" | "am" | "ar" | "bg" | "bn" | "ca" | "cs" | "da" | "el" | "en-GB" | "es-419" | "et" | "fa" | "fi" | "fil" | "gu" | "he" | "hi" | "hr" | "hu" | "id" | "it" | "ja" | "kn" | "ko" | "lt" | "lv" | "ml" | "mr" | "ms" | "nb" | "nl" | "pl" | "pt-BR" | "pt-PT" | "ru" | "sk" | "sl" | "sr" | "sv" | "sw" | "ta" | "te" | "th" | "tr" | "uk" | "ur" | "vi";
 }
 
-const UNSORTED_LOCALES = [
+const UNSORTED_LOCALES: Locale[] = [
     {
         id: "en",
         name: "English",
@@ -44,6 +44,16 @@ const UNSORTED_LOCALES = [
         id: "ro",
         name: "Română",
         electronLocale: "ro"
+    },
+    {
+        id: "ru",
+        name: "Русский",
+        electronLocale: "ru"
+    },
+    {
+        id: "ja",
+        name: "日本語",
+        electronLocale: "ja"
     },
 
     /*

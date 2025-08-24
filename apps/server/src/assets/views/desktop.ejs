@@ -9,7 +9,7 @@
     <link rel="manifest" crossorigin="use-credentials" href="manifest.webmanifest">
     <title>Trilium Notes</title>
 </head>
-<body class="desktop heading-style-<%= headingStyle %> layout-<%= layoutOrientation %> platform-<%= platform %> <%= isElectron ? 'electron' : '' %> <%= hasNativeTitleBar ? 'native-titlebar' : '' %> <%= hasBackgroundEffects ? 'background-effects' : '' %>">
+<body id="trilium-app" class="desktop heading-style-<%= headingStyle %> layout-<%= layoutOrientation %> platform-<%= platform %> <%= isElectron ? 'electron' : '' %> <%= hasNativeTitleBar ? 'native-titlebar' : '' %> <%= hasBackgroundEffects ? 'background-effects' : '' %>">
 <noscript><%= t("javascript-required") %></noscript>
 
 <script>

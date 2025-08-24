@@ -5,7 +5,7 @@ const SVG_MIME = "image/svg+xml";
 
 export const isShare = !window.glob;
 
-function reloadFrontendApp(reason?: string) {
+export function reloadFrontendApp(reason?: string) {
     if (reason) {
         logInfo(`Frontend app reload: ${reason}`);
     }
@@ -13,7 +13,7 @@ function reloadFrontendApp(reason?: string) {
     window.location.reload();
 }
 
-function restartDesktopApp() {
+export function restartDesktopApp() {
     if (!isElectron()) {
         reloadFrontendApp();
         return;
@@ -125,7 +125,7 @@ function formatDateISO(date: Date) {
     return `${date.getFullYear()}-${padNum(date.getMonth() + 1)}-${padNum(date.getDate())}`;
 }
 
-function formatDateTime(date: Date, userSuppliedFormat?: string): string {
+export function formatDateTime(date: Date, userSuppliedFormat?: string): string {
     if (userSuppliedFormat?.trim()) {
         return dayjs(date).format(userSuppliedFormat);
     } else {
@@ -144,7 +144,7 @@ function now() {
 /**
  * Returns `true` if the client is currently running under Electron, or `false` if running in a web browser.
  */
-function isElectron() {
+export function isElectron() {
     return !!(window && window.process && window.process.type);
 }
 
@@ -218,7 +218,7 @@ function randomString(len: number) {
     return text;
 }
 
-function isMobile() {
+export function isMobile() {
     return (
         window.glob?.device === "mobile" ||
         // window.glob.device is not available in setup
@@ -306,7 +306,7 @@ function copySelectionToClipboard() {
     }
 }
 
-function dynamicRequire(moduleName: string) {
+export function dynamicRequire(moduleName: string) {
     if (typeof __non_webpack_require__ !== "undefined") {
         return __non_webpack_require__(moduleName);
     } else {
@@ -375,35 +375,45 @@ async function openInAppHelp($button: JQuery<HTMLElement>) {
 
     const inAppHelpPage = $button.attr("data-in-app-help");
     if (inAppHelpPage) {
-        // Dynamic import to avoid import issues in tests.
-        const appContext = (await import("../components/app_context.js")).default;
-        const activeContext = appContext.tabManager.getActiveContext();
-        if (!activeContext) {
-            return;
-        }
-        const subContexts = activeContext.getSubContexts();
-        const targetNote = `_help_${inAppHelpPage}`;
-        const helpSubcontext = subContexts.find((s) => s.viewScope?.viewMode === "contextual-help");
-        const viewScope: ViewScope = {
-            viewMode: "contextual-help",
-        };
-        if (!helpSubcontext) {
-            if (!ws.uiVerifyConnection())
-                return;
+        openInAppHelpFromUrl(inAppHelpPage);
+    }
+}
 
-            // The help is not already open, open a new split with it.
-            const { ntxId } = subContexts[subContexts.length - 1];
-            appContext.triggerCommand("openNewNoteSplit", {
-                ntxId,
-                notePath: targetNote,
-                hoistedNoteId: "_help",
-                viewScope
-            })
-        } else {
-            // There is already a help window open, make sure it opens on the right note.
-            helpSubcontext.setNote(targetNote, { viewScope });
-        }
+/**
+ * Opens the in-app help at the given page in a split note. If there already is a split note open with a help page, it will be replaced by this one.
+ *
+ * @param inAppHelpPage the ID of the help note (excluding the `_help_` prefix).
+ * @returns a promise that resolves once the help has been opened.
+ */
+export async function openInAppHelpFromUrl(inAppHelpPage: string) {
+    // Dynamic import to avoid import issues in tests.
+    const ws = (await import("./ws.js")).default;
+    const appContext = (await import("../components/app_context.js")).default;
+    const activeContext = appContext.tabManager.getActiveContext();
+    if (!activeContext) {
         return;
+    }
+    const subContexts = activeContext.getSubContexts();
+    const targetNote = `_help_${inAppHelpPage}`;
+    const helpSubcontext = subContexts.find((s) => s.viewScope?.viewMode === "contextual-help");
+    const viewScope: ViewScope = {
+        viewMode: "contextual-help",
+    };
+    if (!helpSubcontext) {
+        if (!ws.uiVerifyConnection())
+            return;
+
+        // The help is not already open, open a new split with it.
+        const { ntxId } = subContexts[subContexts.length - 1];
+        appContext.triggerCommand("openNewNoteSplit", {
+            ntxId,
+            notePath: targetNote,
+            hoistedNoteId: "_help",
+            viewScope
+        })
+    } else {
+        // There is already a help window open, make sure it opens on the right note.
+        helpSubcontext.setNote(targetNote, { viewScope });
     }
 }
 
@@ -737,6 +747,50 @@ function isUpdateAvailable(latestVersion: string | null | undefined, currentVers
 
 function isLaunchBarConfig(noteId: string) {
     return ["_lbRoot", "_lbAvailableLaunchers", "_lbVisibleLaunchers", "_lbMobileRoot", "_lbMobileAvailableLaunchers", "_lbMobileVisibleLaunchers"].includes(noteId);
+}
+
+/**
+ * Adds a class to the <body> of the page, where the class name is formed via a prefix and a value.
+ * Useful for configurable options such as `heading-style-markdown`, where `heading-style` is the prefix and `markdown` is the dynamic value.
+ * There is no separator between the prefix and the value, if needed it has to be supplied manually to the prefix.
+ *
+ * @param prefix the prefix.
+ * @param value the value to be appended to the prefix.
+ */
+export function toggleBodyClass(prefix: string, value: string) {
+    const $body = $("body");
+    for (const clazz of Array.from($body[0].classList)) {
+        // create copy to safely iterate over while removing classes
+        if (clazz.startsWith(prefix)) {
+            $body.removeClass(clazz);
+        }
+    }
+
+    $body.addClass(prefix + value);
+}
+
+/**
+ * Basic comparison for equality between the two arrays. The values are strictly checked via `===`.
+ *
+ * @param a the first array to compare.
+ * @param b the second array to compare.
+ * @returns `true` if both arrays are equals, `false` otherwise.
+ */
+export function arrayEqual<T>(a: T[], b: T[]) {
+    if (a === b) {
+        return true;
+    }
+    if (a.length !== b.length) {
+        return false;
+    }
+
+    for (let i=0; i < a.length; i++) {
+        if (a[i] !== b[i]) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 export default {

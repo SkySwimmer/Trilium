@@ -43,13 +43,15 @@ class="admonition warning">
   <h3>OpenID</h3>
   <p>In order to setup OpenID, you will need to setup a authentication provider.
     This requires a bit of extra setup. Follow <a href="https://developers.google.com/identity/openid-connect/openid-connect">these instructions</a> to
-    setup an OpenID service through google.</p>
+    setup an OpenID service through google. The Redirect URL of Trilium is <code>https://&lt;your-trilium-domain&gt;/callback</code>.</p>
   <ol>
     <li>Set the <code>oauthBaseUrl</code>, <code>oauthClientId</code> and <code>oauthClientSecret</code> in
       the <code>config.ini</code> file (check&nbsp;<a class="reference-link" href="#root/_help_Gzjqa934BdH4">Configuration (config.ini or environment variables)</a>&nbsp;for
       more information).
       <ol>
         <li>You can also setup through environment variables (<code>TRILIUM_OAUTH_BASE_URL</code>, <code>TRILIUM_OAUTH_CLIENT_ID</code> and <code>TRILIUM_OAUTH_CLIENT_SECRET</code>).</li>
+        <li><code>oauthBaseUrl</code> should be the link of your Trilium instance server,
+          for example, <code>https://&lt;your-trilium-domain&gt;</code>.</li>
       </ol>
     </li>
     <li>Restart the server</li>
@@ -66,3 +68,23 @@ class="admonition warning">
       and <code>TRILIUM_OAUTH_ISSUER_ICON</code>. <code>oauthIssuerName</code> and <code>oauthIssuerIcon</code> are
       required for displaying correct issuer information at the Login page.</p>
   </aside>
+  <h4>Authentik</h4>
+  <p>If you don’t already have a running Authentik instance, please follow
+    <a
+    href="https://docs.goauthentik.io/docs/install-config/install/docker-compose">these instructions</a>to set one up.</p>
+  <ol>
+    <li>In the Authentik admin dashboard, create a new OAuth2 application by following
+      <a
+      href="https://docs.goauthentik.io/docs/add-secure-apps/providers/oauth2/create-oauth2-provider">these steps</a>. Make sure to set the Redirect URL to: <code>https://&lt;your-trilium-domain&gt;/callback</code>.</li>
+    <li>In your config.ini file, set the relevant OAuth variables:
+      <ol>
+        <li><code>oauthIssuerBaseUrl</code> → Use the <code>OpenID Configuration Issuer</code> URL
+          from your application's overview page.</li>
+        <li><code>oauthIssuerName</code> and <code>oauthIssuerIcon</code> → Set these
+          to customize the name and icon displayed on the login page. If omitted,
+          Google’s name and icon will be shown by default.</li>
+      </ol>
+    </li>
+    <li>Apply the changes by restarting your server.</li>
+    <li>Proceed with the remaining steps starting from Step 3 in the OpenID section.</li>
+  </ol>

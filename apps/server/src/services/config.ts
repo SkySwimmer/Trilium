@@ -3,7 +3,7 @@ import fs from "fs";
 import dataDir from "./data_dir.js";
 import path from "path";
 import resourceDir from "./resource_dir.js";
-import { envToBoolean } from "./utils.js";
+import { envToBoolean, stringToInt } from "./utils.js";
 
 const configSampleFilePath = path.resolve(resourceDir.RESOURCE_DIR, "config-sample.ini");
 
@@ -50,7 +50,15 @@ export interface TriliumConfig {
         oauthIssuerName: string;
         oauthIssuerIcon: string;
     };
+    Logging: {
+        /**
+         * The number of days to keep the log files around. When rotating the logs, log files created by Trilium older than the specified amount of time will be deleted.
+         */
+        retentionDays: number;
+    }
 }
+
+export const LOGGING_DEFAULT_RETENTION_DAYS = 90;
 
 //prettier-ignore
 const config: TriliumConfig = {
@@ -136,6 +144,13 @@ const config: TriliumConfig = {
 
         oauthIssuerIcon:
             process.env.TRILIUM_OAUTH_ISSUER_ICON || iniConfig?.MultiFactorAuthentication?.oauthIssuerIcon || ""
+    },
+
+    Logging: {
+        retentionDays:
+            stringToInt(process.env.TRILIUM_LOGGING_RETENTION_DAYS) ??
+            stringToInt(iniConfig?.Logging?.retentionDays) ??
+            LOGGING_DEFAULT_RETENTION_DAYS
     }
 };
 

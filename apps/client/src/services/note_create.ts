@@ -109,8 +109,6 @@ async function createNote(parentNotePath: string | undefined, options: CreateNot
 
 async function chooseNoteType() {
     return new Promise<ChooseNoteTypeResponse>((res) => {
-        // TODO: Remove ignore after callback for chooseNoteType is defined in app_context.ts
-        //@ts-ignore
         appContext.triggerCommand("chooseNoteType", { callback: res });
     });
 }

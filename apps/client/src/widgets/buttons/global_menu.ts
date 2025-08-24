@@ -363,7 +363,6 @@ export default class GlobalMenuWidget extends BasicWidget {
 
         this.$zoomState = this.$widget.find(".zoom-state");
         this.$toggleZenMode = this.$widget.find('[data-trigger-command="toggleZenMode"');
-        this.$toggleZenMode.toggle(!utils.isMobile());
         this.$widget.on("show.bs.dropdown", () => this.#onShown());
         if (this.tooltip) {
             this.$widget.on("hide.bs.dropdown", () => this.tooltip.enable());
@@ -415,7 +414,7 @@ export default class GlobalMenuWidget extends BasicWidget {
     }
 
     async fetchLatestVersion() {
-        const RELEASES_API_URL = "https://api.github.com/repos/TriliumNext/Notes/releases/latest";
+        const RELEASES_API_URL = "https://api.github.com/repos/SkySwimmer/Trilium/releases/latest";
 
         const resp = await fetch(RELEASES_API_URL);
         const data = await resp.json();
@@ -424,7 +423,7 @@ export default class GlobalMenuWidget extends BasicWidget {
     }
 
     downloadLatestVersionCommand() {
-        window.open("https://github.com/TriliumNext/Trilium/releases/latest");
+        window.open("https://github.com/SkySwimmer/Trilium/releases/latest");
     }
 
     activeContextChangedEvent() {

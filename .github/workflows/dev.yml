@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0  # needed for https://github.com/marketplace/actions/nx-set-shas
 
@@ -48,7 +48,7 @@ jobs:
       - check-affected
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - uses: pnpm/action-setup@v4
       - name: Set up node & dependencies
@@ -68,7 +68,7 @@ jobs:
       - test_dev
       - check-affected
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: pnpm/action-setup@v4
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -103,7 +103,7 @@ jobs:
           - dockerfile: Dockerfile
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - uses: pnpm/action-setup@v4
       - name: Install dependencies

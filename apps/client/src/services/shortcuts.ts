@@ -14,6 +14,32 @@ interface ShortcutBinding {
 // Store all active shortcut bindings for management
 const activeBindings: Map<string, ShortcutBinding[]> = new Map();
 
+// Handle special key mappings and aliases
+const keyMap: { [key: string]: string[] } = {
+    'return': ['Enter'],
+    'enter': ['Enter'],  // alias for return
+    'del': ['Delete'],
+    'delete': ['Delete'], // alias for del
+    'esc': ['Escape'],
+    'escape': ['Escape'], // alias for esc
+    'space': [' ', 'Space'],
+    'tab': ['Tab'],
+    'backspace': ['Backspace'],
+    'home': ['Home'],
+    'end': ['End'],
+    'pageup': ['PageUp'],
+    'pagedown': ['PageDown'],
+    'up': ['ArrowUp'],
+    'down': ['ArrowDown'],
+    'left': ['ArrowLeft'],
+    'right': ['ArrowRight']
+};
+
+// Function keys
+for (let i = 1; i <= 19; i++) {
+    keyMap[`f${i}`] = [`F${i}`];
+}
+
 function removeGlobalShortcut(namespace: string) {
     bindGlobalShortcut("", null, namespace);
 }
@@ -124,32 +150,6 @@ export function keyMatches(e: KeyboardEvent, key: string): boolean {
         return false;
     }
 
-    // Handle special key mappings and aliases
-    const keyMap: { [key: string]: string[] } = {
-        'return': ['Enter'],
-        'enter': ['Enter'],  // alias for return
-        'del': ['Delete'],
-        'delete': ['Delete'], // alias for del
-        'esc': ['Escape'],
-        'escape': ['Escape'], // alias for esc
-        'space': [' ', 'Space'],
-        'tab': ['Tab'],
-        'backspace': ['Backspace'],
-        'home': ['Home'],
-        'end': ['End'],
-        'pageup': ['PageUp'],
-        'pagedown': ['PageDown'],
-        'up': ['ArrowUp'],
-        'down': ['ArrowDown'],
-        'left': ['ArrowLeft'],
-        'right': ['ArrowRight']
-    };
-
-    // Function keys
-    for (let i = 1; i <= 19; i++) {
-        keyMap[`f${i}`] = [`F${i}`];
-    }
-
     const mappedKeys = keyMap[key.toLowerCase()];
     if (mappedKeys) {
         return mappedKeys.includes(e.key) || mappedKeys.includes(e.code);
@@ -163,7 +163,7 @@ export function keyMatches(e: KeyboardEvent, key: string): boolean {
 
     // For letter keys, use the physical key code for consistency
     if (key.length === 1 && key >= 'a' && key <= 'z') {
-        return e.code === `Key${key.toUpperCase()}`;
+        return e.key.toLowerCase() === key.toLowerCase();
     }
 
     // For regular keys, check both key and code as fallback

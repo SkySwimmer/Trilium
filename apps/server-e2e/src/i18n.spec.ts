@@ -47,15 +47,14 @@ test("User can change language from settings", async ({ page, context }) => {
 
     // Select Chinese and ensure the translation is set.
     await languageCombobox.selectOption("cn");
-
-    // Press the refresh button.
-    await app.currentNoteSplit.getByRole("button", { name: "Restart the application" }).click();
+    await app.currentNoteSplit.locator("button[name=restart-app-button]").click();
 
     await expect(app.currentNoteSplit).toContainText("一周的第一天", { timeout: 15000 });
     await expect(languageCombobox).toHaveValue("cn");
 
     // Select English again.
     await languageCombobox.selectOption("en");
+    await app.currentNoteSplit.locator("button[name=restart-app-button]").click();
     await expect(app.currentNoteSplit).toContainText("Language", { timeout: 15000 });
     await expect(languageCombobox).toHaveValue("en");
 });

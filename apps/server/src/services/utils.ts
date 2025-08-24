@@ -282,6 +282,25 @@ export function envToBoolean(val: string | undefined) {
 }
 
 /**
+ * Parses a string value to an integer. If the resulting number is NaN or undefined, the result is also undefined.
+ *
+ * @param val the value to parse.
+ * @returns the parsed value.
+ */
+export function stringToInt(val: string | undefined) {
+    if (!val) {
+        return undefined;
+    }
+
+    const parsed = parseInt(val, 10);
+    if (Number.isNaN(parsed)) {
+        return undefined;
+    }
+
+    return parsed;
+}
+
+/**
  * Returns the directory for resources. On Electron builds this corresponds to the `resources` subdirectory inside the distributable package.
  * On development builds, this simply refers to the src directory of the application.
  *
@@ -378,7 +397,7 @@ export function safeExtractMessageAndStackFromError(err: unknown): [errMessage: 
 /**
  * Normalizes URL by removing trailing slashes and fixing double slashes.
  * Preserves the protocol (http://, https://) but removes trailing slashes from the rest.
- * 
+ *
  * @param url The URL to normalize
  * @returns The normalized URL without trailing slashes
  */
@@ -389,26 +408,26 @@ export function normalizeUrl(url: string | null | undefined): string | null | un
 
     // Trim whitespace
     url = url.trim();
-    
+
     if (!url) {
         return url;
     }
 
     // Fix double slashes (except in protocol) first
     url = url.replace(/([^:]\/)\/+/g, '$1');
-    
+
     // Remove trailing slash, but preserve protocol
     if (url.endsWith('/') && !url.match(/^https?:\/\/$/)) {
         url = url.slice(0, -1);
     }
-    
+
     return url;
 }
 
 /**
  * Normalizes a path pattern for custom request handlers.
  * Ensures both trailing slash and non-trailing slash versions are handled.
- * 
+ *
  * @param pattern The original pattern from customRequestHandler attribute
  * @returns An array of patterns to match both with and without trailing slash
  */
@@ -418,7 +437,7 @@ export function normalizeCustomHandlerPattern(pattern: string | null | undefined
     }
 
     pattern = pattern.trim();
-    
+
     if (!pattern) {
         return [pattern];
     }
@@ -431,7 +450,7 @@ export function normalizeCustomHandlerPattern(pattern: string | null | undefined
     // If pattern ends with $, handle it specially
     if (pattern.endsWith('$')) {
         const basePattern = pattern.slice(0, -1);
-        
+
         // If already ends with slash, create both versions
         if (basePattern.endsWith('/')) {
             const withoutSlash = basePattern.slice(0, -1) + '$';

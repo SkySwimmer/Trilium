@@ -27,6 +27,7 @@ permissions:
 
 jobs:
   nightly-electron:
+    # if: github.repository == ${{ vars.REPO_MAIN }} # Disabled again since we dont have that var and i feel forks should just be allowed to use it
     name: Deploy nightly
     strategy:
       fail-fast: false
@@ -47,7 +48,7 @@ jobs:
             forge_platform: win32
     runs-on: ${{ matrix.os.image }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: pnpm/action-setup@v4
       - name: Set up node & dependencies
         uses: actions/setup-node@v4
@@ -75,6 +76,7 @@ jobs:
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
           WINDOWS_SIGN_EXECUTABLE: ${{ vars.WINDOWS_SIGN_EXECUTABLE }}
+          # GPG_SIGNING_KEY: ${{ secrets.GPG_SIGN_KEY }}
 
       - name: Publish release
         uses: softprops/action-gh-release@v2.3.2
@@ -96,6 +98,7 @@ jobs:
           path: apps/desktop/upload
 
   nightly-server:
+    # if: github.repository == ${{ vars.REPO_MAIN }}
     name: Deploy server nightly
     strategy:
       fail-fast: false
@@ -108,7 +111,7 @@ jobs:
             runs-on: ubuntu-24.04-arm
     runs-on: ${{ matrix.runs-on }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Run the build
         uses: ./.github/actions/build-server

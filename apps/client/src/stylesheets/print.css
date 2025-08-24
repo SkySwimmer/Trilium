@@ -320,8 +320,3 @@ h6 {
     page-break-after: avoid;
     break-after: avoid;
 }
-
-figure.table {
-    /* Workaround for https://github.com/ckeditor/ckeditor5/issues/18903. Remove once official fix is released */
-    display: table !important;
-}

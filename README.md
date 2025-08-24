@@ -1,11 +1,11 @@
 # Trilium Notes
 
 ![GitHub Sponsors](https://img.shields.io/github/sponsors/eliandoran) ![LiberaPay patrons](https://img.shields.io/liberapay/patrons/ElianDoran)  
-![Docker Pulls](https://img.shields.io/docker/pulls/triliumnext/notes)
-![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/triliumnext/notes/total)  
+![Docker Pulls](https://img.shields.io/docker/pulls/triliumnext/trilium)
+![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/triliumnext/trilium/total)  
 [![RelativeCI](https://badges.relative-ci.com/badges/Di5q7dz9daNDZ9UXi0Bp?branch=develop)](https://app.relative-ci.com/projects/Di5q7dz9daNDZ9UXi0Bp) [![Translation status](https://hosted.weblate.org/widget/trilium/svg-badge.svg)](https://hosted.weblate.org/engage/trilium/)
 
-[English](./README.md) | [Chinese](./docs/README-ZH_CN.md) | [Russian](./docs/README.ru.md) | [Japanese](./docs/README.ja.md) | [Italian](./docs/README.it.md) | [Spanish](./docs/README.es.md)
+[English](./README.md) | [Chinese (Simplified)](./docs/README-ZH_CN.md) | [Chinese (Traditional)](./docs/README-ZH_TW.md) | [Russian](./docs/README.ru.md) | [Japanese](./docs/README.ja.md) | [Italian](./docs/README.it.md) | [Spanish](./docs/README.es.md)
 
 Trilium Notes is a free and open-source, cross-platform hierarchical note taking application with focus on building large personal knowledge bases.
 
@@ -46,15 +46,15 @@ See [screenshots](https://triliumnext.github.io/Docs/Wiki/screenshot-tour) for q
 - [awesome-trilium](https://github.com/Nriver/awesome-trilium) for 3rd party themes, scripts, plugins and more.
 - [TriliumRocks!](https://trilium.rocks/) for tutorials, guides, and much more.
 
-## ⚠️ Why TriliumNext?
+## ❓Why TriliumNext?
 
-[The original Trilium project is in maintenance mode](https://github.com/zadam/trilium/issues/4620).
+The original Trilium developer ([Zadam](https://github.com/zadam)) has graciously given the Trilium repository to the community project which resides at https://github.com/TriliumNext
 
-### Migrating from Trilium?
+### ⬆️Migrating from Zadam/Trilium?
 
-There are no special migration steps to migrate from a zadam/Trilium instance to a TriliumNext/Notes instance. Simply [install TriliumNext/Notes](#-installation) as usual and it will use your existing database.
+There are no special migration steps to migrate from a zadam/Trilium instance to a TriliumNext/Trilium instance. Simply [install TriliumNext/Trilium](#-installation) as usual and it will use your existing database.
 
-Versions up to and including [v0.90.4](https://github.com/TriliumNext/Notes/releases/tag/v0.90.4) are compatible with the latest zadam/trilium version of [v0.63.7](https://github.com/zadam/trilium/releases/tag/v0.63.7). Any later versions of TriliumNext have their sync versions incremented.
+Versions up to and including [v0.90.4](https://github.com/TriliumNext/Trilium/releases/tag/v0.90.4) are compatible with the latest zadam/trilium version of [v0.63.7](https://github.com/zadam/trilium/releases/tag/v0.63.7). Any later versions of TriliumNext/Trilium have their sync versions incremented which prevents direct migration.
 
 ## 📖 Documentation
 
@@ -75,14 +75,14 @@ Feel free to join our official conversations. We would love to hear what feature
 
 - [Matrix](https://matrix.to/#/#triliumnext:matrix.org) (For synchronous discussions.)
   - The `General` Matrix room is also bridged to [XMPP](xmpp:discuss@trilium.thisgreat.party?join)
-- [Github Discussions](https://github.com/TriliumNext/Notes/discussions) (For asynchronous discussions.)
-- [Github Issues](https://github.com/TriliumNext/Notes/issues) (For bug reports and feature requests.)
+- [Github Discussions](https://github.com/TriliumNext/Trilium/discussions) (For asynchronous discussions.)
+- [Github Issues](https://github.com/TriliumNext/Trilium/issues) (For bug reports and feature requests.)
 
 ## 🏗 Installation
 
 ### Windows / MacOS
 
-Download the binary release for your platform from the [latest release page](https://github.com/TriliumNext/Notes/releases/latest), unzip the package and run the `trilium` executable.
+Download the binary release for your platform from the [latest release page](https://github.com/TriliumNext/Trilium/releases/latest), unzip the package and run the `trilium` executable.
 
 ### Linux
 
@@ -90,7 +90,7 @@ If your distribution is listed in the table below, use your distribution's packa
 
 [![Packaging status](https://repology.org/badge/vertical-allrepos/triliumnext.svg)](https://repology.org/project/triliumnext/versions)
 
-You may also download the binary release for your platform from the [latest release page](https://github.com/TriliumNext/Notes/releases/latest), unzip the package and run the `trilium` executable.
+You may also download the binary release for your platform from the [latest release page](https://github.com/TriliumNext/Trilium/releases/latest), unzip the package and run the `trilium` executable.
 
 TriliumNext is also provided as a Flatpak, but not yet published on FlatHub.
 
@@ -104,13 +104,15 @@ Currently only the latest versions of Chrome & Firefox are supported (and tested
 
 To use TriliumNext on a mobile device, you can use a mobile web browser to access the mobile interface of a server installation (see below).
 
-If you prefer a native Android app, you can use [TriliumDroid](https://apt.izzysoft.de/fdroid/index/apk/eu.fliegendewurst.triliumdroid). Report bugs and missing features at [their repository](https://github.com/FliegendeWurst/TriliumDroid).
+See issue https://github.com/TriliumNext/Trilium/issues/4962 for more information on mobile app support.
 
-See issue https://github.com/TriliumNext/Notes/issues/72 for more information on mobile app support.
+If you prefer a native Android app, you can use [TriliumDroid](https://apt.izzysoft.de/fdroid/index/apk/eu.fliegendewurst.triliumdroid).
+Report bugs and missing features at [their repository](https://github.com/FliegendeWurst/TriliumDroid).
+Note: It is best to disable automatic updates on your server installation (see below) when using TriliumDroid since the sync version must match between Trilium and TriliumDroid.
 
 ### Server
 
-To install TriliumNext on your own server (including via Docker from [Dockerhub](https://hub.docker.com/r/triliumnext/notes)) follow [the server installation docs](https://triliumnext.github.io/Docs/Wiki/server-installation).
+To install TriliumNext on your own server (including via Docker from [Dockerhub](https://hub.docker.com/r/triliumnext/trilium)) follow [the server installation docs](https://triliumnext.github.io/Docs/Wiki/server-installation).
 
 
 ## 💻 Contribute
@@ -152,11 +154,11 @@ pnpm install
 pnpm nx --project=desktop electron-forge:make -- --arch=x64 --platform=win32
 ```
 
-For more details, see the [development docs](https://github.com/TriliumNext/Notes/blob/develop/docs/Developer%20Guide/Developer%20Guide/Building%20and%20deployment/Running%20a%20development%20build.md).
+For more details, see the [development docs](https://github.com/TriliumNext/Trilium/tree/main/docs/Developer%20Guide/Developer%20Guide).
 
 ### Developer Documentation
 
-Please view the [documentation guide](./docs/Developer%20Guide/Developer%20Guide/Environment%20Setup.md) for details. If you have more questions, feel free to reach out via the links described in the "Discuss with us" section above.
+Please view the [documentation guide](https://github.com/TriliumNext/Trilium/blob/main/docs/Developer%20Guide/Developer%20Guide/Environment%20Setup.md) for details. If you have more questions, feel free to reach out via the links described in the "Discuss with us" section above.
 
 ## 👏 Shoutouts
 
@@ -168,7 +170,7 @@ Please view the [documentation guide](./docs/Developer%20Guide/Developer%20Guide
 ## 🤝 Support
 
 Support for the TriliumNext organization will be possible in the near future. For now, you can:
-- Support continued development on TriliumNext by supporting our developers: [eliandoran](https://github.com/sponsors/eliandoran) (See the [repository insights]([developers]([url](https://github.com/TriliumNext/Notes/graphs/contributors))) for a full list)
+- Support continued development on TriliumNext by supporting our developers: [eliandoran](https://github.com/sponsors/eliandoran) (See the [repository insights]([developers]([url](https://github.com/TriliumNext/trilium/graphs/contributors))) for a full list)
 - Show a token of gratitude to the original Trilium developer ([zadam](https://github.com/sponsors/zadam)) via [PayPal](https://paypal.me/za4am) or Bitcoin (bitcoin:bc1qv3svjn40v89mnkre5vyvs2xw6y8phaltl385d2).
 
 

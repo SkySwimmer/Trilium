@@ -101,4 +101,8 @@ export default abstract class TypeWidget extends NoteContextAwareWidget {
             return Promise.resolve();
         }
     }
+
+    cleanup(): void {
+        super.cleanup();
+    }
 }

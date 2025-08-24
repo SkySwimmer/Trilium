@@ -413,6 +413,17 @@ export interface Api {
     backupNow(backupName: string): Promise<string>;
 
     /**
+     * Enables the complete duplication of the specified original note and all its children into the specified parent note.
+     * The new note will be named the same as the original, with (Dup) added to the end of it.
+     *
+     * @param origNoteId - the noteId for the original note to be duplicated
+     * @param newParentNoteId - the noteId for the parent note where the duplication is to be placed.
+     *
+     * @returns the note and the branch of the newly created note.
+     */
+    duplicateSubtree(origNoteId: string, newParentNoteId: string): { note: BNote; branch: BBranch; }
+
+    /**
      * This object contains "at your risk" and "no BC guarantees" objects for advanced use cases.
      */
     __private: {
@@ -703,6 +714,7 @@ function BackendScriptApi(this: Api, currentNote: BNote, apiParams: ApiParams) {
 
     this.runOutsideOfSync = syncMutex.doExclusively;
     this.backupNow = backupService.backupNow;
+    this.duplicateSubtree = noteService.duplicateSubtree;
 
     this.__private = {
         becca

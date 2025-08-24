@@ -1,7 +1,8 @@
+import { OptionNames } from "@triliumnext/commons";
 import server from "./server.js";
 import { isShare } from "./utils.js";
 
-type OptionValue = number | string;
+export type OptionValue = number | string;
 
 class Options {
     initializedPromise: Promise<void>;
@@ -74,6 +75,14 @@ class Options {
         payload[key] = value;
 
         await server.put(`options`, payload);
+    }
+
+    /**
+     * Saves multiple options at once, by supplying a record where the keys are the option names and the values represent the stringified value to set.
+     * @param newValues the record of keys and values.
+     */
+    async saveMany<T extends OptionNames>(newValues: Record<T, OptionValue>) {
+        await server.put<void>("options", newValues);
     }
 
     async toggle(key: string) {

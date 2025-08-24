@@ -3,6 +3,7 @@ import i18next from "i18next";
 import i18nextHttpBackend from "i18next-http-backend";
 import server from "./server.js";
 import type { Locale } from "@triliumnext/commons";
+import { initReactI18next } from "react-i18next";
 
 let locales: Locale[] | null;
 
@@ -16,6 +17,7 @@ export async function initLocale() {
 
     locales = await server.get<Locale[]>("options/locales");
 
+    i18next.use(initReactI18next);
     await i18next.use(i18nextHttpBackend).init({
         lng: locale,
         fallbackLng: "en",

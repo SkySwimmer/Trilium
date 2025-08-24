@@ -21,8 +21,6 @@
         "move-note-down-in-hierarchy": "Bajar nota en la jerarquía",
         "edit-note-title": "Saltar del árbol al detalle de la nota y editar el título",
         "edit-branch-prefix": "Mostrar cuadro de diálogo Editar prefijo de rama",
-        "cloneNotesTo": "Clonar notas seleccionadas",
-        "moveNotesTo": "Mover notas seleccionadas",
         "note-clipboard": "Portapapeles de notas",
         "copy-notes-to-clipboard": "Copiar las notas seleccionadas al portapapeles",
         "paste-notes-from-clipboard": "Pegar las notas del portapapeles en una nota activa",

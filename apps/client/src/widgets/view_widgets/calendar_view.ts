@@ -167,7 +167,7 @@ export default class CalendarView extends ViewMode<{}> {
             firstDay: options.getInt("firstDayOfWeek") ?? 0,
             weekends: !this.parentNote.hasAttribute("label", "calendar:hideWeekends"),
             weekNumbers: this.parentNote.hasAttribute("label", "calendar:weekNumbers"),
-            locale: await CalendarView.#getLocale(),
+            locale: await getFullCalendarLocale(options.get("locale")),
             height: "100%",
             nowIndicator: true,
             handleWindowResize: false,
@@ -249,29 +249,6 @@ export default class CalendarView extends ViewMode<{}> {
             .observe(this.$calendarContainer[0]);
 
         return this.$root;
-    }
-
-    static async #getLocale() {
-        const locale = options.get("locale");
-
-        // Here we hard-code the imports in order to ensure that they are embedded by webpack without having to load all the languages.
-        switch (locale) {
-            case "de":
-                return (await import("@fullcalendar/core/locales/de")).default;
-            case "es":
-                return (await import("@fullcalendar/core/locales/es")).default;
-            case "fr":
-                return (await import("@fullcalendar/core/locales/fr")).default;
-            case "cn":
-                return (await import("@fullcalendar/core/locales/zh-cn")).default;
-            case "tw":
-                return (await import("@fullcalendar/core/locales/zh-tw")).default;
-            case "ro":
-                return (await import("@fullcalendar/core/locales/ro")).default;
-            case "en":
-            default:
-                return undefined;
-        }
     }
 
     #onDatesSet(e: DatesSetArg) {
@@ -683,4 +660,29 @@ export default class CalendarView extends ViewMode<{}> {
         return items;
     }
 
+}
+
+export async function getFullCalendarLocale(locale: string) {
+    // Here we hard-code the imports in order to ensure that they are embedded by webpack without having to load all the languages.
+    switch (locale) {
+        case "de":
+            return (await import("@fullcalendar/core/locales/de")).default;
+        case "es":
+            return (await import("@fullcalendar/core/locales/es")).default;
+        case "fr":
+            return (await import("@fullcalendar/core/locales/fr")).default;
+        case "cn":
+            return (await import("@fullcalendar/core/locales/zh-cn")).default;
+        case "tw":
+            return (await import("@fullcalendar/core/locales/zh-tw")).default;
+        case "ro":
+            return (await import("@fullcalendar/core/locales/ro")).default;
+        case "ru":
+            return (await import("@fullcalendar/core/locales/ru")).default;
+        case "ja":
+            return (await import("@fullcalendar/core/locales/ja")).default;
+        case "en":
+        default:
+            return undefined;
+    }
 }

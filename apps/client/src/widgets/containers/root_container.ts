@@ -1,6 +1,8 @@
-import utils from "../../services/utils.js";
-import type BasicWidget from "../basic_widget.js";
+import { EventData } from "../../components/app_context.js";
 import FlexContainer from "./flex_container.js";
+import options from "../../services/options.js";
+import type BasicWidget from "../basic_widget.js";
+import utils from "../../services/utils.js";
 
 /**
  * The root container is the top-most widget/container, from which the entire layout derives.
@@ -27,7 +29,25 @@ export default class RootContainer extends FlexContainer<BasicWidget> {
             window.visualViewport?.addEventListener("resize", () => this.#onMobileResize());
         }
 
+        this.#setMotion(options.is("motionEnabled"));
+        this.#setShadows(options.is("shadowsEnabled"));
+        this.#setBackdropEffects(options.is("backdropEffectsEnabled"));
+
         return super.render();
+    }
+
+    entitiesReloadedEvent({ loadResults }: EventData<"entitiesReloaded">) {
+        if (loadResults.isOptionReloaded("motionEnabled")) {
+            this.#setMotion(options.is("motionEnabled"));
+        }
+
+        if (loadResults.isOptionReloaded("shadowsEnabled")) {
+            this.#setShadows(options.is("shadowsEnabled"));
+        }
+
+        if (loadResults.isOptionReloaded("backdropEffectsEnabled")) {
+            this.#setBackdropEffects(options.is("backdropEffectsEnabled"));
+        }
     }
 
     #onMobileResize() {
@@ -36,6 +56,18 @@ export default class RootContainer extends FlexContainer<BasicWidget> {
         this.$widget.toggleClass("virtual-keyboard-opened", isKeyboardOpened);
     }
 
+    #setMotion(enabled: boolean) {
+        document.body.classList.toggle("motion-disabled", !enabled);
+        jQuery.fx.off = !enabled;
+    }
+
+    #setShadows(enabled: boolean) {
+        document.body.classList.toggle("shadows-disabled", !enabled);
+    }
+
+    #setBackdropEffects(enabled: boolean) {
+        document.body.classList.toggle("backdrop-effects-disabled", !enabled);
+    }
 }
 
 function getViewportHeight() {

@@ -92,6 +92,7 @@ function register(router: Router) {
             throw new eu.EtapiError(400, "NOTE_IS_PROTECTED", `Note '${req.params.noteId}' is protected and cannot be modified through ETAPI.`);
         }
 
+        noteService.saveRevisionIfNeeded(note);
         eu.validateAndPatch(note, req.body, ALLOWED_PROPERTIES_FOR_PATCH);
         note.save();
 
@@ -136,6 +137,7 @@ function register(router: Router) {
             throw new eu.EtapiError(400, "NOTE_IS_PROTECTED", `Note '${req.params.noteId}' is protected and cannot be modified through ETAPI.`);
         }
 
+        noteService.saveRevisionIfNeeded(note);
         note.setContent(req.body);
 
         noteService.asyncPostProcessContent(note, req.body);

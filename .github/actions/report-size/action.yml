@@ -1,5 +1,6 @@
 name: 'Bundle size reporter'
 description: 'Post bundle size difference compared to another branch'
+
 inputs:
   branch:
     description: 'Branch to compare to'

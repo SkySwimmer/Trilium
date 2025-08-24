@@ -1,3 +1,6 @@
+name: "Build Server"
+description: "Builds and packages the server for different platforms"
+
 inputs:
   os:
     description: "One of the supported platforms: windows"

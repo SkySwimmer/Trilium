@@ -1,3 +1,5 @@
+name: "Docker build"
+
 on:
   push:
     branches:
@@ -185,12 +187,13 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Login to DockerHub
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ env.DOCKERHUB_REGISTRY }}
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      # FIXME We do not have dockerhub
+      # - name: Login to DockerHub
+      #   uses: docker/login-action@v3
+      #   with:
+      #     registry: ${{ env.DOCKERHUB_REGISTRY }}
+      #     username: ${{ secrets.DOCKERHUB_USERNAME }}
+      #     password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and push by digest
         id: build
@@ -242,7 +245,7 @@ jobs:
         with:
           images: |
             ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }}
-            ${{ env.DOCKERHUB_REGISTRY }}/${{ env.IMAGE_NAME }}
+          #  ${{ env.DOCKERHUB_REGISTRY }}/${{ env.IMAGE_NAME }} # FIXME
           flavor: |
             latest=false
 
@@ -253,12 +256,13 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Login to DockerHub
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ env.DOCKERHUB_REGISTRY }}
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      # FIXME We do not have dockerhub
+      # - name: Login to DockerHub
+      #   uses: docker/login-action@v3
+      #   with:
+      #     registry: ${{ env.DOCKERHUB_REGISTRY }}
+      #     username: ${{ secrets.DOCKERHUB_USERNAME }}
+      #     password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Create manifest list and push
         working-directory: /tmp/digests
@@ -271,9 +275,10 @@ jobs:
             -t ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }}:${REF_NAME} \
             $(printf '${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }}@sha256:%s ' *)
 
-          docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
-            -t ${{ env.DOCKERHUB_REGISTRY }}/${{ env.IMAGE_NAME }}:${REF_NAME} \
-            $(printf '${{ env.DOCKERHUB_REGISTRY }}/${{ env.IMAGE_NAME }}@sha256:%s ' *)
+          # FIXME We currently do not have dockerhub
+          # docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
+          #   -t ${{ env.DOCKERHUB_REGISTRY }}/${{ env.IMAGE_NAME }}:${REF_NAME} \
+          #   $(printf '${{ env.DOCKERHUB_REGISTRY }}/${{ env.IMAGE_NAME }}@sha256:%s ' *)
 
           # If the ref is a tag, also tag the image as stable as this is part of a 'release'
           # and only go in the `if` if there is NOT a `-` in the tag's name, due to tagging of `-alpha`, `-beta`, etc...
@@ -283,9 +288,10 @@ jobs:
               -t ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }}:stable \
               $(printf '${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }}@sha256:%s ' *)
 
-            docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
-              -t ${{ env.DOCKERHUB_REGISTRY }}/${{ env.IMAGE_NAME }}:stable \
-              $(printf '${{ env.DOCKERHUB_REGISTRY }}/${{ env.IMAGE_NAME }}@sha256:%s ' *)
+            # FIXME We currently have no dockerhub
+            # docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
+            #   -t ${{ env.DOCKERHUB_REGISTRY }}/${{ env.IMAGE_NAME }}:stable \
+            #   $(printf '${{ env.DOCKERHUB_REGISTRY }}/${{ env.IMAGE_NAME }}@sha256:%s ' *)
 
             # Small delay to ensure stable tag is fully propagated
             sleep 5
@@ -295,13 +301,14 @@ jobs:
               -t ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }}:latest \
               ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }}:stable
 
-            docker buildx imagetools create \
-              -t ${{ env.DOCKERHUB_REGISTRY }}/${{ env.IMAGE_NAME }}:latest \
-              ${{ env.DOCKERHUB_REGISTRY }}/${{ env.IMAGE_NAME }}:stable
+            # FIXME We currently have no dockerhub
+            # docker buildx imagetools create \
+            #   -t ${{ env.DOCKERHUB_REGISTRY }}/${{ env.IMAGE_NAME }}:latest \
+            #   ${{ env.DOCKERHUB_REGISTRY }}/${{ env.IMAGE_NAME }}:stable
 
           fi
 
       - name: Inspect image
         run: |
           docker buildx imagetools inspect ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.version }}
-          docker buildx imagetools inspect ${{ env.DOCKERHUB_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.version }}
+        #  docker buildx imagetools inspect ${{ env.DOCKERHUB_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.version }}

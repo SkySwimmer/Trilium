@@ -18,26 +18,27 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-env:
-  GITHUB_UPLOAD_URL: https://uploads.github.com/repos/TriliumNext/Notes/releases/179589950/assets{?name,label}
-  GITHUB_RELEASE_ID: 179589950
+# env:
+#   GITHUB_UPLOAD_URL: https://uploads.github.com/repos/TriliumNext/Notes/releases/179589950/assets{?name,label}
+#   GITHUB_RELEASE_ID: 179589950
 
 permissions:
   contents: write
 
 jobs:
   nightly-electron:
-    # if: github.repository == ${{ vars.REPO_MAIN }} # Disabled again since we dont have that var and i feel forks should just be allowed to use it
+    if: github.repository == ${{ vars.REPO_MAIN }}
     name: Deploy nightly
     strategy:
       fail-fast: false
       matrix:
         arch: [x64, arm64]
         os:
-          - name: macos
-            image: macos-latest
-            shell: bash
-            forge_platform: darwin
+          # FIXME: macos cannot be built at this moment
+          # - name: macos
+          #   image: macos-latest
+          #   shell: bash
+          #   forge_platform: darwin
           - name: linux
             image: ubuntu-22.04
             shell: bash
@@ -98,7 +99,7 @@ jobs:
           path: apps/desktop/upload
 
   nightly-server:
-    # if: github.repository == ${{ vars.REPO_MAIN }}
+    if: github.repository == ${{ vars.REPO_MAIN }}
     name: Deploy server nightly
     strategy:
       fail-fast: false

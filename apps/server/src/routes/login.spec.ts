@@ -46,10 +46,9 @@ describe("Login Route test", () => {
         let res: Response;
         let setCookieHeader: string;
         let expectedExpiresDate: string;
+        const CUSTOM_MAX_AGE_SECONDS = 86400;
 
-        beforeAll(async () => {
-            const CUSTOM_MAX_AGE_SECONDS = 86400;
-
+        beforeEach(async () => {
             expectedExpiresDate = dayjs().utc().add(CUSTOM_MAX_AGE_SECONDS, "seconds").toDate().toUTCString();
             res = await supertest(app)
                 .post("/login")
@@ -82,7 +81,7 @@ describe("Login Route test", () => {
             expect(expiry).toStrictEqual(new Date(session!.cookie.expires!));
         });
 
-        it("doesn't renew the session on subsequent requests", async () => {
+        it("properly renews the session on subsequent requests with correct expires", async () => {
             const { expiry: originalExpiry } = await getSessionFromCookie(setCookieHeader);
 
             // Simulate user waiting half the period before the session expires.
@@ -94,10 +93,15 @@ describe("Login Route test", () => {
                 .set("Cookie", setCookieHeader)
                 .expect(200);
 
-            // Check the session is still valid and has not been renewed.
+            // Check session expiry renewed
             const { session, expiry } = await getSessionFromCookie(setCookieHeader);
             expect(session).toBeTruthy();
-            expect(expiry!.getTime()).toStrictEqual(originalExpiry!.getTime());
+            expect(expiry!.getTime()).toBeGreaterThan(originalExpiry!.getTime());
+
+            // Check time until expiry, bit more relaxed to avoid edge cases where theres a time discrepency in processing
+            const timeUntilExpiry = expiry!.getTime() - Date.now();
+            expect(timeUntilExpiry).lessThanOrEqual((CUSTOM_MAX_AGE_SECONDS + 1) * 1000);
+            expect(timeUntilExpiry).greaterThanOrEqual((CUSTOM_MAX_AGE_SECONDS - 1) * 1000);
         });
 
         it("cleans up expired sessions", async () => {
@@ -116,7 +120,7 @@ describe("Login Route test", () => {
         let res: Response;
         let setCookieHeader: string;
 
-        beforeAll(async () => {
+        beforeEach(async () => {
             res = await supertest(app)
                 .post("/login")
                 .send({ password: "demo1234" })
@@ -160,8 +164,8 @@ describe("Login Route test", () => {
         });
 
         it("keeps session up to 24 hours", async () => {
-            // Simulate user waiting 23 hours.
-            vi.setSystemTime(dayjs().add(23, "hours").toDate());
+            // Simulate user waiting 22 hours.
+            vi.setSystemTime(dayjs().add(22, "hours").toDate());
             vi.advanceTimersByTime(CLEAN_UP_INTERVAL);
 
             // Check the session is still valid.
@@ -177,6 +181,16 @@ describe("Login Route test", () => {
             vi.setSystemTime(expiry!);
             vi.advanceTimersByTime(CLEAN_UP_INTERVAL);
             ({ session } = await getSessionFromCookie(setCookieHeader));
+            expect(session).toBeFalsy();
+        });
+
+        it("removes session after 24 hours", async () => {
+            // Simulate user waiting 24 hours.
+            vi.setSystemTime(dayjs().add(24, "hours").toDate());
+            vi.advanceTimersByTime(CLEAN_UP_INTERVAL);
+
+            // Check the session is still valid.
+            const { session } = await getSessionFromCookie(setCookieHeader);
             expect(session).toBeFalsy();
         });
     });

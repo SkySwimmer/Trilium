@@ -11,6 +11,7 @@ on:
       - "bin/**"
     tags:
       - "v*"
+  # This can be used to allow manually triggering nightlies from the web interface
   workflow_dispatch:
 
 env:

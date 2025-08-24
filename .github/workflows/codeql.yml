@@ -18,6 +18,8 @@ on:
     branches: [ "main" ]
   schedule:
     - cron: '20 7 * * 0'
+  # This can be used to allow manually triggering nightlies from the web interface
+  workflow_dispatch:
 
 jobs:
   analyze:

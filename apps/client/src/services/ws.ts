@@ -489,7 +489,7 @@ async function handleConnected(webSocketUri: string) {
     connectionIsReconnect = false;
 
     // Close toast if needed
-    if (connectionLostToastShown) {
+    if (connectionLostToastShown && !utils.isElectron()) {
         // Done
         connectionLostToastShown = false;
 
@@ -529,23 +529,25 @@ async function sendPing() {
         wasTimeout = true;
 
         // Show popup if needed
-        setTimeout(() => {
-            if ((ws.readyState === ws.CLOSED || ws.readyState === ws.CLOSING || ws.readyState === ws.CONNECTING) && !connectionFailed) {
-                // Show toast if needed
-                if (!connectionLostToastShown) {
-                    // Show toast
-                    connectionLostToastShown = true
-                    toastService.showPersistent({
-                        id: "clientConnectionLost",
-                        title: t("ws.connection-toast-title"),
-                        icon: "alert",
-                        message: t("ws.connection-toast-lost"),
-                        preventUserClose: true,
-                        color: "red"
-                    });
+        if (!utils.isElectron()) {
+            setTimeout(() => {
+                if ((ws.readyState === ws.CLOSED || ws.readyState === ws.CLOSING || ws.readyState === ws.CONNECTING) && !connectionFailed) {
+                    // Show toast if needed
+                    if (!connectionLostToastShown) {
+                        // Show toast
+                        connectionLostToastShown = true
+                        toastService.showPersistent({
+                            id: "clientConnectionLost",
+                            title: t("ws.connection-toast-title"),
+                            icon: "alert",
+                            message: t("ws.connection-toast-lost"),
+                            preventUserClose: true,
+                            color: "red"
+                        });
+                    }
                 }
-            }
-        }, 5000);
+            }, 5000);
+        }
     }
 
     // Check state
@@ -568,7 +570,7 @@ async function sendPing() {
         connectionActive = false;
 
         // Show toast if needed
-        if (!connectionLostToastShown && !wasTimeout && !connectionFailed) {
+        if (!connectionLostToastShown && !wasTimeout && !connectionFailed && !utils.isElectron()) {
             // Show toast
             connectionLostToastShown = true
             toastService.showPersistent({

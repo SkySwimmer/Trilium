@@ -1,3 +1,11 @@
+# DISCLAIMER
+This repository is a fan-operated fork, if you wish to go to the official repository, [click here](https://github.com/TriliumNext/Trilium).
+
+This repository serves as a fork that primarily removes AI integration from trilium, however i do work on some QoL changes and hope to, in the future, expand on the trilium client.
+
+Aside from our changes, all credits go to the upstream repository, ill eventually update the readmes to include better credits lists, for now you can use the change notes to see added content.
+
+
 # Trilium Notes
 
 ![GitHub Sponsors](https://img.shields.io/github/sponsors/eliandoran) ![LiberaPay patrons](https://img.shields.io/liberapay/patrons/ElianDoran)  

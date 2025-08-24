@@ -131,6 +131,8 @@ export interface OptionDefinitions extends KeyboardShortcutsOptions<KeyboardActi
     // Share settings
     redirectBareDomain: boolean;
     showLoginInShareTheme: boolean;
+
+    seenCallToActions: boolean;
 }
 
 export type OptionNames = keyof OptionDefinitions;

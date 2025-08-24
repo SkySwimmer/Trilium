@@ -197,6 +197,8 @@ const defaultOptions: DefaultOption[] = [
     // Share settings
     { name: "redirectBareDomain", value: "false", isSynced: true },
     { name: "showLoginInShareTheme", value: "false", isSynced: true },
+
+    { name: "seenCallToActions", value: "[]", isSynced: true }
 ];
 
 /**

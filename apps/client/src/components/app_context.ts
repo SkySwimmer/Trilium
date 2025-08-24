@@ -94,7 +94,9 @@ export type CommandMappings = {
     closeTocCommand: CommandData;
     closeHlt: CommandData;
     showLaunchBarSubtree: CommandData;
-    showRevisions: CommandData;
+    showRevisions: CommandData & {
+        noteId?: string | null;
+    };
     showOptions: CommandData & {
         section: string;
     };

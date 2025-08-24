@@ -7,17 +7,6 @@ permissions:
   contents: write
 
 jobs:
-  checks:
-    name: Merge conflict checks
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check if PRs have conflicts
-        uses: eps1lon/actions-label-merge-conflict@v3
-        if: github.repository == ${{ vars.REPO_MAIN }}
-        with:
-          dirtyLabel: "merge-conflicts"
-          repoToken: "${{ secrets.MERGE_CONFLICT_LABEL_PAT }}"
-
   compiletest:
     name: Attempt build
     strategy:
@@ -60,3 +49,13 @@ jobs:
       - name: Attempt server build
         shell: ${{ matrix.os.shell }}
         run: pnpm exec nx run server:build
+  checks:
+    name: Merge conflict checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if PRs have conflicts
+        uses: eps1lon/actions-label-merge-conflict@v3
+        if: github.repository == ${{ vars.REPO_MAIN }}
+        with:
+          dirtyLabel: "merge-conflicts"
+          repoToken: "${{ secrets.MERGE_CONFLICT_LABEL_PAT }}"

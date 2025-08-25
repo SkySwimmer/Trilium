@@ -36,6 +36,8 @@ export interface Suggestion {
     commandId?: string;
     commandDescription?: string;
     commandShortcut?: string;
+    attributeSnippet?: string;
+    highlightedAttributeSnippet?: string;
 }
 
 export interface Options {
@@ -323,7 +325,33 @@ function initNoteAutocomplete($el: JQuery<HTMLElement>, options?: Options) {
                             html += '</div>';
                             return html;
                         }
-                        return `<span class="${suggestion.icon ?? "bx bx-note"}"></span> ${suggestion.highlightedNotePathTitle}`;
+                        // Add special class for search-notes action
+                        const actionClass = suggestion.action === "search-notes" ? "search-notes-action" : "";
+                        
+                        // Choose appropriate icon based on action
+                        let iconClass = suggestion.icon ?? "bx bx-note";
+                        if (suggestion.action === "search-notes") {
+                            iconClass = "bx bx-search";
+                        } else if (suggestion.action === "create-note") {
+                            iconClass = "bx bx-plus";
+                        } else if (suggestion.action === "external-link") {
+                            iconClass = "bx bx-link-external";
+                        }
+                        
+                        // Simplified HTML structure without nested divs
+                        let html = `<div class="note-suggestion ${actionClass}">`;
+                        html += `<span class="${iconClass}" style="display: inline-block; width: 16px; vertical-align: top;"></span>`;
+                        html += `<span style="display: inline-block; width: calc(100% - 20px); padding-left: 4px;">`;
+                        html += `<span class="search-result-title" style="display: block;">${suggestion.highlightedNotePathTitle}</span>`;
+                        
+                        // Add attribute snippet inline if available
+                        if (suggestion.highlightedAttributeSnippet) {
+                            html += `<span style="display: block; font-size: 0.8em; color: var(--muted-text-color); opacity: 0.6; line-height: 1;" class="search-result-attributes">${suggestion.highlightedAttributeSnippet}</span>`;
+                        }
+                        
+                        html += `</span>`;
+                        html += `</div>`;
+                        return html;
                     }
                 },
                 // we can't cache identical searches because notes can be created / renamed, new recent notes can be added

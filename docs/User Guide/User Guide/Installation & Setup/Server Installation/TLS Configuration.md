@@ -25,7 +25,13 @@ certPath=/[username]/.acme.sh/[hostname]/fullchain.cer
 keyPath=/[username]/.acme.sh/[hostname]/example.com.key
 ```
 
-You can also review the [configuration](../../Advanced%20Usage/Configuration%20\(config.ini%20or%20e.md) file to provide all `config.ini` values as environment variables instead.
+You can also review the [configuration](../../Advanced%20Usage/Configuration%20\(config.ini%20or%20e.md) file to provide all `config.ini` values as environment variables instead. For example, you can configure TLS using environment variables:
+
+```bash
+export TRILIUM_NETWORK_HTTPS=true
+export TRILIUM_NETWORK_CERTPATH=/path/to/cert.pem
+export TRILIUM_NETWORK_KEYPATH=/path/to/key.pem
+```
 
 The above example shows how this is set up in an environment where the certificate was generated using Let's Encrypt's ACME utility. Your paths may differ. For Docker installations, ensure these paths are within a volume or another directory accessible by the Docker container, such as `/home/node/trilium-data/[DIR IN DATA DIRECTORY]`.
 

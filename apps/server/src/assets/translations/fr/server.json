@@ -111,7 +111,9 @@
     "incorrect-password": "Le mot de passe est incorrect. Veuillez réessayer.",
     "password": "Mot de passe",
     "remember-me": "Se souvenir de moi",
-    "button": "Connexion"
+    "button": "Connexion",
+    "sign_in_with_sso": "Se connecter avec {{ ssoIssuerName }}",
+    "incorrect-totp": "TOTP incorrect. Veuillez réessayer."
   },
   "set_password": {
     "title": "Définir un mot de passe",
@@ -357,6 +359,22 @@
     "toggle-ribbon-tab-file-properties": "Afficher/masquer les Propriétés du fichier",
     "toggle-ribbon-tab-image-properties": "Afficher/masquer les Propriétés de l'image",
     "toggle-ribbon-tab-owned-attributes": "Afficher/masquer les Attributs propres",
-    "toggle-ribbon-tab-inherited-attributes": "Afficher/masquer les Attributs hérités"
+    "toggle-ribbon-tab-inherited-attributes": "Afficher/masquer les Attributs hérités",
+    "toggle-right-pane": "Afficher le panneau de droite",
+    "print-active-note": "Imprimer la note active",
+    "export-active-note-as-pdf": "Exporter la note active en PDF",
+    "open-note-externally": "Ouvrir la note à l'extérieur",
+    "render-active-note": "Faire un rendu de la note active",
+    "run-active-note": "Lancer la note active",
+    "reload-frontend-app": "Recharger l'application Frontend",
+    "open-developer-tools": "Ouvrir les outils développeur",
+    "find-in-text": "Chercher un texte",
+    "toggle-left-pane": "Afficher le panneau de gauche",
+    "toggle-full-screen": "Passer en mode plein écran",
+    "zoom-out": "Dézoomer",
+    "zoom-in": "Zoomer",
+    "reset-zoom-level": "Réinitilaliser le zoom",
+    "copy-without-formatting": "Copier sans mise en forme",
+    "force-save-revision": "Forcer la sauvegarde de la révision"
   }
 }

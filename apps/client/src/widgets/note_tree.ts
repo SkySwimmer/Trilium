@@ -152,7 +152,7 @@ const TPL = /*html*/`
 const MAX_SEARCH_RESULTS_IN_TREE = 100;
 
 // this has to be hanged on the actual elements to effectively intercept and stop click event
-const cancelClickPropagation: JQuery.TypeEventHandler<unknown, unknown, unknown, unknown, any> = (e) => e.stopPropagation();
+const cancelClickPropagation: (e: JQuery.ClickEvent) => void = (e) => e.stopPropagation();
 
 // TODO: Fix once we remove Node.js API from public
 type Timeout = NodeJS.Timeout | string | number | undefined;

@@ -538,8 +538,8 @@ body.mobile .dropdown-menu .dropdown-item.submenu-open .dropdown-toggle::after {
 /* List item */
 .jump-to-note-dialog .aa-suggestions div,
 .note-detail-empty .aa-suggestions div {
-    border-radius: 6px;
-    padding: 6px 12px;
+    border-radius: 0;
+    padding: 12px 16px;
     color: var(--menu-text-color);
     cursor: default;
 }

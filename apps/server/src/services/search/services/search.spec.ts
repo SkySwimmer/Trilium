@@ -234,6 +234,28 @@ describe("Search", () => {
         expect(findNoteByTitle(searchResults, "Austria")).toBeTruthy();
     });
 
+    it("leading = operator for exact match", () => {
+        rootNote
+            .child(note("Example Note").label("type", "document"))
+            .child(note("Examples of Usage").label("type", "tutorial"))
+            .child(note("Sample").label("type", "example"));
+
+        const searchContext = new SearchContext();
+
+        // Using leading = for exact title match
+        let searchResults = searchService.findResultsWithQuery("=Example Note", searchContext);
+        expect(searchResults.length).toEqual(1);
+        expect(findNoteByTitle(searchResults, "Example Note")).toBeTruthy();
+
+        // Without =, it should find all notes containing "example"
+        searchResults = searchService.findResultsWithQuery("example", searchContext);
+        expect(searchResults.length).toEqual(3);
+
+        // = operator should not match partial words
+        searchResults = searchService.findResultsWithQuery("=Example", searchContext);
+        expect(searchResults.length).toEqual(0);
+    });
+
     it("fuzzy attribute search", () => {
         rootNote.child(note("Europe")
                 .label("country", "", true)

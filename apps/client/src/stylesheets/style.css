@@ -1795,20 +1795,69 @@ textarea {
     font-size: 1em;
 }
 
+.jump-to-note-dialog .modal-dialog {
+    max-width: 900px;
+    width: 90%;
+}
+
 .jump-to-note-dialog .modal-header {
     align-items: center;
 }
 
 .jump-to-note-dialog .modal-body {
     padding: 0;
+    min-height: 200px;
 }
 
 .jump-to-note-results .aa-dropdown-menu {
-    max-height: 40vh;
+    max-height: calc(80vh - 200px);
+    width: 100%;
+    max-width: none;
+    overflow-y: auto;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    box-shadow: none;
+}
+
+.jump-to-note-results {
+    width: 100%;
 }
 
 .jump-to-note-results .aa-suggestions {
-    padding: 1rem;
+    padding: 0;
+    width: 100%;
+}
+
+.jump-to-note-results .aa-dropdown-menu .aa-suggestion {
+    white-space: normal;
+    padding: 2px 12px !important;
+    line-height: 1.1;
+    position: relative;
+    border-radius: 0;
+    margin: 0 !important;
+}
+
+.jump-to-note-results .note-suggestion {
+    margin: 0;
+    padding: 0;
+    line-height: 1;
+}
+
+.jump-to-note-results .aa-suggestion:not(:last-child)::after {
+    display: none; /* Remove dividers for more compact look */
+}
+
+.jump-to-note-results .aa-suggestion:last-child::after {
+    display: none;
+}
+
+.jump-to-note-results .aa-suggestion.disabled::after {
+    display: none;
+}
+
+.jump-to-note-results .aa-dropdown-menu .aa-suggestion:hover,
+.jump-to-note-results .aa-dropdown-menu .aa-cursor {
+    background-color: var(--hover-item-background-color, #f8f9fa);
 }
 
 /* Command palette styling */
@@ -1826,8 +1875,24 @@ textarea {
 
 .jump-to-note-dialog .aa-cursor .command-suggestion,
 .jump-to-note-dialog .aa-suggestion:hover .command-suggestion {
-    border-left-color: var(--link-color);
-    background-color: var(--hover-background-color);
+    background-color: transparent;
+}
+
+.jump-to-note-dialog .show-in-full-search,
+.jump-to-note-results .show-in-full-search {
+    border-top: 1px solid var(--main-border-color);
+    padding-top: 12px;
+    margin-top: 12px;
+}
+
+.jump-to-note-results .aa-suggestion .search-notes-action {
+    border-top: 1px solid var(--main-border-color);
+    margin-top: 8px;
+    padding-top: 8px;
+}
+
+.jump-to-note-results .aa-suggestion:has(.search-notes-action)::after {
+    display: none;
 }
 
 .jump-to-note-dialog .command-icon {
@@ -2284,7 +2349,8 @@ footer.webview-footer button {
 
 /* Search result highlighting */
 .search-result-title b,
-.search-result-content b {
+.search-result-content b,
+.search-result-attributes b {
     font-weight: 900;
     color: var(--admonition-warning-accent-color);
 }

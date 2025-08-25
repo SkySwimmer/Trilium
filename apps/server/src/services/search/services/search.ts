@@ -367,7 +367,7 @@ function mergeExactAndFuzzyResults(exactResults: SearchResult[], fuzzyResults: S
 }
 
 function parseQueryToExpression(query: string, searchContext: SearchContext) {
-    const { fulltextQuery, fulltextTokens, expressionTokens } = lex(query);
+    const { fulltextQuery, fulltextTokens, expressionTokens, leadingOperator } = lex(query);
     searchContext.fulltextQuery = fulltextQuery;
 
     let structuredExpressionTokens: TokenStructure;
@@ -383,7 +383,8 @@ function parseQueryToExpression(query: string, searchContext: SearchContext) {
         fulltextTokens,
         expressionTokens: structuredExpressionTokens,
         searchContext,
-        originalQuery: query
+        originalQuery: query,
+        leadingOperator
     });
 
     if (searchContext.debug) {

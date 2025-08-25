@@ -1,4 +1,4 @@
-import options from "../../services/options.js";
+import local_options from "../../services/local_options.js";
 import splitService from "../../services/resizer.js";
 import CommandButtonWidget from "./command_button.js";
 import { t } from "../../services/i18n.js";
@@ -10,12 +10,12 @@ export default class LeftPaneToggleWidget extends CommandButtonWidget {
     constructor(isHorizontalLayout: boolean) {
         super();
 
-        this.currentLeftPaneVisible = options.is("leftPaneVisible");
+        this.currentLeftPaneVisible = local_options.is("leftPaneVisible");
 
         this.class(isHorizontalLayout ? "toggle-button" : "launcher-button");
 
         this.settings.icon = () => {
-            if (options.get("layoutOrientation") === "horizontal") {
+            if (local_options.get("layoutOrientation") === "horizontal") {
                 return "bx-sidebar";
             }
 
@@ -35,7 +35,7 @@ export default class LeftPaneToggleWidget extends CommandButtonWidget {
         super.refreshIcon();
         splitService.setupLeftPaneResizer(this.currentLeftPaneVisible);
     }
-    
+
     setLeftPaneVisibilityEvent({ leftPaneVisible }: EventData<"setLeftPaneVisibility">) {
         this.currentLeftPaneVisible = leftPaneVisible ?? !this.currentLeftPaneVisible;
         this.refreshIcon();

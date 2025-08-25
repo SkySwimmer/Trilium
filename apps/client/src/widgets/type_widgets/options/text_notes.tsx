@@ -20,6 +20,12 @@ import KeyboardShortcut from "../../react/KeyboardShortcut";
 import { Trans } from "react-i18next";
 import AutoReadOnlySize from "./components/AutoReadOnlySize";
 
+let triliumInServerOptions = true; // FIXME: actually let something change this, and maybe not a global, but for compile reasons leaving it at this rn
+
+export function setInServerOptions(state: boolean) {
+    triliumInServerOptions = state;
+}
+
 export default function TextNoteSettings() {
     return (
         <>
@@ -36,8 +42,8 @@ export default function TextNoteSettings() {
 }
 
 function FormattingToolbar() {
-    const [ textNoteEditorType, setTextNoteEditorType ] = useTriliumOption("textNoteEditorType", true);
-    const [ textNoteEditorMultilineToolbar, setTextNoteEditorMultilineToolbar ] = useTriliumOptionBool("textNoteEditorMultilineToolbar", true);
+    const [ textNoteEditorType, setTextNoteEditorType ] = useTriliumOption("textNoteEditorType", triliumInServerOptions, true);
+    const [ textNoteEditorMultilineToolbar, setTextNoteEditorMultilineToolbar ] = useTriliumOptionBool("textNoteEditorMultilineToolbar", triliumInServerOptions, true);
 
     return (
         <OptionsSection title={t("editing.editor_type.label")}>
@@ -69,8 +75,8 @@ function FormattingToolbar() {
 }
 
 function EditorFeatures() {
-    const [ textNoteEmojiCompletionEnabled, setTextNoteEmojiCompletionEnabled] = useTriliumOptionBool("textNoteEmojiCompletionEnabled");
-    const [ textNoteCompletionEnabled, setTextNoteCompletionEnabled ] = useTriliumOptionBool("textNoteCompletionEnabled");
+    const [ textNoteEmojiCompletionEnabled, setTextNoteEmojiCompletionEnabled] = useTriliumOptionBool("textNoteEmojiCompletionEnabled", triliumInServerOptions);
+    const [ textNoteCompletionEnabled, setTextNoteCompletionEnabled ] = useTriliumOptionBool("textNoteCompletionEnabled", triliumInServerOptions);
 
     return (
         <OptionsSection title={t("editorfeatures.title")}>
@@ -90,7 +96,7 @@ function EditorFeatures() {
 }
 
 function HeadingStyle() {
-    const [ headingStyle, setHeadingStyle ] = useTriliumOption("headingStyle");
+    const [ headingStyle, setHeadingStyle ] = useTriliumOption("headingStyle", triliumInServerOptions);
 
     useEffect(() => {
         toggleBodyClass("heading-style-", headingStyle);
@@ -148,8 +154,8 @@ function CodeBlockStyle() {
         ];
         return output;
     }, []);
-    const [ codeBlockTheme, setCodeBlockTheme ] = useTriliumOption("codeBlockTheme");
-    const [ codeBlockWordWrap, setCodeBlockWordWrap ] = useTriliumOptionBool("codeBlockWordWrap");
+    const [ codeBlockTheme, setCodeBlockTheme ] = useTriliumOption("codeBlockTheme", triliumInServerOptions);
+    const [ codeBlockWordWrap, setCodeBlockWordWrap ] = useTriliumOptionBool("codeBlockWordWrap", triliumInServerOptions);
 
     return (
         <OptionsSection title={t("highlighting.title")}>            
@@ -238,7 +244,7 @@ interface ThemeData {
 }
 
 function TableOfContent() {
-    const [ minTocHeadings, setMinTocHeadings ] = useTriliumOption("minTocHeadings");
+    const [ minTocHeadings, setMinTocHeadings ] = useTriliumOption("minTocHeadings", triliumInServerOptions);
 
     return (
         <OptionsSection title={t("table_of_contents.title")}>
@@ -260,7 +266,7 @@ function TableOfContent() {
 }
 
 function HighlightsList() {
-    const [ highlightsList, setHighlightsList ] = useTriliumOptionJson<string[]>("highlightsList");
+    const [ highlightsList, setHighlightsList ] = useTriliumOptionJson<string[]>("highlightsList", triliumInServerOptions);
 
     return (
         <OptionsSection title={t("highlights_list.title")}>
@@ -286,7 +292,7 @@ function HighlightsList() {
 }
 
 function DateTimeFormatOptions() {
-    const [ customDateTimeFormat, setCustomDateTimeFormat ] = useTriliumOption("customDateTimeFormat");
+    const [ customDateTimeFormat, setCustomDateTimeFormat ] = useTriliumOption("customDateTimeFormat", triliumInServerOptions);
 
     return (
         <OptionsSection title={t("custom_date_time_format.title")}>

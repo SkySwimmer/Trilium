@@ -1,4 +1,5 @@
 import options from "../services/options.js";
+import local_options from "../services/local_options.js";
 import Component from "./component.js";
 import utils from "../services/utils.js";
 
@@ -11,7 +12,7 @@ class ZoomComponent extends Component {
 
         if (utils.isElectron()) {
             options.initializedPromise.then(() => {
-                const zoomFactor = options.getFloat("zoomFactor");
+                const zoomFactor = local_options.getFloat("zoomFactor");
                 if (zoomFactor) {
                     this.setZoomFactor(zoomFactor);
                 }
@@ -37,7 +38,7 @@ class ZoomComponent extends Component {
 
             this.setZoomFactor(zoomFactor);
 
-            await options.save("zoomFactor", zoomFactor);
+            await local_options.save("zoomFactor", zoomFactor);
         } else {
             console.log(`Zoom factor ${zoomFactor} outside of the range, ignored.`);
         }

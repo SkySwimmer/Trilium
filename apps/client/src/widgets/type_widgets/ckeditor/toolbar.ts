@@ -1,5 +1,5 @@
 import utils from "../../../services/utils.js";
-import options from "../../../services/options.js";
+import local_options from "../../../services/local_options.js";
 
 const TEXT_FORMATTING_GROUP = {
     label: "Text formatting",
@@ -10,7 +10,7 @@ export function buildToolbarConfig(isClassicToolbar: boolean) {
     if (utils.isMobile()) {
         return buildMobileToolbar();
     } else if (isClassicToolbar) {
-        const multilineToolbar = utils.isDesktop() && options.get("textNoteEditorMultilineToolbar") === "true";
+        const multilineToolbar = utils.isDesktop() && local_options.get("textNoteEditorMultilineToolbar") === "true";
         return buildClassicToolbar(multilineToolbar);
     } else {
         return buildFloatingToolbar();

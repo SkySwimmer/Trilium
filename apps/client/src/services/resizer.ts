@@ -1,4 +1,4 @@
-import options from "./options.js";
+import local_options from "./local_options.js";
 import Split from "split.js"
 
 export const DEFAULT_GUTTER_SIZE = 5;
@@ -18,7 +18,7 @@ function setupLeftPaneResizer(leftPaneVisible: boolean) {
 
     $("#left-pane").toggle(leftPaneVisible);
 
-    layoutOrientation = layoutOrientation ?? options.get("layoutOrientation");
+    layoutOrientation = layoutOrientation ?? local_options.get("layoutOrientation");
     reservedPx = reservedPx ?? (layoutOrientation === "vertical" ? ($("#launcher-pane").outerWidth() || 0) : 0);
     // Window resizing causes `window.innerWidth` to change, so `reservedWidth` needs to be recalculated each time.
     const reservedWidth = reservedPx / window.innerWidth * 100;
@@ -27,7 +27,7 @@ function setupLeftPaneResizer(leftPaneVisible: boolean) {
         return;
     }
 
-    leftPaneWidth = leftPaneWidth ?? (options.getInt("leftPaneWidth") ?? 0);
+    leftPaneWidth = leftPaneWidth ?? (local_options.getInt("leftPaneWidth") ?? 0);
     if (!leftPaneWidth || leftPaneWidth < 5) {
         leftPaneWidth = 5;
     }
@@ -44,7 +44,7 @@ function setupLeftPaneResizer(leftPaneVisible: boolean) {
                 minSize: [150, 300],
                 onDragEnd: (sizes) => {
                     leftPaneWidth = Math.round(sizes[0]);
-                    options.save("leftPaneWidth", Math.round(sizes[0]));
+                    local_options.save("leftPaneWidth", Math.round(sizes[0]));
                 }
             });
         });
@@ -65,7 +65,7 @@ function setupRightPaneResizer() {
         return;
     }
 
-    rightPaneWidth = rightPaneWidth ?? (options.getInt("rightPaneWidth") ?? 0);
+    rightPaneWidth = rightPaneWidth ?? (local_options.getInt("rightPaneWidth") ?? 0);
     if (!rightPaneWidth || rightPaneWidth < 5) {
         rightPaneWidth = 5;
     }
@@ -77,7 +77,7 @@ function setupRightPaneResizer() {
             minSize: [300, 180],
             onDragEnd: (sizes) => {
                 rightPaneWidth = Math.round(sizes[1]);
-                options.save("rightPaneWidth", Math.round(sizes[1]));
+                local_options.save("rightPaneWidth", Math.round(sizes[1]));
             }
         });
     }

@@ -4,7 +4,7 @@ import server from "../../services/server.js";
 import appContext from "../../components/app_context.js";
 import RightDropdownButtonWidget from "./right_dropdown_button.js";
 import toastService from "../../services/toast.js";
-import options from "../../services/options.js";
+import local_options from "../../services/local_options.js";
 import { Dropdown } from "bootstrap";
 import type { EventData } from "../../components/app_context.js";
 import dayjs, { Dayjs } from "dayjs";
@@ -229,7 +229,7 @@ export default class CalendarWidget extends RightDropdownButtonWidget {
     }
 
     manageFirstDayOfWeek() {
-        this.firstDayOfWeek = options.getInt("firstDayOfWeek") || 0;
+        this.firstDayOfWeek = local_options.getInt("firstDayOfWeek") || 0;
 
         // Generate the list of days of the week taking into consideration the user's selected first day of week.
         let localeDaysOfWeek = [...DAYS_OF_WEEK];
@@ -240,8 +240,8 @@ export default class CalendarWidget extends RightDropdownButtonWidget {
 
     initWeekCalculation() {
         this.weekCalculationOptions = {
-            firstWeekType: options.getInt("firstWeekOfYear") || 0,
-            minDaysInFirstWeek: options.getInt("minDaysInFirstWeek") || 4
+            firstWeekType: local_options.getInt("firstWeekOfYear") || 0,
+            minDaysInFirstWeek: local_options.getInt("minDaysInFirstWeek") || 4
         };
     }
 

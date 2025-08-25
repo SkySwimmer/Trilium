@@ -1,5 +1,5 @@
 import utils from "../services/utils.js";
-import options from "../services/options.js";
+import local_options from "../services/options.js";
 import zoomService from "../components/zoom.js";
 import contextMenu, { type MenuItem } from "./context_menu.js";
 import { t } from "../services/i18n.js";
@@ -97,8 +97,8 @@ function setupContextMenu() {
             const shortenedSelection = params.selectionText.length > 15 ? `${params.selectionText.substr(0, 13)}…` : params.selectionText;
 
             // Read the search engine from the options and fallback to DuckDuckGo if the option is not set.
-            const customSearchEngineName = options.get("customSearchEngineName");
-            const customSearchEngineUrl = options.get("customSearchEngineUrl") as string;
+            const customSearchEngineName = local_options.get("customSearchEngineName");
+            const customSearchEngineUrl = local_options.get("customSearchEngineUrl") as string;
             let searchEngineName;
             let searchEngineUrl;
             if (customSearchEngineName && customSearchEngineUrl) {

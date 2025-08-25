@@ -7,6 +7,12 @@ import { t } from "../../../../services/i18n";
 import { useTriliumOption } from "../../../react/hooks";
 import toast from "../../../../services/toast";
 
+let triliumInServerOptions = true; // FIXME: actually let something change this, and maybe not a global, but for compile reasons leaving it at this rn
+
+export function setInServerOptions(state: boolean) {
+    triliumInServerOptions = state;
+}
+
 type TimeSelectorScale = "seconds" | "minutes" | "hours" | "days";
 
 interface TimeSelectorProps {
@@ -37,8 +43,8 @@ export default function TimeSelector({ id, name, includedTimeScales, optionValue
         return values;
     }, [ includedTimeScales ]);
 
-    const [ value, setValue ] = useTriliumOption(optionValueId);
-    const [ scale, setScale ] = useTriliumOption(optionTimeScaleId);
+    const [ value, setValue ] = useTriliumOption(optionValueId, triliumInServerOptions);
+    const [ scale, setScale ] = useTriliumOption(optionTimeScaleId, triliumInServerOptions);
     const [ displayedTime, setDisplayedTime ] = useState("");
 
     // React to changes in scale and value.

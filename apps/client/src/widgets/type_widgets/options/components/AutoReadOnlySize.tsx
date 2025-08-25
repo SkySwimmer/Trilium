@@ -6,13 +6,19 @@ import { useTriliumOption } from "../../../react/hooks";
 import { t } from "../../../../services/i18n";
 import FormGroup from "../../../react/FormGroup";
 
+let triliumInServerOptions = true; // FIXME: actually let something change this, and maybe not a global, but for compile reasons leaving it at this rn
+
+export function setInServerOptions(state: boolean) {
+    triliumInServerOptions = state;
+}
+
 interface AutoReadOnlySizeProps {
     label: string;
     option: OptionNames;
 }
 
 export default function AutoReadOnlySize({ label, option }: AutoReadOnlySizeProps) {
-    const [ autoReadonlyOpt, setAutoReadonlyOpt ] = useTriliumOption(option);
+    const [ autoReadonlyOpt, setAutoReadonlyOpt ] = useTriliumOption(option, triliumInServerOptions);
 
     return (
         <OptionsSection title={t("text_auto_read_only_size.title")}>

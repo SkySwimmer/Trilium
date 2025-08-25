@@ -4,7 +4,7 @@ import EditableCodeTypeWidget from "./editable_code.js";
 import TypeWidget from "./type_widget.js";
 import Split from "split.js";
 import { DEFAULT_GUTTER_SIZE } from "../../services/resizer.js";
-import options from "../../services/options.js";
+import local_options from "../../services/local_options.js";
 import type SwitchSplitOrientationButton from "../floating_buttons/switch_layout_button.js";
 import type { EventData } from "../../components/app_context.js";
 import type OnClickButtonWidget from "../buttons/onclick_button.js";
@@ -200,7 +200,7 @@ export default abstract class AbstractSplitTypeWidget extends TypeWidget {
         }
 
         // Vertical vs horizontal layout
-        const layoutOrientation = (!utils.isMobile() ? options.get("splitEditorOrientation") ?? "horizontal" : "vertical");
+        const layoutOrientation = (!utils.isMobile() ? local_options.get("splitEditorOrientation") ?? "horizontal" : "vertical");
         if (this.layoutOrientation !== layoutOrientation || this.isReadOnly !== isReadOnly) {
             this.$widget
                 .toggleClass("split-horizontal", !isReadOnly && layoutOrientation === "horizontal")

@@ -1,6 +1,6 @@
 import { getThemeById } from "@triliumnext/codemirror";
 import type FNote from "../../entities/fnote.js";
-import options from "../../services/options.js";
+import local_options from "../../services/local_options.js";
 import TypeWidget from "./type_widget.js";
 import CodeMirror, { type EditorConfig } from "@triliumnext/codemirror";
 import type { EventData } from "../../components/app_context.js";
@@ -32,12 +32,12 @@ export default class AbstractCodeTypeWidget extends TypeWidget {
     async #initEditor() {
         this.codeEditor = new CodeMirror({
             parent: this.$editor[0],
-            lineWrapping: options.is("codeLineWrapEnabled"),
+            lineWrapping: local_options.is("codeLineWrapEnabled"),
             ...this.getExtraOpts()
         });
 
         // Load the theme.
-        const themeId = options.get("codeNoteTheme");
+        const themeId = local_options.get("codeNoteTheme");
         if (themeId?.startsWith(DEFAULT_PREFIX)) {
             const theme = getThemeById(themeId.substring(DEFAULT_PREFIX.length));
             if (theme) {
@@ -113,7 +113,7 @@ export default class AbstractCodeTypeWidget extends TypeWidget {
 
     async entitiesReloadedEvent({ loadResults }: EventData<"entitiesReloaded">) {
         if (loadResults.isOptionReloaded("codeNoteTheme")) {
-            const themeId = options.get("codeNoteTheme");
+            const themeId = local_options.get("codeNoteTheme");
             if (themeId?.startsWith(DEFAULT_PREFIX)) {
                 const theme = getThemeById(themeId.substring(DEFAULT_PREFIX.length));
                 if (theme) {
@@ -124,7 +124,7 @@ export default class AbstractCodeTypeWidget extends TypeWidget {
         }
 
         if (loadResults.isOptionReloaded("codeLineWrapEnabled")) {
-            this.codeEditor.setLineWrapping(options.is("codeLineWrapEnabled"));
+            this.codeEditor.setLineWrapping(local_options.is("codeLineWrapEnabled"));
         }
     }
 

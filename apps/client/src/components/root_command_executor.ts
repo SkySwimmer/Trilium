@@ -118,6 +118,8 @@ export default class RootCommandExecutor extends Component {
     }
 
     async showOptionsCommand({ section }: CommandListenerData<"showOptions">) {
+        if (utils.isElectron())
+            return this.showOptionsCommand({ section });
         await appContext.tabManager.openContextWithNote(section || "_options", {
             activate: true,
             hoistedNoteId: "_options"

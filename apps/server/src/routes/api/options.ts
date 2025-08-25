@@ -186,10 +186,10 @@ function getSupportedLocales() {
 }
 
 function isAllowed(name: string) {
-    return (ALLOWED_OPTIONS as Set<string>).has(name)
-        || name.startsWith("keyboardShortcuts")
-        || name.endsWith("Collapsed")
-        || name.startsWith("hideArchivedNotes");
+    return (ALLOWED_OPTIONS as Set<string>).has(name); // FIXME: below options rely too much on server
+        // || name.startsWith("keyboardShortcuts")
+        // || name.endsWith("Collapsed")
+        // || name.startsWith("hideArchivedNotes");
 }
 
 export default {

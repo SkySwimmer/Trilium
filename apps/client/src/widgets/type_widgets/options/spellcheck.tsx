@@ -8,6 +8,12 @@ import { useTriliumOption, useTriliumOptionBool } from "../../react/hooks";
 import OptionsSection from "./components/OptionsSection";
 import { dynamicRequire, isElectron } from "../../../services/utils";
 
+let triliumInServerOptions = true; // FIXME: actually let something change this, and maybe not a global, but for compile reasons leaving it at this rn
+
+export function setInServerOptions(state: boolean) {
+    triliumInServerOptions = state;
+}
+
 export default function SpellcheckSettings() {
     if (isElectron()) {
         return <ElectronSpellcheckSettings />
@@ -17,8 +23,8 @@ export default function SpellcheckSettings() {
 }
 
 function ElectronSpellcheckSettings() {
-    const [ spellCheckEnabled, setSpellCheckEnabled ] = useTriliumOptionBool("spellCheckEnabled");
-    const [ spellCheckLanguageCode, setSpellCheckLanguageCode ] = useTriliumOption("spellCheckLanguageCode");
+    const [ spellCheckEnabled, setSpellCheckEnabled ] = useTriliumOptionBool("spellCheckEnabled", triliumInServerOptions);
+    const [ spellCheckLanguageCode, setSpellCheckLanguageCode ] = useTriliumOption("spellCheckLanguageCode", triliumInServerOptions);
 
     const availableLanguageCodes = useMemo(() => {
         if (!isElectron()) {

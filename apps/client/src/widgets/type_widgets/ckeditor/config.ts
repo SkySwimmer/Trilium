@@ -3,6 +3,7 @@ import { MIME_TYPE_AUTO } from "@triliumnext/commons";
 import { buildExtraCommands, type EditorConfig, PREMIUM_PLUGINS } from "@triliumnext/ckeditor5";
 import { getHighlightJsNameForMime } from "../../../services/mime_types.js";
 import options from "../../../services/options.js";
+import local_options from "../../../services/local_options.js";
 import { ensureMimeTypesForHighlighting, isSyntaxHighlightEnabled } from "../../../services/syntax_highlight.js";
 import emojiDefinitionsUrl from "@triliumnext/ckeditor5/emoji_definitions/en.json?url";
 import { copyTextWithToast } from "../../../services/clipboard_ext.js";
@@ -177,7 +178,7 @@ export async function buildConfig(opts: BuildEditorOptions): Promise<EditorConfi
     }
 
     // Mention customisation.
-    if (options.get("textNoteCompletionEnabled") === "true") {
+    if (local_options.get("textNoteCompletionEnabled") === "true") {
         config.mention = {
             feeds: [
                 {
@@ -240,7 +241,7 @@ function getLicenseKey() {
 function getDisabledPlugins() {
     let disabledPlugins: string[] = [];
 
-    if (options.get("textNoteEmojiCompletionEnabled") !== "true") {
+    if (local_options.get("textNoteEmojiCompletionEnabled") !== "true") {
         disabledPlugins.push("EmojiMention");
     }
 

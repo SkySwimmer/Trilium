@@ -6,7 +6,7 @@ import AbstractTextTypeWidget from "./abstract_text_type_widget.js";
 import link from "../../services/link.js";
 import appContext, { type CommandListenerData, type EventData } from "../../components/app_context.js";
 import dialogService from "../../services/dialog.js";
-import options from "../../services/options.js";
+import local_options from "../../services/local_options.js";
 import toast from "../../services/toast.js";
 import { buildSelectedBackgroundColor } from "../../components/touch_bar.js";
 import { buildConfig, BuildEditorOptions, OPEN_SOURCE_LICENSE_KEY } from "./ckeditor/config.js";
@@ -108,7 +108,7 @@ export default class EditableTextTypeWidget extends AbstractTextTypeWidget {
     }
 
     async initEditor() {
-        const isClassicEditor = utils.isMobile() || options.get("textNoteEditorType") === "ckeditor-classic";
+        const isClassicEditor = utils.isMobile() || local_options.get("textNoteEditorType") === "ckeditor-classic";
 
         // CKEditor since version 12 needs the element to be visible before initialization. At the same time,
         // we want to avoid flicker - i.e., show editor only once everything is ready. That's why we have separate
@@ -300,7 +300,7 @@ export default class EditableTextTypeWidget extends AbstractTextTypeWidget {
 
     insertDateTimeToTextCommand() {
         const date = new Date();
-        const customDateTimeFormat = options.get("customDateTimeFormat");
+        const customDateTimeFormat = local_options.get("customDateTimeFormat");
         const dateString = utils.formatDateTime(date, customDateTimeFormat);
 
         this.addTextToEditor(dateString);

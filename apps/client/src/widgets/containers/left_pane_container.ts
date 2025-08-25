@@ -1,4 +1,4 @@
-import options from "../../services/options.js";
+import local_options from "../../services/local_options.js";
 import FlexContainer from "./flex_container.js";
 import appContext, { type EventData } from "../../components/app_context.js";
 import type Component from "../../components/component.js";
@@ -9,7 +9,7 @@ export default class LeftPaneContainer extends FlexContainer<Component> {
     constructor() {
         super("column");
 
-        this.currentLeftPaneVisible = options.is("leftPaneVisible");
+        this.currentLeftPaneVisible = local_options.is("leftPaneVisible");
 
         this.id("left-pane");
         this.css("height", "100%");
@@ -32,6 +32,6 @@ export default class LeftPaneContainer extends FlexContainer<Component> {
             this.triggerEvent("focusOnDetail", { ntxId: appContext.tabManager.getActiveContext()?.ntxId });
         }
 
-        options.save("leftPaneVisible", this.currentLeftPaneVisible.toString());
+        local_options.save("leftPaneVisible", this.currentLeftPaneVisible.toString());
     }
 }

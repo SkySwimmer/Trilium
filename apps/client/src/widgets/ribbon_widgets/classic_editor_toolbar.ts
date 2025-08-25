@@ -1,5 +1,5 @@
 import { t } from "../../services/i18n.js";
-import options from "../../services/options.js";
+import local_options from "../../services/local_options.js";
 import utils from "../../services/utils.js";
 import NoteContextAwareWidget from "../note_context_aware_widget.js";
 
@@ -49,7 +49,7 @@ export default class ClassicEditorToolbar extends NoteContextAwareWidget {
     }
 
     isEnabled(): boolean | null | undefined {
-        if (options.get("textNoteEditorType") !== "ckeditor-classic") {
+        if (local_options.get("textNoteEditorType") !== "ckeditor-classic") {
             return false;
         }
 

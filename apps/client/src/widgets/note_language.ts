@@ -5,7 +5,7 @@ import type { EventData } from "../components/app_context.js";
 import type FNote from "../entities/fnote.js";
 import attributes from "../services/attributes.js";
 import type { Locale } from "@triliumnext/commons";
-import options from "../services/options.js";
+import local_options from "../services/local_options.js";
 import appContext from "../components/app_context.js";
 
 const TPL = /*html*/`\
@@ -132,7 +132,7 @@ export default class NoteLanguageWidget extends NoteContextAwareWidget {
     }
 
     static #buildLocales() {
-        const enabledLanguages = JSON.parse(options.get("languages") ?? "[]") as string[];
+        const enabledLanguages = JSON.parse(local_options.get("languages") ?? "[]") as string[];
         const filteredLanguages = getAvailableLocales().filter((l) => typeof l !== "object" || enabledLanguages.includes(l.id));
         const leftToRightLanguages = filteredLanguages.filter((l) => !l.rtl);
         const rightToLeftLanguages = filteredLanguages.filter((l) => l.rtl);

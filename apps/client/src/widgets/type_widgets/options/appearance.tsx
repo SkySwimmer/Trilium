@@ -17,6 +17,12 @@ import RelatedSettings from "./components/RelatedSettings";
 
 const MIN_CONTENT_WIDTH = 640;
 
+let triliumInServerOptions = true; // FIXME: actually let something change this, and maybe not a global, but for compile reasons leaving it at this rn
+
+export function setInServerOptions(state: boolean) {
+    triliumInServerOptions = state;
+}
+
 interface Theme {
     val: string;
     title: string;
@@ -80,7 +86,7 @@ const FONT_FAMILIES: FontGroup[] = [
 ];
 
 export default function AppearanceSettings() {    
-    const [ overrideThemeFonts ] = useTriliumOption("overrideThemeFonts");
+    const [ overrideThemeFonts ] = useTriliumOption("overrideThemeFonts", triliumInServerOptions);
 
     return (
         <div>
@@ -105,7 +111,7 @@ export default function AppearanceSettings() {
 }
 
 function LayoutOrientation() {
-    const [ layoutOrientation, setLayoutOrientation ] = useTriliumOption("layoutOrientation", true);
+    const [ layoutOrientation, setLayoutOrientation ] = useTriliumOption("layoutOrientation", triliumInServerOptions, true);
     
     return (
         <OptionsSection title={t("theme.layout")}>
@@ -130,8 +136,8 @@ function LayoutOrientation() {
 }
 
 function ApplicationTheme() {
-    const [ theme, setTheme ] = useTriliumOption("theme", true);
-    const [ overrideThemeFonts, setOverrideThemeFonts ] = useTriliumOptionBool("overrideThemeFonts");
+    const [ theme, setTheme ] = useTriliumOption("theme", triliumInServerOptions, true);
+    const [ overrideThemeFonts, setOverrideThemeFonts ] = useTriliumOptionBool("overrideThemeFonts", triliumInServerOptions);
 
     const [ themes, setThemes ] = useState<Theme[]>([]);
 
@@ -183,8 +189,8 @@ function Fonts() {
 }
 
 function Font({ title, fontFamilyOption, fontSizeOption }: { title: string, fontFamilyOption: OptionNames, fontSizeOption: OptionNames }) {    
-    const [ fontFamily, setFontFamily ] = useTriliumOption(fontFamilyOption);    
-    const [ fontSize, setFontSize ] = useTriliumOption(fontSizeOption);
+    const [ fontFamily, setFontFamily ] = useTriliumOption(fontFamilyOption, triliumInServerOptions);    
+    const [ fontSize, setFontSize ] = useTriliumOption(fontSizeOption, triliumInServerOptions);
 
     return (
         <>
@@ -212,9 +218,9 @@ function Font({ title, fontFamilyOption, fontSizeOption }: { title: string, font
 }
 
 function ElectronIntegration() {
-    const [ zoomFactor, setZoomFactor ] = useTriliumOption("zoomFactor");
-    const [ nativeTitleBarVisible, setNativeTitleBarVisible ] = useTriliumOptionBool("nativeTitleBarVisible");
-    const [ backgroundEffects, setBackgroundEffects ] = useTriliumOptionBool("backgroundEffects");
+    const [ zoomFactor, setZoomFactor ] = useTriliumOption("zoomFactor", triliumInServerOptions);
+    const [ nativeTitleBarVisible, setNativeTitleBarVisible ] = useTriliumOptionBool("nativeTitleBarVisible", triliumInServerOptions);
+    const [ backgroundEffects, setBackgroundEffects ] = useTriliumOptionBool("backgroundEffects", triliumInServerOptions);
 
     return (
         <OptionsSection title={t("electron_integration.desktop-application")}>
@@ -247,9 +253,9 @@ function ElectronIntegration() {
 }
 
 function Performance() {
-    const [ motionEnabled, setMotionEnabled ] = useTriliumOptionBool("motionEnabled");
-    const [ shadowsEnabled, setShadowsEnabled ] = useTriliumOptionBool("shadowsEnabled");
-    const [ backdropEffectsEnabled, setBackdropEffectsEnabled ] = useTriliumOptionBool("backdropEffectsEnabled");
+    const [ motionEnabled, setMotionEnabled ] = useTriliumOptionBool("motionEnabled", triliumInServerOptions);
+    const [ shadowsEnabled, setShadowsEnabled ] = useTriliumOptionBool("shadowsEnabled", triliumInServerOptions);
+    const [ backdropEffectsEnabled, setBackdropEffectsEnabled ] = useTriliumOptionBool("backdropEffectsEnabled", triliumInServerOptions);
 
     return <OptionsSection title={t("ui-performance.title")}>
         <FormCheckbox
@@ -271,7 +277,7 @@ function Performance() {
 
 
 function MaxContentWidth() {
-    const [ maxContentWidth, setMaxContentWidth ] = useTriliumOption("maxContentWidth");
+    const [ maxContentWidth, setMaxContentWidth ] = useTriliumOption("maxContentWidth", triliumInServerOptions);
 
     return (
         <OptionsSection title={t("max_content_width.title")}>

@@ -16,6 +16,10 @@ class Options {
         }
     }
 
+    has(key: string) {
+        return this.getNames().includes(key);
+    }
+
     load(arr: Record<string, OptionValue>) {
         this.arr = arr;
     }
@@ -82,6 +86,9 @@ class Options {
      * @param newValues the record of keys and values.
      */
     async saveMany<T extends OptionNames>(newValues: Record<T, OptionValue>) {
+        for (const key in newValues) {
+            this.set(key, newValues[key]);
+        }
         await server.put<void>("options", newValues);
     }
 

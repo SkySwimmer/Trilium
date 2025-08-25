@@ -8,7 +8,7 @@
 import { t } from "../services/i18n.js";
 import attributeService from "../services/attributes.js";
 import RightPanelWidget from "./right_panel_widget.js";
-import options from "../services/options.js";
+import local_options from "../services/local_options.js";
 import OnClickButtonWidget from "./buttons/onclick_button.js";
 import appContext, { type EventData } from "../components/app_context.js";
 import type FNote from "../entities/fnote.js";
@@ -89,7 +89,7 @@ export default class HighlightsListWidget extends RightPanelWidget {
             this.toggleInt(false);
         }
 
-        const optionsHighlightsList = JSON.parse(options.get("highlightsList"));
+        const optionsHighlightsList = JSON.parse(local_options.get("highlightsList"));
 
         if (note?.isLabelTruthy("hideHighlightWidget") || !optionsHighlightsList.length) {
             this.toggleInt(false);

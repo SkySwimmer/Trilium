@@ -4,9 +4,9 @@ import { ParentComponent } from "./ReactBasicWidget";
 import SpacedUpdate from "../../services/spaced_update";
 import { OptionNames } from "@triliumnext/commons";
 import options, { type OptionValue } from "../../services/options";
+import local_options from "../../services/local_options";
 import utils, { reloadFrontendApp } from "../../services/utils";
 import Component from "../../components/component";
-import server from "../../services/server";
 
 type TriliumEventHandler<T extends EventNames> = (data: EventData<T>) => void;
 const registeredHandlers: Map<Component, Map<EventNames, TriliumEventHandler<any>[]>> = new Map();
@@ -118,13 +118,14 @@ export function useSpacedUpdate(callback: () => Promise<void>, interval = 1000) 
  * @param needsRefresh whether to reload the frontend whenever the value is changed.
  * @returns an array where the first value is the current option value and the second value is the setter.
  */
-export function useTriliumOption(name: OptionNames, needsRefresh?: boolean): [string, (newValue: OptionValue) => Promise<void>] {
-    const initialValue = options.get(name);
+export function useTriliumOption(name: OptionNames, useServerSided: boolean, needsRefresh?: boolean): [string, (newValue: OptionValue) => Promise<void>, (() => boolean)?, (() => Promise<void>)?] {
+    const options_framework = useServerSided ? options : local_options;
+    const initialValue = options_framework.get(name);
     const [ value, setValue ] = useState(initialValue);
 
     const wrappedSetValue = useMemo(() => {
         return async (newValue: OptionValue) => {
-            await options.save(name, newValue);
+            await options_framework.save(name, newValue);
 
             if (needsRefresh) {
                 reloadFrontendApp(`option change: ${name}`);
@@ -134,14 +135,32 @@ export function useTriliumOption(name: OptionNames, needsRefresh?: boolean): [st
 
     useTriliumEvent("entitiesReloaded", useCallback(({ loadResults }) => {
         if (loadResults.getOptionNames().includes(name)) {
-            const newValue = options.get(name);
+            const newValue = options_framework.get(name);
             setValue(newValue);
         }
-     }, [ name ]));
+    }, [name]));
+    
+    const isDefinedClientsided = useServerSided ? undefined : function () {
+        // Check
+        return local_options.hasLocal(name);
+    };
+
+    const removeClientsided = useServerSided ? undefined : async function () {
+        // Remove
+        await local_options.remove(name);
+
+        if (needsRefresh) {
+            reloadFrontendApp(`option change: ${name}`);
+        }
+
+        return;
+    };
 
     return [
         value,
-        wrappedSetValue
+        wrappedSetValue,
+        isDefinedClientsided,
+        removeClientsided
     ]
 }
 
@@ -152,11 +171,13 @@ export function useTriliumOption(name: OptionNames, needsRefresh?: boolean): [st
  * @param needsRefresh whether to reload the frontend whenever the value is changed.
  * @returns an array where the first value is the current option value and the second value is the setter.
  */
-export function useTriliumOptionBool(name: OptionNames, needsRefresh?: boolean): [boolean, (newValue: boolean) => Promise<void>] {
-    const [ value, setValue ] = useTriliumOption(name, needsRefresh);
+export function useTriliumOptionBool(name: OptionNames, useServerSided: boolean, needsRefresh?: boolean): [boolean, (newValue: boolean) => Promise<void>, (() => boolean)?, (() => Promise<void>)?] {
+    const [ value, setValue, isDefinedClientsided, removeClientsided ] = useTriliumOption(name, useServerSided, needsRefresh);
     return [
         (value === "true"),
-        (newValue) => setValue(newValue ? "true" : "false")
+        (newValue) => setValue(newValue ? "true" : "false"),
+        isDefinedClientsided,
+        removeClientsided
     ]
 }
 
@@ -167,11 +188,13 @@ export function useTriliumOptionBool(name: OptionNames, needsRefresh?: boolean):
  * @param needsRefresh whether to reload the frontend whenever the value is changed.
  * @returns an array where the first value is the current option value and the second value is the setter.
  */
-export function useTriliumOptionInt(name: OptionNames): [number, (newValue: number) => Promise<void>] {
-    const [ value, setValue ] = useTriliumOption(name);
+export function useTriliumOptionInt(name: OptionNames, useServerSided: boolean): [number, (newValue: number) => Promise<void>, (() => boolean)?, (() => Promise<void>)?] {
+    const [ value, setValue, isDefinedClientsided, removeClientsided ] = useTriliumOption(name, useServerSided);
     return [
         (parseInt(value, 10)),
-        (newValue) => setValue(newValue)
+        (newValue) => setValue(newValue),
+        isDefinedClientsided,
+        removeClientsided
     ]
 }
 
@@ -181,11 +204,13 @@ export function useTriliumOptionInt(name: OptionNames): [number, (newValue: numb
  * @param name the name of the option to listen for.
  * @returns an array where the first value is the current option value and the second value is the setter.
  */
-export function useTriliumOptionJson<T>(name: OptionNames): [ T, (newValue: T) => Promise<void> ] {
-    const [ value, setValue ] = useTriliumOption(name);
+export function useTriliumOptionJson<T>(name: OptionNames, useServerSided: boolean): [ T, (newValue: T) => Promise<void>, (() => boolean)?, (() => Promise<void>)? ] {
+    const [ value, setValue, isDefinedClientsided, removeClientsided ] = useTriliumOption(name, useServerSided);
     return [
         (JSON.parse(value) as T),
-        (newValue => setValue(JSON.stringify(newValue)))
+        (newValue => setValue(JSON.stringify(newValue))),
+        isDefinedClientsided,
+        removeClientsided
     ];
 }
 
@@ -195,15 +220,29 @@ export function useTriliumOptionJson<T>(name: OptionNames): [ T, (newValue: T) =
  * @param names the name of the option to listen for.
  * @returns an array where the first value is a map where the keys are the option names and the values, and the second value is the setter which takes in the same type of map and saves them all at once.
  */
-export function useTriliumOptions<T extends OptionNames>(...names: T[]) {
+export function useTriliumOptions<T extends OptionNames>(useServerSided: boolean, ...names: T[]) {
+    const options_framework = useServerSided ? options : local_options;
     const values: Record<string, string> = {};
     for (const name of names) {
-        values[name] = options.get(name);
+        values[name] = options_framework.get(name);
     }
+
+    const isDefinedClientsided = useServerSided ? undefined : function (name) {
+        // Check
+        return local_options.hasLocal(name);
+    };
+
+    const removeClientsided = useServerSided ? undefined : async function (name) {
+        // Remove
+        await local_options.remove(name);
+        return;
+    };
 
     return [
         values as Record<T, string>,
-        options.saveMany
+        options_framework.saveMany,
+        isDefinedClientsided,
+        removeClientsided
     ] as const;
 }
 

@@ -4,7 +4,7 @@ import ViewMode, { type ViewModeArgs } from "./view_mode.js";
 import type FNote from "../../entities/fnote.js";
 import server from "../../services/server.js";
 import { t } from "../../services/i18n.js";
-import options from "../../services/options.js";
+import local_options from "../../services/local_options.js";
 import dialogService from "../../services/dialog.js";
 import attributes from "../../services/attributes.js";
 import type { CommandListenerData, EventData } from "../../components/app_context.js";
@@ -164,10 +164,10 @@ export default class CalendarView extends ViewMode<{}> {
             selectable: isEditable,
             select: (e) => this.#onCalendarSelection(e),
             eventChange: (e) => this.#onEventMoved(e),
-            firstDay: options.getInt("firstDayOfWeek") ?? 0,
+            firstDay: local_options.getInt("firstDayOfWeek") ?? 0,
             weekends: !this.parentNote.hasAttribute("label", "calendar:hideWeekends"),
             weekNumbers: this.parentNote.hasAttribute("label", "calendar:weekNumbers"),
-            locale: await getFullCalendarLocale(options.get("locale")),
+            locale: await getFullCalendarLocale(local_options.get("locale")),
             height: "100%",
             nowIndicator: true,
             handleWindowResize: false,

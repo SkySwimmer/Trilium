@@ -61,7 +61,7 @@ import UploadAttachmentsDialog from "../widgets/dialogs/upload_attachments.js";
 import CopyImageReferenceButton from "../widgets/floating_buttons/copy_image_reference_button.js";
 import ScrollPaddingWidget from "../widgets/scroll_padding.js";
 import ClassicEditorToolbar from "../widgets/ribbon_widgets/classic_editor_toolbar.js";
-import options from "../services/options.js";
+import local_options from "../services/local_options.js";
 import utils from "../services/utils.js";
 import GeoMapButtons from "../widgets/floating_buttons/geo_map_button.js";
 import ContextualHelpButton from "../widgets/floating_buttons/help_button.js";
@@ -85,7 +85,7 @@ export default class DesktopLayout {
     getRootWidget(appContext: AppContext) {
         appContext.noteTreeWidget = new NoteTreeWidget();
 
-        const launcherPaneIsHorizontal = options.get("layoutOrientation") === "horizontal";
+        const launcherPaneIsHorizontal = local_options.get("layoutOrientation") === "horizontal";
         const launcherPane = this.#buildLauncherPane(launcherPaneIsHorizontal);
         const isElectron = utils.isElectron();
         const isMac = window.glob.platform === "darwin";

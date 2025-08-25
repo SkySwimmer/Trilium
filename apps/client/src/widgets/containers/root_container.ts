@@ -1,6 +1,6 @@
 import { EventData } from "../../components/app_context.js";
 import FlexContainer from "./flex_container.js";
-import options from "../../services/options.js";
+import local_options from "../../services/local_options.js";
 import type BasicWidget from "../basic_widget.js";
 import utils from "../../services/utils.js";
 
@@ -29,24 +29,24 @@ export default class RootContainer extends FlexContainer<BasicWidget> {
             window.visualViewport?.addEventListener("resize", () => this.#onMobileResize());
         }
 
-        this.#setMotion(options.is("motionEnabled"));
-        this.#setShadows(options.is("shadowsEnabled"));
-        this.#setBackdropEffects(options.is("backdropEffectsEnabled"));
+        this.#setMotion(local_options.is("motionEnabled"));
+        this.#setShadows(local_options.is("shadowsEnabled"));
+        this.#setBackdropEffects(local_options.is("backdropEffectsEnabled"));
 
         return super.render();
     }
 
     entitiesReloadedEvent({ loadResults }: EventData<"entitiesReloaded">) {
         if (loadResults.isOptionReloaded("motionEnabled")) {
-            this.#setMotion(options.is("motionEnabled"));
+            this.#setMotion(local_options.is("motionEnabled"));
         }
 
         if (loadResults.isOptionReloaded("shadowsEnabled")) {
-            this.#setShadows(options.is("shadowsEnabled"));
+            this.#setShadows(local_options.is("shadowsEnabled"));
         }
 
         if (loadResults.isOptionReloaded("backdropEffectsEnabled")) {
-            this.#setBackdropEffects(options.is("backdropEffectsEnabled"));
+            this.#setBackdropEffects(local_options.is("backdropEffectsEnabled"));
         }
     }
 

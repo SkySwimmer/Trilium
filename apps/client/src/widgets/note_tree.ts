@@ -15,6 +15,7 @@ import clipboard from "../services/clipboard.js";
 import protectedSessionService from "../services/protected_session.js";
 import linkService from "../services/link.js";
 import options from "../services/options.js";
+import local_options from "../services/local_options.js";
 import protectedSessionHolder from "../services/protected_session_holder.js";
 import dialogService from "../services/dialog.js";
 import shortcutService from "../services/shortcuts.js";
@@ -339,19 +340,19 @@ export default class NoteTreeWidget extends NoteContextAwareWidget {
     }
 
     get hideArchivedNotes() {
-        return options.is(`hideArchivedNotes_${this.treeName}`);
+        return local_options.is(`hideArchivedNotes_${this.treeName}`);
     }
 
     async setHideArchivedNotes(val: string) {
-        await options.save(`hideArchivedNotes_${this.treeName}`, val.toString());
+        await local_options.save(`hideArchivedNotes_${this.treeName}`, val.toString());
     }
 
     get autoCollapseNoteTree() {
-        return options.is("autoCollapseNoteTree");
+        return local_options.is("autoCollapseNoteTree");
     }
 
     async setAutoCollapseNoteTree(val: string) {
-        await options.save("autoCollapseNoteTree", val.toString());
+        await local_options.save("autoCollapseNoteTree", val.toString());
     }
 
     initFancyTree() {

@@ -2,7 +2,7 @@ import type { CommandListenerData, EventData } from "../../components/app_contex
 import type FNote from "../../entities/fnote.js";
 import { t } from "../../services/i18n.js";
 import keyboardActionService from "../../services/keyboard_actions.js";
-import options from "../../services/options.js";
+import local_options from "../../services/local_options.js";
 import AbstractCodeTypeWidget from "./abstract_code_type_widget.js";
 import appContext from "../../components/app_context.js";
 import type { TouchBarItem } from "../../components/touch_bar.js";
@@ -55,7 +55,7 @@ export default class EditableCodeTypeWidget extends AbstractCodeTypeWidget {
     getExtraOpts(): Partial<EditorConfig> {
         return {
             placeholder: t("editable_code.placeholder"),
-            vimKeybindings: options.is("vimKeymapEnabled"),
+            vimKeybindings: local_options.is("vimKeymapEnabled"),
             onContentChanged: () => {
                 if (this.debounceUpdate) {
                     this.spacedUpdate.resetUpdateTimer();

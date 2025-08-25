@@ -5,11 +5,17 @@ import { FormTextBoxWithUnit } from "../../react/FormTextBox";
 import { useTriliumOption, useTriliumOptionBool } from "../../react/hooks";
 import OptionsSection from "./components/OptionsSection";
 
+let triliumInServerOptions = true; // FIXME: actually let something change this, and maybe not a global, but for compile reasons leaving it at this rn
+
+export function setInServerOptions(state: boolean) {
+    triliumInServerOptions = state;
+}
+
 export default function ImageSettings() {
-    const [ downloadImagesAutomatically, setDownloadImagesAutomatically ] = useTriliumOptionBool("downloadImagesAutomatically");
-    const [ compressImages, setCompressImages ] = useTriliumOptionBool("compressImages");
-    const [ imageMaxWidthHeight, setImageMaxWidthHeight ] = useTriliumOption("imageMaxWidthHeight"); 
-    const [ imageJpegQuality, setImageJpegQuality ] = useTriliumOption("imageJpegQuality");
+    const [ downloadImagesAutomatically, setDownloadImagesAutomatically ] = useTriliumOptionBool("downloadImagesAutomatically", triliumInServerOptions);
+    const [ compressImages, setCompressImages ] = useTriliumOptionBool("compressImages", triliumInServerOptions);
+    const [ imageMaxWidthHeight, setImageMaxWidthHeight ] = useTriliumOption("imageMaxWidthHeight", triliumInServerOptions); 
+    const [ imageJpegQuality, setImageJpegQuality ] = useTriliumOption("imageJpegQuality", triliumInServerOptions);
 
     return (
         <OptionsSection title={t("images.images_section_title")}>

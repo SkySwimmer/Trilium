@@ -1,4 +1,4 @@
-import options from "./options.js";
+import local_options from "./local_options.js";
 import i18next from "i18next";
 import i18nextHttpBackend from "i18next-http-backend";
 import server from "./server.js";
@@ -13,7 +13,7 @@ let locales: Locale[] | null;
 export let translationsInitializedPromise = $.Deferred();
 
 export async function initLocale() {
-    const locale = (options.get("locale") as string) || "en";
+    const locale = (local_options.get("locale") as string) || "en";
 
     locales = await server.get<Locale[]>("options/locales");
 

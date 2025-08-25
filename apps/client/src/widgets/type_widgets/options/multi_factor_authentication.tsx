@@ -15,8 +15,14 @@ import toast from "../../../services/toast"
 import RawHtml from "../../react/RawHtml"
 import { isElectron } from "../../../services/utils"
 
+let triliumInServerOptions = true; // FIXME: actually let something change this, and maybe not a global, but for compile reasons leaving it at this rn
+
+export function setInServerOptions(state: boolean) {
+    triliumInServerOptions = state;
+}
+
 export default function MultiFactorAuthenticationSettings() {
-    const [ mfaEnabled, setMfaEnabled ] = useTriliumOptionBool("mfaEnabled");
+    const [ mfaEnabled, setMfaEnabled ] = useTriliumOptionBool("mfaEnabled", triliumInServerOptions);
 
     return (!isElectron()
         ? (
@@ -45,7 +51,7 @@ function EnableMultiFactor({ mfaEnabled, setMfaEnabled }: { mfaEnabled: boolean,
 }
 
 function MultiFactorMethod() {
-    const [ mfaMethod, setMfaMethod ] = useTriliumOption("mfaMethod");
+    const [ mfaMethod, setMfaMethod ] = useTriliumOption("mfaMethod", triliumInServerOptions);
 
     return (
         <>

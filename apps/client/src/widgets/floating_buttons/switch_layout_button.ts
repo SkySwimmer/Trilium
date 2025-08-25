@@ -1,6 +1,6 @@
 import type { EventData } from "../../components/app_context.js";
 import { t } from "../../services/i18n.js";
-import options from "../../services/options.js";
+import local_options from "../../services/local_options.js";
 import NoteContextAwareWidget from "../note_context_aware_widget.js";
 
 const TPL = /*html*/`
@@ -23,15 +23,15 @@ export default class SwitchSplitOrientationButton extends NoteContextAwareWidget
         super.doRender();
         this.$widget = $(TPL);
         this.$widget.on("click", () => {
-            const currentOrientation = options.get("splitEditorOrientation");
-            options.save("splitEditorOrientation", toggleOrientation(currentOrientation));
+            const currentOrientation = local_options.get("splitEditorOrientation");
+            local_options.save("splitEditorOrientation", toggleOrientation(currentOrientation));
         });
         this.#adjustIcon();
         this.contentSized();
     }
 
     #adjustIcon() {
-        const currentOrientation = options.get("splitEditorOrientation");
+        const currentOrientation = local_options.get("splitEditorOrientation");
         const upcomingOrientation = toggleOrientation(currentOrientation);
         const $icon = this.$widget.find("span.bx");
         $icon

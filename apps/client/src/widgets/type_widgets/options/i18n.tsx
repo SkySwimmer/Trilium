@@ -13,6 +13,12 @@ import Admonition from "../../react/Admonition";
 import Button from "../../react/Button";
 import CheckboxList from "./components/CheckboxList";
 
+let triliumInServerOptions = true; // FIXME: actually let something change this, and maybe not a global, but for compile reasons leaving it at this rn
+
+export function setInServerOptions(state: boolean) {
+    triliumInServerOptions = state;
+}
+
 export default function InternationalizationOptions() {
     return (
         <>
@@ -31,8 +37,8 @@ function LocalizationOptions() {
         }
     }, []);
 
-    const [ locale, setLocale ] = useTriliumOption("locale");
-    const [ formattingLocale, setFormattingLocale ] = useTriliumOption("formattingLocale");
+    const [ locale, setLocale ] = useTriliumOption("locale", triliumInServerOptions);
+    const [ formattingLocale, setFormattingLocale ] = useTriliumOption("formattingLocale", triliumInServerOptions);
 
     return (
         <OptionsSection title={t("i18n.title")}>
@@ -59,9 +65,9 @@ function LocaleSelector({ id, locales, currentValue, onChange }: { id?: string; 
 }
 
 function DateSettings() {
-    const [ firstDayOfWeek, setFirstDayOfWeek ] = useTriliumOption("firstDayOfWeek");
-    const [ firstWeekOfYear, setFirstWeekOfYear ] = useTriliumOption("firstWeekOfYear");
-    const [ minDaysInFirstWeek, setMinDaysInFirstWeek ] = useTriliumOption("minDaysInFirstWeek");
+    const [ firstDayOfWeek, setFirstDayOfWeek ] = useTriliumOption("firstDayOfWeek", triliumInServerOptions);
+    const [ firstWeekOfYear, setFirstWeekOfYear ] = useTriliumOption("firstWeekOfYear", triliumInServerOptions);
+    const [ minDaysInFirstWeek, setMinDaysInFirstWeek ] = useTriliumOption("minDaysInFirstWeek", triliumInServerOptions);
 
     return (
         <>
@@ -119,7 +125,7 @@ function DateSettings() {
 
 function ContentLanguages() {
     const locales = useMemo(() => getAvailableLocales(), []);
-    const [ languages, setLanguages ] = useTriliumOptionJson<string[]>("languages");
+    const [ languages, setLanguages ] = useTriliumOptionJson<string[]>("languages", triliumInServerOptions);
 
     return (
         <OptionsSection title={t("content_language.title")}>

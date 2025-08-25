@@ -7,8 +7,7 @@ import noteAutocompleteService from "./services/note_autocomplete.js";
 import electronContextMenu from "./menus/electron_context_menu.js";
 import glob from "./services/glob.js";
 import { t } from "./services/i18n.js";
-import options from "./services/options.js";
-import server from "./services/server.js";
+import local_options from "./services/local_options.js";
 import type ElectronRemote from "@electron/remote";
 import type Electron from "electron";
 import "./stylesheets/bootstrap.scss";
@@ -57,7 +56,7 @@ function initOnElectron() {
     initDarkOrLightMode(style);
     initTransparencyEffects(style, currentWindow);
 
-    if (options.get("nativeTitleBarVisible") !== "true") {
+    if (local_options.get("nativeTitleBarVisible") !== "true") {
         initTitleBarButtons(style, currentWindow);
     }
 }

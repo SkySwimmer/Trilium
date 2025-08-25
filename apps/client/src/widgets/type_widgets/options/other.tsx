@@ -16,6 +16,12 @@ import FormTextBox, { FormTextBoxWithUnit } from "../../react/FormTextBox";
 import FormSelect from "../../react/FormSelect";
 import { isElectron } from "../../../services/utils";
 
+let triliumInServerOptions = true; // FIXME: actually let something change this, and maybe not a global, but for compile reasons leaving it at this rn
+
+export function setInServerOptions(state: boolean) {
+    triliumInServerOptions = state;
+}
+
 export default function OtherSettings() {
     return (
         <>
@@ -35,8 +41,8 @@ export default function OtherSettings() {
 }
 
 function SearchEngineSettings() {
-    const [ customSearchEngineName, setCustomSearchEngineName ] = useTriliumOption("customSearchEngineName");
-    const [ customSearchEngineUrl, setCustomSearchEngineUrl ] = useTriliumOption("customSearchEngineUrl");
+    const [ customSearchEngineName, setCustomSearchEngineName ] = useTriliumOption("customSearchEngineName", triliumInServerOptions);
+    const [ customSearchEngineUrl, setCustomSearchEngineUrl ] = useTriliumOption("customSearchEngineUrl", triliumInServerOptions);
 
     const searchEngines = useMemo(() => {
         return [
@@ -86,7 +92,7 @@ function SearchEngineSettings() {
 }
 
 function TrayOptionsSettings() {
-    const [ disableTray, setDisableTray ] = useTriliumOptionBool("disableTray");
+    const [ disableTray, setDisableTray ] = useTriliumOptionBool("disableTray", triliumInServerOptions);
 
     return (
         <OptionsSection title={t("tray.title")}>
@@ -169,7 +175,7 @@ function RevisionSnapshotInterval() {
 }
 
 function RevisionSnapshotLimit() {
-    const [ revisionSnapshotNumberLimit, setRevisionSnapshotNumberLimit ] = useTriliumOption("revisionSnapshotNumberLimit");
+    const [ revisionSnapshotNumberLimit, setRevisionSnapshotNumberLimit ] = useTriliumOption("revisionSnapshotNumberLimit", triliumInServerOptions);
 
     return (
         <OptionsSection title={t("revisions_snapshot_limit.note_revisions_snapshot_limit_title")}>
@@ -201,7 +207,7 @@ function RevisionSnapshotLimit() {
 }
 
 function HtmlImportTags() {
-    const [ allowedHtmlTags, setAllowedHtmlTags ] = useTriliumOptionJson<readonly string[]>("allowedHtmlTags");
+    const [ allowedHtmlTags, setAllowedHtmlTags ] = useTriliumOptionJson<readonly string[]>("allowedHtmlTags", triliumInServerOptions);
 
     const parsedValue = useMemo(() => {
         return allowedHtmlTags.join(" ");
@@ -240,8 +246,8 @@ function HtmlImportTags() {
 }
 
 function ShareSettings() {
-    const [ redirectBareDomain, setRedirectBareDomain ] = useTriliumOptionBool("redirectBareDomain");
-    const [ showLogInShareTheme, setShowLogInShareTheme ] = useTriliumOptionBool("showLoginInShareTheme");
+    const [ redirectBareDomain, setRedirectBareDomain ] = useTriliumOptionBool("redirectBareDomain", triliumInServerOptions);
+    const [ showLogInShareTheme, setShowLogInShareTheme ] = useTriliumOptionBool("showLoginInShareTheme", triliumInServerOptions);
 
     return (
         <OptionsSection title={t("share.title")}>
@@ -278,7 +284,7 @@ function ShareSettings() {
 }
 
 function NetworkSettings() {
-    const [ checkForUpdates, setCheckForUpdates ] = useTriliumOptionBool("checkForUpdates");
+    const [ checkForUpdates, setCheckForUpdates ] = useTriliumOptionBool("checkForUpdates", triliumInServerOptions);
 
     return (
         <OptionsSection title={t("network_connections.network_connections_title")}>

@@ -1,5 +1,5 @@
 import BasicWidget from "./basic_widget.js";
-import options from "../services/options.js";
+import local_options from "../services/local_options.js";
 import utils from "../services/utils.js";
 
 const TPL = /*html*/`
@@ -44,7 +44,7 @@ const TPL = /*html*/`
 
 export default class TitleBarButtonsWidget extends BasicWidget {
     doRender() {
-        if (!utils.isElectron() || options.is("nativeTitleBarVisible")) {
+        if (!utils.isElectron() || local_options.is("nativeTitleBarVisible")) {
             return (this.$widget = $("<div>"));
         }
 

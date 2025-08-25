@@ -22,7 +22,7 @@ export default function SyncOptions() {
 }
 
 export function SyncConfiguration() {
-    const [ options, setOptions ] = useTriliumOptions("syncServerHost", "syncServerTimeout", "syncProxy");
+    const [ options, setOptions ] = useTriliumOptions(true, "syncServerHost", "syncServerTimeout", "syncProxy");
     const syncServerHost = useRef(options.syncServerHost);
     const syncServerTimeout = useRef(options.syncServerTimeout);
     const syncProxy = useRef(options.syncProxy);

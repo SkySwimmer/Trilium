@@ -4,7 +4,7 @@ import froca from "../../services/froca.js";
 import linkService from "../../services/link.js";
 import contentRenderer from "../../services/content_renderer.js";
 import utils from "../../services/utils.js";
-import options from "../../services/options.js";
+import local_options from "../../services/local_options.js";
 import attributes from "../../services/attributes.js";
 import ws from "../../services/ws.js";
 
@@ -116,7 +116,7 @@ export default class AbstractTextTypeWidget extends TypeWidget {
     }
 
     refreshCodeBlockOptions() {
-        const wordWrap = options.is("codeBlockWordWrap");
+        const wordWrap = local_options.is("codeBlockWordWrap");
         this.$widget.toggleClass("word-wrap", wordWrap);
     }
 

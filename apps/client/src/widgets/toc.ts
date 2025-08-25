@@ -16,7 +16,7 @@
 import { t } from "../services/i18n.js";
 import attributeService from "../services/attributes.js";
 import RightPanelWidget from "./right_panel_widget.js";
-import options from "../services/options.js";
+import local_options from "../services/local_options.js";
 import OnClickButtonWidget from "./buttons/onclick_button.js";
 import appContext, { type EventData } from "../components/app_context.js";
 import katex from "../services/math.js";
@@ -221,7 +221,7 @@ export default class TocWidget extends RightPanelWidget {
 
         const tocLabelValue = this.tocLabelValue;
 
-        const visible = tocLabelValue === "" || tocLabelValue === "show" || headingCount >= (options.getInt("minTocHeadings") ?? 0);
+        const visible = tocLabelValue === "" || tocLabelValue === "show" || headingCount >= (local_options.getInt("minTocHeadings") ?? 0);
         this.toggleInt(visible);
         if (this.noteContext?.viewScope) {
             this.noteContext.viewScope.tocPreviousVisible = visible;

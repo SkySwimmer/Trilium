@@ -11,6 +11,12 @@ import OptionsSection from "./components/OptionsSection";
 import { useCallback, useEffect, useState } from "preact/hooks";
 import { formatDateTime } from "../../../utils/formatters";
 
+let triliumInServerOptions = true; // FIXME: actually let something change this, and maybe not a global, but for compile reasons leaving it at this rn
+
+export function setInServerOptions(state: boolean) {
+    triliumInServerOptions = state;
+}
+
 export default function BackupSettings() {
     const [ backups, setBackups ] = useState<DatabaseBackup[]>([]);
 
@@ -39,9 +45,9 @@ export default function BackupSettings() {
 }
 
 export function AutomaticBackup() {
-    const [ dailyBackupEnabled, setDailyBackupEnabled ] = useTriliumOptionBool("dailyBackupEnabled");
-    const [ weeklyBackupEnabled, setWeeklyBackupEnabled ] = useTriliumOptionBool("weeklyBackupEnabled");
-    const [ monthlyBackupEnabled, setMonthlyBackupEnabled ] = useTriliumOptionBool("monthlyBackupEnabled");
+    const [ dailyBackupEnabled, setDailyBackupEnabled ] = useTriliumOptionBool("dailyBackupEnabled", triliumInServerOptions);
+    const [ weeklyBackupEnabled, setWeeklyBackupEnabled ] = useTriliumOptionBool("weeklyBackupEnabled", triliumInServerOptions);
+    const [ monthlyBackupEnabled, setMonthlyBackupEnabled ] = useTriliumOptionBool("monthlyBackupEnabled", triliumInServerOptions);
 
     return (
         <OptionsSection title={t("backup.automatic_backup")}>

@@ -16,6 +16,12 @@ import AutoReadOnlySize from "./components/AutoReadOnlySize";
 
 const SAMPLE_MIME = "application/typescript";
 
+let triliumInServerOptions = true; // FIXME: actually let something change this, and maybe not a global, but for compile reasons leaving it at this rn
+
+export function setInServerOptions(state: boolean) {
+    triliumInServerOptions = state;
+}
+
 export default function CodeNoteSettings() {
     return (
         <>
@@ -28,7 +34,7 @@ export default function CodeNoteSettings() {
 }
 
 function Editor() {
-    const [ vimKeymapEnabled, setVimKeymapEnabled ] = useTriliumOptionBool("vimKeymapEnabled");
+    const [ vimKeymapEnabled, setVimKeymapEnabled ] = useTriliumOptionBool("vimKeymapEnabled", triliumInServerOptions);
 
     return (
         <OptionsSection title={t("code-editor-options.title")}>
@@ -43,8 +49,8 @@ function Editor() {
 }
 
 function Appearance() {
-    const [ codeNoteTheme, setCodeNoteTheme ] = useTriliumOption("codeNoteTheme");
-    const [ codeLineWrapEnabled, setCodeLineWrapEnabled ] = useTriliumOptionBool("codeLineWrapEnabled");
+    const [ codeNoteTheme, setCodeNoteTheme ] = useTriliumOption("codeNoteTheme", triliumInServerOptions);
+    const [ codeLineWrapEnabled, setCodeLineWrapEnabled ] = useTriliumOptionBool("codeLineWrapEnabled", triliumInServerOptions);
 
     const themes = useMemo(() => {
         return ColorThemes.map(({ id, name }) => ({
@@ -123,7 +129,7 @@ function CodeNotePreview({ themeName, wordWrapping }: { themeName: string, wordW
 }
 
 function CodeMimeTypes() {
-    const [ codeNotesMimeTypes, setCodeNotesMimeTypes ] = useTriliumOptionJson<string[]>("codeNotesMimeTypes");
+    const [ codeNotesMimeTypes, setCodeNotesMimeTypes ] = useTriliumOptionJson<string[]>("codeNotesMimeTypes", triliumInServerOptions);
     const sectionStyle = useMemo(() => ({ marginBottom: "1em", breakInside: "avoid-column" }), []);
     const groupedMimeTypes: Record<string, MimeType[]> = useMemo(() => {
         mime_types.loadMimeTypes();

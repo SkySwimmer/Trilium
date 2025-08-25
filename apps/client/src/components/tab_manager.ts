@@ -1,7 +1,7 @@
 import Component from "./component.js";
 import SpacedUpdate from "../services/spaced_update.js";
-import server from "../services/server.js";
 import options from "../services/options.js";
+import local_options from "../services/local_options.js";
 import froca from "../services/froca.js";
 import treeService from "../services/tree.js";
 import NoteContext from "./note_context.js";
@@ -52,9 +52,7 @@ export default class TabManager extends Component {
                 .map((nc) => nc.getPojoState())
                 .filter((t) => !!t);
 
-            await server.put("options", {
-                openNoteContexts: JSON.stringify(openNoteContexts)
-            });
+            await local_options.save("openNoteContexts", JSON.stringify(openNoteContexts));
         });
 
         appContext.addBeforeUnloadListener(this);
@@ -70,7 +68,7 @@ export default class TabManager extends Component {
 
     async loadTabs() {
         try {
-            const noteContextsToOpen = (appContext.isMainWindow && options.getJson("openNoteContexts")) || [];
+            const noteContextsToOpen = (appContext.isMainWindow && local_options.getJson("openNoteContexts")) || [];
 
             // preload all notes at once
             await froca.getNotes([...noteContextsToOpen.flatMap((tab: NoteContextState) =>
@@ -135,9 +133,9 @@ export default class TabManager extends Component {
             }
         } catch (e: unknown) {
             if (e instanceof Error) {
-                logError(`Loading note contexts '${options.get("openNoteContexts")}' failed: ${e.message} ${e.stack}`);
+                logError(`Loading note contexts '${local_options.get("openNoteContexts")}' failed: ${e.message} ${e.stack}`);
             } else {
-                logError(`Loading note contexts '${options.get("openNoteContexts")}' failed: ${String(e)}`);
+                logError(`Loading note contexts '${local_options.get("openNoteContexts")}' failed: ${String(e)}`);
             }
 
             // try to recover

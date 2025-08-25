@@ -98,7 +98,6 @@ function AddLinkDialogComponent() {
     }
 
     const autocompleteRef = useRef<HTMLInputElement>(null);
-    console.log("Add link ", linkType, hasSelection);
 
     return (
         <Modal

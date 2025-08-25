@@ -1,6 +1,6 @@
 {
   "name": "@triliumnext/source",
-  "version": "0.98.2-noai",
+  "version": "0.98.3-noai",
   "description": "Build your personal knowledge base with Trilium Notes",
   "directories": {
     "doc": "docs"

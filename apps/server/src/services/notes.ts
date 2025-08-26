@@ -744,7 +744,7 @@ function updateNoteData(noteId: string, content: string, attachments: Attachment
 
     const { forceFrontendReload, content: newContent } = saveLinks(note, content);
 
-    note.setContent(newContent, { forceFrontendReload });
+    const res = note.setContent(newContent, { forceFrontendReload });
 
     if (attachments?.length > 0) {
         const existingAttachmentsByTitle = toMap(note.getAttachments({ includeContentLength: false }), "title");
@@ -763,6 +763,8 @@ function updateNoteData(noteId: string, content: string, attachments: Attachment
             }
         }
     }
+
+    return res;
 }
 
 function undeleteNote(noteId: string, taskContext: TaskContext) {

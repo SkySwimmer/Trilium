@@ -167,19 +167,21 @@ abstract class AbstractBeccaEntity<T extends AbstractBeccaEntity<T>> {
             }
         }
 
+        let newPojo;
         sql.transactional(() => {
-            const newBlobId = this.saveBlob(content, unencryptedContentForHashCalculation, opts);
+            newPojo = this.saveBlob(content, unencryptedContentForHashCalculation, opts);
             const oldBlobId = this.blobId;
 
-            if (newBlobId !== oldBlobId || opts.forceSave) {
-                this.blobId = newBlobId;
+            if (newPojo.blobId !== oldBlobId || opts.forceSave) {
+                this.blobId = newPojo.blobId;
                 this.save();
 
-                if (oldBlobId && newBlobId !== oldBlobId) {
+                if (oldBlobId && newPojo.blobId !== oldBlobId) {
                     this.deleteBlobIfNotUsed(oldBlobId);
                 }
             }
         });
+        return newPojo;
     }
 
     private deleteBlobIfNotUsed(oldBlobId: string) {
@@ -211,7 +213,7 @@ abstract class AbstractBeccaEntity<T extends AbstractBeccaEntity<T>> {
         }
     }
 
-    private saveBlob(content: string | Buffer, unencryptedContentForHashCalculation: string | Buffer, opts: ContentOpts = {}) {
+    private saveBlob(content: string | Buffer, unencryptedContentForHashCalculation: string | Buffer, opts: ContentOpts = {}): { blobId: string, utcDateModified: string } {
         /*
          * We're using the unencrypted blob for the hash calculation, because otherwise the random IV would
          * cause every content blob to be unique which would balloon the database size (esp. with revisioning).
@@ -219,10 +221,10 @@ abstract class AbstractBeccaEntity<T extends AbstractBeccaEntity<T>> {
          * notes/attachments), but the trade-off comes out clearly positive.
          */
         const newBlobId = utils.hashedBlobId(unencryptedContentForHashCalculation);
-        const blobNeedsInsert = !sql.getValue("SELECT 1 FROM blobs WHERE blobId = ?", [newBlobId]);
+        const existingBlob: any = sql.getValue("SELECT 1 FROM blobs WHERE blobId = ?", [newBlobId]);
 
-        if (!blobNeedsInsert) {
-            return newBlobId;
+        if (existingBlob) {
+            return existingBlob;
         }
 
         const pojo = {
@@ -255,7 +257,7 @@ abstract class AbstractBeccaEntity<T extends AbstractBeccaEntity<T>> {
             entity: this
         });
 
-        return newBlobId;
+        return pojo;
     }
 
     protected _getContent(): string | Buffer {

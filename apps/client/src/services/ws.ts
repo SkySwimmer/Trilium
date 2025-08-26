@@ -316,9 +316,6 @@ async function connectWebSocket() {
     ws.onopen = () => handleConnected(webSocketUri);
     ws.onmessage = handleMessage;
     // we're not handling ws.onclose here because reconnection is done in sendPing()
-
-    // Verify authentication
-    await verifyAuth();
     return ws;
 }
 
@@ -616,9 +613,15 @@ async function sendPing() {
         if (!connectionFailed) {
             console.log(utils.now(), "WS closed or closing, trying to reconnect");
 
-            // Try reconnect
-            connectionIsReconnect = true;
-            ws = await connectWebSocket();
+            // Verify authentication
+            await verifyAuth();
+
+            // Check
+            if (!connectionFailed) {
+                // Try reconnect
+                connectionIsReconnect = true;
+                ws = await connectWebSocket();
+            }
         }
     }
 }
@@ -626,6 +629,9 @@ async function sendPing() {
 setTimeout(async () => {
     // Resync time
     server.resyncTime();
+
+    // Verify authentication
+    await verifyAuth();
 
     // Connect
     ws = await connectWebSocket();

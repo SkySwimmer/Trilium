@@ -470,7 +470,9 @@ async function refreshNotes() {
     // Active note refreshes, this part of the code deals with refreshing note data, either uploading or downloading active notes
     // Depending on the server content, if the upstream is newer, itll need to be downloaded, if the upstream matches the cache but the contents changed, itll need upload
     let anyNotesChanged = false;
+    let connectionFailed = false;
     const refreshedNotes: FNote[] = [];
+    const refresherPromises: Promise<FBlobRow | null>[] = [];
     for (const noteID in froca.notes) {
         // Get note
         const note = froca.notes[noteID];
@@ -497,79 +499,110 @@ async function refreshNotes() {
 
             // Load remote data
             // Calling manually so deleted blobs wont cause issues
-            const blob = await server.getWithSilentNotFound<FBlobRow>("notes/" + note.noteId + "/blob").then((row) => new FBlob(row)).catch(() => null);
-            if (!blob) {
+            refresherPromises.push(server.getWithSilentNotFound<FBlobRow>("notes/" + note.noteId + "/blob").catch(async (res) => {
+                // Check current status
+                if (connectionFailed)
+                    return null; // Connection broken
+
                 // Check if its a connection error
                 const connected: boolean = await server.get("connectiontest").then((data: any) => {
                     return data.connected;
                 }).catch((e) => {
-                    console.error(utils.now(), `Note refresh failure! Connection to server unavailable! Exception: `, e);
-                    return false;
+                    if (!connectionFailed) {
+                        connectionFailed = true;
+                        console.error(utils.now(), `Note refresh failure! Connection to server unavailable! Exception: `, e);
+                    }
+                    return null;
                 });
 
                 // Check result
                 if (!connected) {
                     // Connection error, abort
-                    return false;
+                    return null;
                 }
 
-                // Note no longer present likely
-                continue; // Skip
-            }
-            const serverSidedData = blob.content; // Current serversided note contents
-            const serverSidedEditTime = Date.parse(blob.utcDateModified); // Current serversided note update timestamp
+                // No longer present
+                return res;
+            }).then(async (blobR) => {
+                // Check error
+                if (!blobR)
+                    return null;
 
-            // Compare note against remote
-            const remoteChangedSinceDisconnect = lastRemoteData !== serverSidedData; // Checks if the server side has changed by comparing the last synced data to the current data
-            const localChangedSinceDisconnect = lastLocalData !== lastRemoteData; // Checks if the local note has been altered by the user since the disconnect
-            if (remoteChangedSinceDisconnect) {
-                // Remote end has changed since our disconnect
+                // Check current status
+                if (connectionFailed)
+                    return null; // Connection broken
 
-                // Check conflict
-                if (localChangedSinceDisconnect) {
-                    // Conflict
+                // Load blob
+                const blob = new FBlob(blobR);
 
-                    // Check times
-                    console.debug(utils.now(), "Note " + note.noteId + " has gone out of sync! (local changed, upstream changed)");
-                    console.debug(utils.now(), "Conflict detected with note refresh, performing resolution!");
-                    if (lastLocalEditTime > serverSidedEditTime) {
-                        // Current is newer
-                        console.debug(utils.now(), "Local note changes are newer than upstream changes");
+                // Check data
+                const serverSidedData = blob.content; // Current serversided note contents
+                const serverSidedEditTime = Date.parse(blob.utcDateModified); // Current serversided note update timestamp
 
-                        // Sync local data to upsream
-                        if (!await refreshNoteUpload(note, lastLocalData))
-                            return false;
-                        refreshedNotes.push(note);
-                        anyNotesChanged = true;
+                // Compare note against remote
+                const remoteChangedSinceDisconnect = lastRemoteData !== serverSidedData; // Checks if the server side has changed by comparing the last synced data to the current data
+                const localChangedSinceDisconnect = lastLocalData !== lastRemoteData; // Checks if the local note has been altered by the user since the disconnect
+                if (remoteChangedSinceDisconnect) {
+                    // Remote end has changed since our disconnect
+
+                    // Check conflict
+                    if (localChangedSinceDisconnect) {
+                        // Conflict
+
+                        // Check times
+                        console.debug(utils.now(), "Note " + note.noteId + " has gone out of sync! (local changed, upstream changed)");
+                        console.debug(utils.now(), "Conflict detected with note refresh, performing resolution!");
+                        if (lastLocalEditTime > serverSidedEditTime) {
+                            // Current is newer
+                            console.debug(utils.now(), "Local note changes are newer than upstream changes");
+
+                            // Sync local data to upsream
+                            if (!await refreshNoteUpload(note, lastLocalData))
+                                return null;
+                            refreshedNotes.push(note);
+                            anyNotesChanged = true;
+                        } else {
+                            // Upstream is newer
+                            console.debug(utils.now(), "Upstream note changes are newer than local changes");
+
+                            // Download upstream data to local
+                            if (!await refreshNoteDownload(note, serverSidedData, serverSidedEditTime))
+                                return null;
+                            refreshedNotes.push(note);
+                            anyNotesChanged = true;
+                        }
                     } else {
-                        // Upstream is newer
-                        console.debug(utils.now(), "Upstream note changes are newer than local changes");
-
                         // Download upstream data to local
+                        console.debug(utils.now(), "Note " + note.noteId + " has gone out of sync! (local unchanged, upstream changed)");
                         if (!await refreshNoteDownload(note, serverSidedData, serverSidedEditTime))
-                            return false;
+                            return null;
                         refreshedNotes.push(note);
                         anyNotesChanged = true;
                     }
-                } else {
-                    // Download upstream data to local
-                    console.debug(utils.now(), "Note " + note.noteId + " has gone out of sync! (local unchanged, upstream changed)");
-                    if (!await refreshNoteDownload(note, serverSidedData, serverSidedEditTime))
-                        return false;
+                } else if (localChangedSinceDisconnect) {
+                    // Remote end unchanged but local end has changed
+
+                    // Sync local data to upsream
+                    console.debug(utils.now(), "Note " + note.noteId + " has gone out of sync! (local changed, upstream unchanged)");
+                    if (!await refreshNoteUpload(note, lastLocalData))
+                        return null;
                     refreshedNotes.push(note);
                     anyNotesChanged = true;
                 }
-            } else if (localChangedSinceDisconnect) {
-                // Remote end unchanged but local end has changed
 
-                // Sync local data to upsream
-                console.debug(utils.now(), "Note " + note.noteId + " has gone out of sync! (local changed, upstream unchanged)");
-                if (!await refreshNoteUpload(note, lastLocalData))
-                    return false;
-                refreshedNotes.push(note);
-                anyNotesChanged = true;
-            }
+                // Success for this one
+                return blob;
+            }));
         }
+    }
+
+    // Await all
+    const results = await Promise.all(refresherPromises);
+
+    // Check
+    for (const res of results) {
+        if (!res)
+            return false; // Failed
     }
 
     // Log done

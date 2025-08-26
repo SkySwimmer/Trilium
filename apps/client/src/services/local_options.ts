@@ -157,7 +157,7 @@ class LocalOptions {
         if (utils.isElectron())
             return options.save(key, value);
         if (!this.isAllowedLocal(key))
-            return options.set(key, value);
+            return options.save(key, value);
         this.set(key, value);
 
         const payload: Record<string, OptionValue> = {};
@@ -211,10 +211,11 @@ class LocalOptions {
     }
 
     isAllowedLocal(name: string) {
-        return (OPTIONS_ALLOWED_LOCAL as Set<string>).has(name)
-            || name.startsWith("keyboardShortcuts")
-            || name.endsWith("Collapsed")
-            || name.startsWith("hideArchivedNotes");
+        return ((OPTIONS_ALLOWED_LOCAL as Set<string>).has(name) // FIXME: the options below depend too much on the server right now, nor have we fully implemented user-specific options
+            // || name.startsWith("keyboardShortcuts")
+            // || name.endsWith("Collapsed")
+            // || name.startsWith("hideArchivedNotes")
+        ) && options.is("useLocalOption_" + name)
     }
 
     private isEmptyDefault(name: string) {
@@ -224,12 +225,14 @@ class LocalOptions {
 
 // options permitted to be local options instead of server options
 const OPTIONS_ALLOWED_LOCAL = new Set<OptionNames>([
-    "openNoteContexts"
+    "openNoteContexts",
+    "noteTreeExpansion"
 ]);
 
 // options that are empty by default instead of using the server options as fallback
 const OPTIONS_LOCAL_EMPTY_DEFAULT = new Set<OptionNames>([
-    "openNoteContexts"
+    "openNoteContexts",
+    "noteTreeExpansion"
 ]);
 
 const localOptions = new LocalOptions();

@@ -35,6 +35,9 @@ export default function OtherSettings() {
             <RevisionSnapshotLimit />
             <HtmlImportTags />
             <ShareSettings />
+            {!isElectron() &&
+                < LocalOptionsSettings />
+            }
             <NetworkSettings />
         </>
     )
@@ -253,7 +256,7 @@ function ShareSettings() {
         <OptionsSection title={t("share.title")}>
             <FormGroup name="redirectBareDomain" description={t("share.redirect_bare_domain_description")}>
                 <FormCheckbox                    
-                    label={t(t("share.redirect_bare_domain"))}   
+                    label={t("share.redirect_bare_domain")}   
                     currentValue={redirectBareDomain}
                     onChange={async value => {
                         if (value) {
@@ -278,6 +281,30 @@ function ShareSettings() {
                     label={t("share.show_login_link")}
                     currentValue={showLogInShareTheme} onChange={setShowLogInShareTheme}
                 />
+            </FormGroup>
+        </OptionsSection>
+    )
+}
+
+function LocalOptionsSettings() {
+    const [ useLocalOption_openNoteContexts, set_UseLocalOption_openNoteContexts ] = useTriliumOptionBool("useLocalOption_openNoteContexts", true);
+    const [ useLocalOption_noteTreeExpansion, set_UseLocalOption_noteTreeExpansion ] = useTriliumOptionBool("useLocalOption_noteTreeExpansion", true);
+
+    return (
+        <OptionsSection title={t("local_options.title")}>
+            <FormGroup name="localoptionsOpenNoteContexts" description={t("local_options.note_tabs_description")}>
+                <FormCheckbox                    
+                    label={t("local_options.note_tabs")}
+                    currentValue={useLocalOption_openNoteContexts}
+                    onChange={set_UseLocalOption_openNoteContexts}
+                /> 
+            </FormGroup>
+            <FormGroup name="localoptionsNoteTreeExpansion" description={t("local_options.note_tree_expansion_description")}>
+                <FormCheckbox                    
+                    label={t("local_options.note_tree_expansion")}
+                    currentValue={useLocalOption_noteTreeExpansion}
+                    onChange={set_UseLocalOption_noteTreeExpansion}
+                /> 
             </FormGroup>
         </OptionsSection>
     )

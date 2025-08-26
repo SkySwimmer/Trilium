@@ -965,9 +965,14 @@ export default class NoteTreeWidget extends NoteContextAwareWidget {
             node = this.getNodesByNoteId(hoistedNoteId)[0];
         }
 
-        const { branchIds } = await server.put<ExpandedSubtreeResponse>(`branches/${node.data.branchId}/expanded-subtree/${isExpanded ? 1 : 0}`);
-
-        froca.getBranches(branchIds, true).forEach((branch) => (branch.isExpanded = !!isExpanded));
+        let branches: string[] = [];
+            const { branchIds } = await server.put<ExpandedSubtreeResponse>(`branches/${node.data.branchId}/expanded-subtree/${isExpanded ? 1 : 0}`);
+            branches = branchIds;
+        if (!options.is("useLocalOption_noteTreeExpansion")) {
+            // Expand via server
+        } else {
+            branches = [];
+        }
 
         await this.batchUpdate(async () => {
             await node.load(true);

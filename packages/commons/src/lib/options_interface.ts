@@ -16,6 +16,8 @@ export type FontFamily = "theme" | "serif" | "sans-serif" | "monospace" | string
 
 export interface OptionDefinitions extends KeyboardShortcutsOptions<KeyboardActionNames> {
     openNoteContexts: string;
+    noteTreeExpansion: string;
+
     lastDailyBackupDate: string;
     lastWeeklyBackupDate: string;
     lastMonthlyBackupDate: string;
@@ -133,6 +135,10 @@ export interface OptionDefinitions extends KeyboardShortcutsOptions<KeyboardActi
     showLoginInShareTheme: boolean;
 
     seenCallToActions: boolean;
+
+    // Local options
+    useLocalOption_openNoteContexts: boolean;
+    useLocalOption_noteTreeExpansion: boolean;
 }
 
 export type OptionNames = keyof OptionDefinitions;

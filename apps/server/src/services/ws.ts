@@ -47,6 +47,9 @@ interface Message {
     done?: boolean;
     error?: string;
     raw?: unknown;
+
+    key?: string;
+    value?: string;
 }
 
 type SessionParser = (req: IncomingMessage, params: {}, cb: () => void) => void;

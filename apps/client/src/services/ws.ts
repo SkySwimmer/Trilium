@@ -91,7 +91,7 @@ let consumeQueuePromise: Promise<void> | null = null;
 const processedEntityChangeIds = new Set();
 
 function logRows(entityChanges: EntityChange[]) {
-    const filteredRows = entityChanges.filter((row) => !processedEntityChangeIds.has(row.id) && (row.entityName !== "options" || row.entityId !== "openNoteContexts"));
+    const filteredRows = entityChanges.filter((row) => !processedEntityChangeIds.has(row.id) && (row.entityName !== "options" || (row.entityId !== "openNoteContexts" && row.entityId !== "noteTreeExpansion")));
 
     if (filteredRows.length > 0) {
         console.debug(utils.now(), "Frontend update data: ", filteredRows);

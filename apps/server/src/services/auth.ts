@@ -235,6 +235,7 @@ function checkCredentials(req: Request, res: Response, next: NextFunction) {
 
     if (!passwordEncryptionService.verifyPassword(password)) {
         res.setHeader("Content-Type", "text/plain").status(401).send("Incorrect password");
+        log.info(`WARNING: Wrong password from ${req.ip}, rejecting.`);
     } else {
         next();
     }

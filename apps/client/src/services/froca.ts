@@ -3,6 +3,8 @@ import FBranch, { type FBranchRow } from "../entities/fbranch.js";
 import FNote, { type FNoteRow } from "../entities/fnote.js";
 import FAttribute, { type FAttributeRow } from "../entities/fattribute.js";
 import server from "./server.js";
+import options from "./options.js";
+import local_options from "./local_options.js";
 import appContext from "../components/app_context.js";
 import protectedSessionHolder from "./protected_session_holder.js";
 import FBlob, { type FBlobRow } from "../entities/fblob.js";
@@ -47,6 +49,7 @@ class FrocaImpl implements Froca {
 
     async loadInitialTree() {
         const resp = await server.get<SubtreeResponse>("tree");
+        await options.initializedPromise;
 
         // clear the cache only directly before adding new content which is important for e.g., switching to protected session
 
@@ -171,6 +174,25 @@ class FrocaImpl implements Froca {
         for (const noteId of noteIdsToSort) {
             this.notes[noteId].sortChildren();
             this.notes[noteId].sortParents();
+        }
+
+        // load user tree overrides
+        if (!utils.isElectron() && options.is("useLocalOption_noteTreeExpansion")) {
+            // load tree states
+            const tree = local_options.has("noteTreeExpansion") ? JSON.parse(local_options.get("noteTreeExpansion")) : {};
+            for (const branchRow of branchRows) {
+                const branch = this.branches[branchRow.branchId]
+                if (branch) {
+                    // check tree states
+                    if (tree[branchRow.branchId] != undefined) {
+                        // set state
+                        branch.isExpanded = tree[branchRow.branchId];
+                    } else {
+                        // mark NOT expanded
+                        branch.isExpanded = false;
+                    }
+                }
+            }
         }
     }
 

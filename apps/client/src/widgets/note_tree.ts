@@ -966,13 +966,46 @@ export default class NoteTreeWidget extends NoteContextAwareWidget {
         }
 
         let branches: string[] = [];
+        if (utils.isElectron() || !options.is("useLocalOption_noteTreeExpansion")) {
+            // Expand via server
             const { branchIds } = await server.put<ExpandedSubtreeResponse>(`branches/${node.data.branchId}/expanded-subtree/${isExpanded ? 1 : 0}`);
             branches = branchIds;
-        if (!options.is("useLocalOption_noteTreeExpansion")) {
-            // Expand via server
         } else {
-            branches = [];
+            // Expand locally
+
+            // Load child branches
+            const branchId = node.data.branchId;
+            function recurseFindBranches(branch?: FBranch) {
+                if (branch) {
+                    branches.push(branchId);
+                    for (const id in froca.branches) {
+                        // Check parent
+                        if (froca.branches[id].parentNoteId == branch.noteId) {
+                            // Add
+                            branches.push(id);
+                            recurseFindBranches(froca.branches[id]);
+                        }
+                    }
+                }
+            }
+            recurseFindBranches(froca.branches[branchId]);
+
+            // Set states
+            for (const branch of branches) {
+                froca.branches[branch].isExpanded = isExpanded;
+            }
+
+            // Build tree
+            const tree = {};
+            for (const id in froca.branches) {
+                tree[id] = froca.branches[id].isExpanded;
+            }
+
+            // Save
+            await local_options.save("noteTreeExpansion", JSON.stringify(tree));
         }
+
+        froca.getBranches(branches, true).forEach((branch) => (branch.isExpanded = !!isExpanded));
 
         await this.batchUpdate(async () => {
             await node.load(true);
@@ -1499,7 +1532,17 @@ export default class NoteTreeWidget extends NoteContextAwareWidget {
 
         branch.isExpanded = isExpanded;
 
-        server.put(`branches/${branchId}/expanded/${isExpanded ? 1 : 0}`);
+        if (utils.isElectron() || !options.is("useLocalOption_noteTreeExpansion")) {
+            // Expand via server
+            server.put(`branches/${branchId}/expanded/${isExpanded ? 1 : 0}`);
+        } else {
+            // Set locally
+            const tree = {};
+            for (const id in froca.branches) {
+                tree[id] = froca.branches[id].isExpanded;
+            }
+            local_options.save("noteTreeExpansion", JSON.stringify(tree));
+        }
     }
 
     async reloadTreeFromCache() {

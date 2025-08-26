@@ -16,7 +16,6 @@ export type FontFamily = "theme" | "serif" | "sans-serif" | "monospace" | string
 
 export interface OptionDefinitions extends KeyboardShortcutsOptions<KeyboardActionNames> {
     openNoteContexts: string;
-    noteTreeExpansion: string;
 
     lastDailyBackupDate: string;
     lastWeeklyBackupDate: string;

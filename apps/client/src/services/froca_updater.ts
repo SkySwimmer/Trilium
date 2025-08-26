@@ -26,7 +26,7 @@ async function processEntityChanges(entityChanges: EntityChange[]) {
                 loadResults.addRevision(ec.entityId, ec.noteId, ec.componentId);
             } else if (ec.entityName === "options") {
                 const attributeEntity = ec.entity as FAttributeRow;
-                if (attributeEntity.name === "openNoteContexts" || attributeEntity.name === "noteTreeExpansion") {
+                if (attributeEntity.name === "openNoteContexts") {
                     continue; // only noise
                 }
 

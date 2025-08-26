@@ -73,7 +73,6 @@ async function initNotSyncedOptions(initialized: boolean, opts: NotSyncedOpts = 
  * Contains all the default options that must be initialized on new and existing databases (at startup). The value can also be determined based on other options, provided they have already been initialized.
  */
 const defaultOptions: DefaultOption[] = [
-    { name: "noteTreeExpansion", value: "{}", isSynced: false },
     { name: "revisionSnapshotTimeInterval", value: "600", isSynced: true },
     { name: "revisionSnapshotTimeIntervalTimeScale", value: "60", isSynced: true }, // default to Minutes
     { name: "revisionSnapshotNumberLimit", value: "-1", isSynced: true },

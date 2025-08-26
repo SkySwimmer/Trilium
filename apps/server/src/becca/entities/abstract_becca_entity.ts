@@ -221,7 +221,7 @@ abstract class AbstractBeccaEntity<T extends AbstractBeccaEntity<T>> {
          * notes/attachments), but the trade-off comes out clearly positive.
          */
         const newBlobId = utils.hashedBlobId(unencryptedContentForHashCalculation);
-        const existingBlob: any = sql.getValue("SELECT 1 FROM blobs WHERE blobId = ?", [newBlobId]);
+        const existingBlob: any = sql.getRow("SELECT * FROM blobs WHERE blobId = ?", [newBlobId]);
 
         if (existingBlob) {
             return existingBlob;

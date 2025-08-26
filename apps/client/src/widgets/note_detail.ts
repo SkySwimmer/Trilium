@@ -34,6 +34,7 @@ import utils from "../services/utils.js";
 import type { NoteType } from "../entities/fnote.js";
 import type TypeWidget from "./type_widgets/type_widget.js";
 import { MermaidTypeWidget } from "./type_widgets/mermaid.js";
+import { FBlobRow } from "../entities/fblob.js";
 
 const TPL = /*html*/`
 <div class="note-detail">
@@ -133,15 +134,14 @@ export default class NoteDetailWidget extends NoteContextAwareWidget {
             // Update shouldnt be attempted at all if the connection isnt available
             if (ws.isConnected()) {
                 // Update on server
-                await server.put(`notes/${noteId}/data`, data, this.componentId);
-
-                // Download blob
-                const blob = await froca.getBlob("notes", noteId);
+                const blob = await server.put<FBlobRow>(`notes/${noteId}/data`, data, this.componentId);
                 if (blob != null)
                 {
                     // Update note sync data to match server
                     note.lastLocalData = blob.content;
                     note.lastLocalEdits = Date.parse(blob.utcDateModified);
+                    note.lastRemoteData = blob.content;
+                    note.lastRemoteEdits = Date.parse(blob.utcDateModified);
                 }
             }
 

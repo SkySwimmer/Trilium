@@ -7,6 +7,8 @@ import options, { type OptionValue } from "../../services/options";
 import local_options from "../../services/local_options";
 import utils, { reloadFrontendApp } from "../../services/utils";
 import Component from "../../components/component";
+import { t } from "../../services/i18n";
+import Button from "./Button";
 
 type TriliumEventHandler<T extends EventNames> = (data: EventData<T>) => void;
 const registeredHandlers: Map<Component, Map<EventNames, TriliumEventHandler<any>[]>> = new Map();
@@ -25,9 +27,9 @@ export default function useTriliumEvent<T extends EventNames>(eventName: T, hand
     if (!parentWidget) {
         return;
     }
-    
+
     const handlerName = `${eventName}Event`;
-    const customHandler  = useMemo(() => {
+    const customHandler = useMemo(() => {
         return async (data: EventData<T>) => {
             // Inform the attached event listeners.
             const eventHandlers = registeredHandlers.get(parentWidget)?.get(eventName) ?? [];
@@ -35,7 +37,7 @@ export default function useTriliumEvent<T extends EventNames>(eventName: T, hand
                 eventHandler(data);
             }
         }
-    }, [ eventName, parentWidget ]);    
+    }, [eventName, parentWidget]);
 
     useEffect(() => {
         // Attach to the list of handlers.
@@ -59,19 +61,19 @@ export default function useTriliumEvent<T extends EventNames>(eventName: T, hand
         if (parentWidget[handlerName] && parentWidget[handlerName] !== customHandler) {
             console.warn(`Widget ${parentWidget.componentId} already had an event listener and it was replaced by the React one.`);
         }
-        
+
         parentWidget[handlerName] = customHandler;
-    
+
         return () => {
             const eventHandlers = registeredHandlers.get(parentWidget)?.get(eventName);
             if (!eventHandlers || !eventHandlers.includes(handler)) {
                 return;
             }
-    
+
             // Remove the event handler from the array.            
-            const newEventHandlers = eventHandlers.filter(e => e !== handler);            
+            const newEventHandlers = eventHandlers.filter(e => e !== handler);
             if (newEventHandlers.length) {
-                registeredHandlers.get(parentWidget)?.set(eventName, newEventHandlers);        
+                registeredHandlers.get(parentWidget)?.set(eventName, newEventHandlers);
             } else {
                 registeredHandlers.get(parentWidget)?.delete(eventName);
             }
@@ -80,7 +82,7 @@ export default function useTriliumEvent<T extends EventNames>(eventName: T, hand
                 registeredHandlers.delete(parentWidget);
             }
         };
-    }, [ eventName, parentWidget, handler ]);
+    }, [eventName, parentWidget, handler]);
 }
 
 export function useSpacedUpdate(callback: () => Promise<void>, interval = 1000) {
@@ -121,7 +123,7 @@ export function useSpacedUpdate(callback: () => Promise<void>, interval = 1000) 
 export function useTriliumOption(name: OptionNames, useServerSided: boolean, needsRefresh?: boolean): [string, (newValue: OptionValue) => Promise<void>, (() => boolean)?, (() => Promise<void>)?] {
     const options_framework = useServerSided ? options : local_options;
     const initialValue = options_framework.get(name);
-    const [ value, setValue ] = useState(initialValue);
+    const [value, setValue] = useState(initialValue);
 
     const wrappedSetValue = useMemo(() => {
         return async (newValue: OptionValue) => {
@@ -130,8 +132,11 @@ export function useTriliumOption(name: OptionNames, useServerSided: boolean, nee
             if (needsRefresh) {
                 reloadFrontendApp(`option change: ${name}`);
             }
+
+            if (!useServerSided && local_options.hasLocal(name) && local_options.isAllowedLocal(name))
+                setValue(newValue.toString());
         }
-    }, [ name, needsRefresh ]);
+    }, [name, needsRefresh]);
 
     useTriliumEvent("entitiesReloaded", useCallback(({ loadResults }) => {
         if (loadResults.getOptionNames().includes(name)) {
@@ -139,10 +144,10 @@ export function useTriliumOption(name: OptionNames, useServerSided: boolean, nee
             setValue(newValue);
         }
     }, [name]));
-    
+
     const isDefinedClientsided = useServerSided ? undefined : function () {
         // Check
-        return local_options.hasLocal(name);
+        return local_options.hasLocal(name) && local_options.isAllowedLocal(name);
     };
 
     const removeClientsided = useServerSided ? undefined : async function () {
@@ -167,12 +172,13 @@ export function useTriliumOption(name: OptionNames, useServerSided: boolean, nee
 /**
  * Similar to {@link useTriliumOption}, but the value is converted to and from a boolean instead of a string.
  * 
- * @param name the name of the option to listen for.
- * @param needsRefresh whether to reload the frontend whenever the value is changed.
+ * @param useServerSided true to use server-sided options, false to use local
+ * @param name the name of the option to listen for
+ * @param needsRefresh whether to reload the frontend whenever the value is changed
  * @returns an array where the first value is the current option value and the second value is the setter.
  */
 export function useTriliumOptionBool(name: OptionNames, useServerSided: boolean, needsRefresh?: boolean): [boolean, (newValue: boolean) => Promise<void>, (() => boolean)?, (() => Promise<void>)?] {
-    const [ value, setValue, isDefinedClientsided, removeClientsided ] = useTriliumOption(name, useServerSided, needsRefresh);
+    const [value, setValue, isDefinedClientsided, removeClientsided] = useTriliumOption(name, useServerSided, needsRefresh);
     return [
         (value === "true"),
         (newValue) => setValue(newValue ? "true" : "false"),
@@ -184,12 +190,13 @@ export function useTriliumOptionBool(name: OptionNames, useServerSided: boolean,
 /**
  * Similar to {@link useTriliumOption}, but the value is converted to and from a int instead of a string.
  * 
- * @param name the name of the option to listen for.
- * @param needsRefresh whether to reload the frontend whenever the value is changed.
+ * @param useServerSided true to use server-sided options, false to use local
+ * @param name the name of the option to listen for
+ * @param needsRefresh whether to reload the frontend whenever the value is changed
  * @returns an array where the first value is the current option value and the second value is the setter.
  */
-export function useTriliumOptionInt(name: OptionNames, useServerSided: boolean): [number, (newValue: number) => Promise<void>, (() => boolean)?, (() => Promise<void>)?] {
-    const [ value, setValue, isDefinedClientsided, removeClientsided ] = useTriliumOption(name, useServerSided);
+export function useTriliumOptionInt(name: OptionNames, useServerSided: boolean, needsRefresh?: boolean): [number, (newValue: number) => Promise<void>, (() => boolean)?, (() => Promise<void>)?] {
+    const [value, setValue, isDefinedClientsided, removeClientsided] = useTriliumOption(name, useServerSided, needsRefresh);
     return [
         (parseInt(value, 10)),
         (newValue) => setValue(newValue),
@@ -201,11 +208,13 @@ export function useTriliumOptionInt(name: OptionNames, useServerSided: boolean):
 /**
  * Similar to {@link useTriliumOption}, but the object value is parsed to and from a JSON instead of a string.
  * 
- * @param name the name of the option to listen for.
+ * @param useServerSided true to use server-sided options, false to use local
+ * @param name the name of the option to listen for
+ * @param needsRefresh whether to reload the frontend whenever the value is changed
  * @returns an array where the first value is the current option value and the second value is the setter.
  */
-export function useTriliumOptionJson<T>(name: OptionNames, useServerSided: boolean): [ T, (newValue: T) => Promise<void>, (() => boolean)?, (() => Promise<void>)? ] {
-    const [ value, setValue, isDefinedClientsided, removeClientsided ] = useTriliumOption(name, useServerSided);
+export function useTriliumOptionJson<T>(name: OptionNames, useServerSided: boolean, needsRefresh?: boolean): [T, (newValue: T) => Promise<void>, (() => boolean)?, (() => Promise<void>)?] {
+    const [value, setValue, isDefinedClientsided, removeClientsided] = useTriliumOption(name, useServerSided, needsRefresh);
     return [
         (JSON.parse(value) as T),
         (newValue => setValue(JSON.stringify(newValue))),
@@ -217,6 +226,7 @@ export function useTriliumOptionJson<T>(name: OptionNames, useServerSided: boole
 /**
  * Similar to {@link useTriliumOption}, but operates with multiple options at once. 
  * 
+ * @param useServerSided true to use server-sided options, false to use local
  * @param names the name of the option to listen for.
  * @returns an array where the first value is a map where the keys are the option names and the values, and the second value is the setter which takes in the same type of map and saves them all at once.
  */
@@ -246,6 +256,177 @@ export function useTriliumOptions<T extends OptionNames>(useServerSided: boolean
     ] as const;
 }
 
+type AutoSidedHandlerContext = { supportsLocal: boolean, isLocal: boolean, hasLocalValue: boolean, resetLocalValue: () => Promise<void>, switchToOtherSide: () => Promise<void>, genSideAwareElements: () => any };
+type AutoSidedHandler<T, T2> = (value: T2, setValue: (newValue: T2) => Promise<void>, execContext: AutoSidedHandlerContext) => T;
+
+/**
+ * Used to insert option blocks with support for local and server sided fields, see eg. appearance.tsx for examples
+ * 
+ * @param name option name
+ * @param handler option content provider
+ * @param setValueHandler optional handler for setValue calls
+ * @param needsRefresh whether to reload the frontend whenever the value is changed
+ * @returns object elements
+ */
+export function triliumSideAwareOptionInserter<T>(name: OptionNames, handler: AutoSidedHandler<T, string>, setValueHandler?: (setValueUpstream: (newValue: OptionValue) => Promise<void>, newValue: OptionValue) => Promise<void>, needsRefresh?: boolean): T {
+    const [sideState, setSideState] = useState<boolean>(true);
+
+    function stateForSide(useLocal: boolean) {
+        let options_framework = useLocal ? local_options : options;
+
+        const initialValue = options_framework.get(name);
+        const [value, setValue] = useState(initialValue);
+        const [localPresent, setLocalPresent] = useState(local_options.hasLocal(name));
+
+        const ctx: AutoSidedHandlerContext = {
+            supportsLocal: local_options.isAllowedLocal(name),
+            hasLocalValue: localPresent,
+            isLocal: useLocal,
+            resetLocalValue: async function () {
+                // Remove
+                local_options.remove(name);
+
+                // Refresh if needed
+                if (needsRefresh) {
+                    reloadFrontendApp(`option change: ${name}`);
+                }
+
+                setValue(options.get(name));
+                setLocalPresent(false);
+            },
+            switchToOtherSide: async function () {
+                // Switch
+                setSideState(!useLocal);
+                setValue((!useLocal ? local_options : options).get(name))
+            },
+            genSideAwareElements: function () {
+                return (
+                    <div>
+                        {ctx.supportsLocal &&
+                            <p>
+                            <p/>
+                                {ctx.isLocal ? t("local_options.tip_onclient") : t("local_options.tip_onserver")} {ctx.isLocal && ctx.hasLocalValue &&
+                                    <Button
+                                        size="micro" icon="bx bx-eraser"
+                                        text={t("local_options.reset_option")}
+                                        onClick={ctx.resetLocalValue}
+                                    />
+                                }
+                                <Button
+                                    size="micro" icon={ctx.isLocal ? "bx bx-terminal" : "bx bx-window"}
+                                    text={ctx.isLocal ? t("local_options.switch_server") : t("local_options.switch_client")}
+                                    onClick={ctx.switchToOtherSide}
+                                />
+                            </p>
+                        }
+                    </div>
+                )
+            }
+        };
+        if (utils.isElectron()) {
+            ctx.supportsLocal = false;
+            ctx.hasLocalValue = false;
+            ctx.isLocal = false;
+            options_framework = options;
+        }
+        return {
+            ctx: ctx,
+            handler: () => {
+                return handler(value, async (val) => {
+                    const upstream = async (val) => {
+                        await options_framework.save(name, val);
+
+                        if (needsRefresh) {
+                            reloadFrontendApp(`option change: ${name}`);
+                        }
+
+                        setValue(val);
+                        if (ctx.isLocal)
+                            setLocalPresent(true);
+                    };
+                    if (!setValueHandler)
+                        upstream(val);
+                    else
+                        setValueHandler(upstream, val);
+                }, ctx);
+            }
+        };
+    }
+    return stateForSide(sideState).handler();
+}
+
+/**
+ * Similar to {@link triliumSideAwareOptionInserter}, but the value is converted to and from a boolean instead of a string.
+ * 
+ * @param name option name
+ * @param handler option content provider
+ * @param setValueHandler optional handler for setValue calls
+ * @param needsRefresh whether to reload the frontend whenever the value is changed
+ * @returns object elements
+ */
+export function triliumSideAwareOptionBoolInserter<T>(name: OptionNames, handler: AutoSidedHandler<T, boolean>, setValueHandler?: (setValueUpstream: (newValue: boolean) => Promise<void>, newValue: boolean) => Promise<void>, needsRefresh?: boolean): T {
+    return triliumSideAwareOptionInserter(name, (value, setValue, ctx) => { 
+        return handler((value === "true"), (newValue) => {
+            // Assign value
+            const upstream = (newValue: boolean) => {
+                return setValue(newValue ? "true" : "false");
+            };
+            if (!setValueHandler)
+                return upstream(newValue);
+            else
+                return setValueHandler(upstream, newValue);
+        }, ctx);
+    }, undefined, needsRefresh);
+}
+
+/**
+ * Similar to {@link triliumSideAwareOptionInserter}, but the value is converted to and from a int instead of a string.
+ * 
+ * @param name option name
+ * @param handler option content provider
+ * @param setValueHandler optional handler for setValue calls
+ * @param needsRefresh whether to reload the frontend whenever the value is changed
+ * @returns object elements
+ */
+export function triliumSideAwareOptionIntInserter<T>(name: OptionNames, handler: AutoSidedHandler<T, number>, setValueHandler?: (setValueUpstream: (newValue: number) => Promise<void>, newValue: number) => Promise<void>, needsRefresh?: boolean): T {
+    return triliumSideAwareOptionInserter(name, (value, setValue, ctx) => { 
+        return handler(parseInt(value, 10), (newValue) => {
+            // Assign value
+            const upstream = (newValue: number) => {
+                return setValue(newValue.toString());
+            };
+            if (!setValueHandler)
+                return upstream(newValue);
+            else
+                return setValueHandler(upstream, newValue);
+        }, ctx);
+    }, undefined, needsRefresh);
+}
+
+/**
+ * Similar to {@link triliumSideAwareOptionInserter}, but the object value is parsed to and from a JSON instead of a string.
+ * 
+ * @param name option name
+ * @param handler option content provider
+ * @param setValueHandler optional handler for setValue calls
+ * @param needsRefresh whether to reload the frontend whenever the value is changed
+ * @returns object elements
+ */
+export function triliumSideAwareOptionJsonInserter<T, T2>(name: OptionNames, handler: AutoSidedHandler<T, T2>, setValueHandler?: (setValueUpstream: (newValue: T2) => Promise<void>, newValue: T2) => Promise<void>, needsRefresh?: boolean): T {
+    return triliumSideAwareOptionInserter(name, (value, setValue, ctx) => { 
+        return handler(JSON.parse(value) as T2, (newValue) => {
+            // Assign value
+            const upstream = (newValue: T2) => {
+                return setValue(JSON.stringify(newValue));
+            };
+            if (!setValueHandler)
+                return upstream(newValue);
+            else
+                return setValueHandler(upstream, newValue);
+        }, ctx);
+    }, undefined, needsRefresh);
+}
+
 /**
  * Generates a unique name via a random alphanumeric string of a fixed length.
  * 
@@ -256,5 +437,5 @@ export function useTriliumOptions<T extends OptionNames>(useServerSided: boolean
  * @returns a name with the given prefix and a random alpanumeric string appended to it.
  */
 export function useUniqueName(prefix?: string) {
-    return useMemo(() => (prefix ? prefix + "-" : "") + utils.randomString(10), [ prefix ]);
+    return useMemo(() => (prefix ? prefix + "-" : "") + utils.randomString(10), [prefix]);
 }

@@ -179,7 +179,7 @@ class FrocaImpl implements Froca {
         // load user tree overrides
         if (!utils.isElectron() && options.is("useLocalOption_noteTreeExpansion")) {
             // load tree states
-            const tree = local_options.has("noteTreeExpansion") ? JSON.parse(local_options.get("noteTreeExpansion")) : {};
+            const tree = local_options.hasLocal("noteTreeExpansion") ? JSON.parse(local_options.get("noteTreeExpansion")) : {};
             for (const branchRow of branchRows) {
                 const branch = this.branches[branchRow.branchId]
                 if (branch) {

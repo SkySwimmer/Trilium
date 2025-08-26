@@ -4,7 +4,7 @@ import { isElectron, isMobile, reloadFrontendApp, restartDesktopApp } from "../.
 import Column from "../../react/Column";
 import FormRadioGroup from "../../react/FormRadioGroup";
 import FormSelect, { FormSelectWithGroups } from "../../react/FormSelect";
-import { useTriliumOption, useTriliumOptionBool } from "../../react/hooks";
+import { useTriliumOption, useTriliumOptionBool, triliumSideAwareOptionInserter, triliumSideAwareOptionBoolInserter } from "../../react/hooks";
 import OptionsSection from "./components/OptionsSection";
 import server from "../../../services/server";
 import FormCheckbox from "../../react/FormCheckbox";
@@ -16,12 +16,6 @@ import Button from "../../react/Button";
 import RelatedSettings from "./components/RelatedSettings";
 
 const MIN_CONTENT_WIDTH = 640;
-
-let triliumInServerOptions = true; // FIXME: actually let something change this, and maybe not a global, but for compile reasons leaving it at this rn
-
-export function setInServerOptions(state: boolean) {
-    triliumInServerOptions = state;
-}
 
 interface Theme {
     val: string;
@@ -85,15 +79,15 @@ const FONT_FAMILIES: FontGroup[] = [
     }
 ];
 
-export default function AppearanceSettings() {    
-    const [ overrideThemeFonts ] = useTriliumOption("overrideThemeFonts", triliumInServerOptions);
+export default function AppearanceSettings() {
+    const [overrideThemeFonts] = useTriliumOption("overrideThemeFonts", false);
 
     return (
         <div>
             {!isMobile() && <LayoutOrientation />}
             <ApplicationTheme />
             {overrideThemeFonts === "true" && <Fonts />}
-            {isElectron() && <ElectronIntegration /> }
+            {isElectron() && <ElectronIntegration />}
             <Performance />
             <MaxContentWidth />
             <RelatedSettings items={[
@@ -111,35 +105,39 @@ export default function AppearanceSettings() {
 }
 
 function LayoutOrientation() {
-    const [ layoutOrientation, setLayoutOrientation ] = useTriliumOption("layoutOrientation", triliumInServerOptions, true);
-    
     return (
-        <OptionsSection title={t("theme.layout")}>
-            <FormRadioGroup
-                name="layout-orientation"
-                values={[
-                    {
-                        label: t("theme.layout-vertical-title"),
-                        inlineDescription: t("theme.layout-vertical-description"),
-                        value: "vertical"
-                    },
-                    {
-                        label: t("theme.layout-horizontal-title"),
-                        inlineDescription: t("theme.layout-horizontal-description"),
-                        value: "horizontal"
-                    }
-                ]}
-                currentValue={layoutOrientation} onChange={setLayoutOrientation}
-            />
-        </OptionsSection>
+        <div>
+            {triliumSideAwareOptionInserter("layoutOrientation", (layoutOrientation, setLayoutOrientation, ctx) => {
+                return (
+                    <div>
+                        <OptionsSection title={t("theme.layout")}>
+                            <FormRadioGroup
+                                name="layout-orientation"
+                                values={[
+                                    {
+                                        label: t("theme.layout-vertical-title"),
+                                        inlineDescription: t("theme.layout-vertical-description"),
+                                        value: "vertical"
+                                    },
+                                    {
+                                        label: t("theme.layout-horizontal-title"),
+                                        inlineDescription: t("theme.layout-horizontal-description"),
+                                        value: "horizontal"
+                                    }
+                                ]}
+                                currentValue={layoutOrientation} onChange={setLayoutOrientation}
+                            />
+                            {ctx.supportsLocal && ctx.genSideAwareElements()}
+                        </OptionsSection>
+                    </div>
+                );
+            }, undefined, true)}
+        </div>
     );
 }
 
 function ApplicationTheme() {
-    const [ theme, setTheme ] = useTriliumOption("theme", triliumInServerOptions, true);
-    const [ overrideThemeFonts, setOverrideThemeFonts ] = useTriliumOptionBool("overrideThemeFonts", triliumInServerOptions);
-
-    const [ themes, setThemes ] = useState<Theme[]>([]);
+    const [themes, setThemes] = useState<Theme[]>([]);
 
     useEffect(() => {
         server.get<Theme[]>("options/user-themes").then((userThemes) => {
@@ -153,24 +151,38 @@ function ApplicationTheme() {
     return (
         <OptionsSection title={t("theme.title")}>
             <div className="row">
-                <FormGroup name="theme" label={t("theme.theme_label")} className="col-md-6" style={{ marginBottom: 0 }}>
-                    <FormSelect
-                        values={themes} currentValue={theme} onChange={setTheme}
-                        keyProperty="val" titleProperty="title"
-                    />
-                </FormGroup>
+                {triliumSideAwareOptionInserter("theme", (theme, setTheme, ctx) => {
+                    return (
+                        <div>
+                            <FormGroup name="theme" label={t("theme.theme_label")} className="col-md-6" style={{ marginBottom: 0 }}>
+                                <FormSelect
+                                    values={themes} currentValue={theme} onChange={setTheme}
+                                    keyProperty="val" titleProperty="title"
+                                />
+                            </FormGroup>
+                            {ctx.supportsLocal && ctx.genSideAwareElements()}
+                        </div>
+                    );
+                }, undefined, true)}
 
-                <FormGroup className="side-checkbox col-md-6" name="override-theme-fonts">
-                    <FormCheckbox                        
-                        label={t("theme.override_theme_fonts_label")}
-                        currentValue={overrideThemeFonts} onChange={setOverrideThemeFonts} />
-                </FormGroup>
+                {triliumSideAwareOptionBoolInserter("overrideThemeFonts", (overrideThemeFonts, setOverrideThemeFonts, ctx) => {
+                    return (
+                        <div>
+                            <FormGroup className="side-checkbox col-md-6" name="override-theme-fonts">
+                                <FormCheckbox
+                                    label={t("theme.override_theme_fonts_label") + (!ctx.isLocal ? " " + t("local_options.servertag") : (isElectron() || !ctx.supportsLocal ? "" : " " + t("local_options.localtag")))}
+                                    currentValue={overrideThemeFonts} onChange={setOverrideThemeFonts} />
+                            </FormGroup>
+                            {ctx.supportsLocal && ctx.genSideAwareElements()}
+                        </div>
+                    );
+                })}
             </div>
         </OptionsSection>
     )
 }
 
-function Fonts() {    
+function Fonts() {
     return (
         <OptionsSection title={t("fonts.fonts")}>
             <Font title={t("fonts.main_font")} fontFamilyOption="mainFontFamily" fontSizeOption="mainFontSize" />
@@ -188,50 +200,61 @@ function Fonts() {
     );
 }
 
-function Font({ title, fontFamilyOption, fontSizeOption }: { title: string, fontFamilyOption: OptionNames, fontSizeOption: OptionNames }) {    
-    const [ fontFamily, setFontFamily ] = useTriliumOption(fontFamilyOption, triliumInServerOptions);    
-    const [ fontSize, setFontSize ] = useTriliumOption(fontSizeOption, triliumInServerOptions);
-
+function Font({ title, fontFamilyOption, fontSizeOption }: { title: string, fontFamilyOption: OptionNames, fontSizeOption: OptionNames }) {
     return (
         <>
             <h5>{title}</h5>
             <div className="row">
-                <FormGroup name="font-family" className="col-md-4" label={t("fonts.font_family")}>
-                    <FormSelectWithGroups
-                        values={FONT_FAMILIES}
-                        currentValue={fontFamily} onChange={setFontFamily}
-                        keyProperty="value" titleProperty="label"                    
-                    />
-                </FormGroup>
+                {triliumSideAwareOptionInserter(fontFamilyOption, (fontFamily, setFontFamily, ctx) => {
+                    return (
+                        <div>
+                            <FormGroup name="font-family" className="col-md-4" label={t("fonts.font_family")}>
+                                <FormSelectWithGroups
+                                    values={FONT_FAMILIES}
+                                    currentValue={fontFamily} onChange={setFontFamily}
+                                    keyProperty="value" titleProperty="label"
+                                />
+                            </FormGroup>
+                            {ctx.supportsLocal && ctx.genSideAwareElements()}
+                        </div>
+                    );
+                })}
 
-                <FormGroup name="font-size" className="col-md-6" label={t("fonts.size")}>
-                    <FormTextBoxWithUnit
-                        name="tree-font-size"
-                        type="number" min={50} max={200} step={10}
-                        currentValue={fontSize} onChange={setFontSize}
-                        unit={t("units.percentage")}
-                    />
-                </FormGroup>
-            </div>            
+                {triliumSideAwareOptionInserter(fontSizeOption, (fontSize, setFontSize, ctx) => {
+                    return (
+                        <div>
+                            <FormGroup name="font-size" className="col-md-6" label={t("fonts.size")}>
+                                <FormTextBoxWithUnit
+                                    name="tree-font-size"
+                                    type="number" min={50} max={200} step={10}
+                                    currentValue={fontSize} onChange={setFontSize}
+                                    unit={t("units.percentage")}
+                                />
+                            </FormGroup>
+                            {ctx.supportsLocal && ctx.genSideAwareElements()}
+                        </div>
+                    );
+                })}
+            </div>
         </>
     );
 }
 
 function ElectronIntegration() {
-    const [ zoomFactor, setZoomFactor ] = useTriliumOption("zoomFactor", triliumInServerOptions);
-    const [ nativeTitleBarVisible, setNativeTitleBarVisible ] = useTriliumOptionBool("nativeTitleBarVisible", triliumInServerOptions);
-    const [ backgroundEffects, setBackgroundEffects ] = useTriliumOptionBool("backgroundEffects", triliumInServerOptions);
+    const [zoomFactor, setZoomFactor] = useTriliumOption("zoomFactor", true);
+    const [nativeTitleBarVisible, setNativeTitleBarVisible] = useTriliumOptionBool("nativeTitleBarVisible", true);
+    const [backgroundEffects, setBackgroundEffects] = useTriliumOptionBool("backgroundEffects", true);
 
     return (
         <OptionsSection title={t("electron_integration.desktop-application")}>
             <FormGroup name="zoom-factor" label={t("electron_integration.zoom-factor")} description={t("zoom_factor.description")}>
                 <FormTextBox
                     type="number"
-                    min="0.3" max="2.0" step="0.1"                    
+                    min="0.3" max="2.0" step="0.1"
                     currentValue={zoomFactor} onChange={setZoomFactor}
                 />
             </FormGroup>
-            <hr/>
+            <hr />
 
             <FormGroup name="native-title-bar" description={t("electron_integration.native-title-bar-description")}>
                 <FormCheckbox
@@ -253,44 +276,67 @@ function ElectronIntegration() {
 }
 
 function Performance() {
-    const [ motionEnabled, setMotionEnabled ] = useTriliumOptionBool("motionEnabled", triliumInServerOptions);
-    const [ shadowsEnabled, setShadowsEnabled ] = useTriliumOptionBool("shadowsEnabled", triliumInServerOptions);
-    const [ backdropEffectsEnabled, setBackdropEffectsEnabled ] = useTriliumOptionBool("backdropEffectsEnabled", triliumInServerOptions);
-
     return <OptionsSection title={t("ui-performance.title")}>
-        <FormCheckbox
-            label={t("ui-performance.enable-motion")}
-            currentValue={motionEnabled} onChange={setMotionEnabled}
-        />
 
-        <FormCheckbox
-            label={t("ui-performance.enable-shadows")}
-            currentValue={shadowsEnabled} onChange={setShadowsEnabled}
-        />
-
-        <FormCheckbox
-            label={t("ui-performance.enable-backdrop-effects")}
-            currentValue={backdropEffectsEnabled} onChange={setBackdropEffectsEnabled}
-        />
+        {triliumSideAwareOptionBoolInserter("motionEnabled", (motionEnabled, setMotionEnabled, ctx) => {
+            return (
+                <div>
+                    <FormCheckbox
+                        label={t("ui-performance.enable-motion")}
+                        currentValue={motionEnabled} onChange={setMotionEnabled}
+                    />
+                    {ctx.supportsLocal && ctx.genSideAwareElements()}
+                </div>
+            );
+        })}
+        
+        {triliumSideAwareOptionBoolInserter("shadowsEnabled", (shadowsEnabled, setShadowsEnabled, ctx) => {
+            return (
+                <div>
+                    <FormCheckbox
+                        label={t("ui-performance.enable-shadows")}
+                        currentValue={shadowsEnabled} onChange={setShadowsEnabled}
+                    />
+                    {ctx.supportsLocal && ctx.genSideAwareElements()}
+                </div>
+            );
+        })}
+        
+        {triliumSideAwareOptionBoolInserter("backdropEffectsEnabled", (backdropEffectsEnabled, setBackdropEffectsEnabled, ctx) => {
+            return (
+                <div>
+                    <FormCheckbox
+                        label={t("ui-performance.enable-backdrop-effects")}
+                        currentValue={backdropEffectsEnabled} onChange={setBackdropEffectsEnabled}
+                    />
+                    {ctx.supportsLocal && ctx.genSideAwareElements()}
+                </div>
+            );
+        })}
     </OptionsSection>
 }
 
 
 function MaxContentWidth() {
-    const [ maxContentWidth, setMaxContentWidth ] = useTriliumOption("maxContentWidth", triliumInServerOptions);
-
     return (
         <OptionsSection title={t("max_content_width.title")}>
             <FormText>{t("max_content_width.default_description")}</FormText>
 
             <Column md={6}>
-                <FormGroup name="max-content-width" label={t("max_content_width.max_width_label")}>
-                    <FormTextBoxWithUnit                        
-                        type="number" min={MIN_CONTENT_WIDTH} step="10" 
-                        currentValue={maxContentWidth} onChange={setMaxContentWidth}
-                        unit={t("max_content_width.max_width_unit")}
-                    />
-                </FormGroup>
+                {triliumSideAwareOptionInserter("maxContentWidth", (maxContentWidth, setMaxContentWidth, ctx) => {
+                    return (
+                        <div>
+                            <FormGroup name="max-content-width" label={t("max_content_width.max_width_label")}>
+                                <FormTextBoxWithUnit
+                                    type="number" min={MIN_CONTENT_WIDTH} step="10"
+                                    currentValue={maxContentWidth} onChange={setMaxContentWidth}
+                                    unit={t("max_content_width.max_width_unit")}
+                                />
+                            </FormGroup>
+                            {ctx.supportsLocal && ctx.genSideAwareElements()}
+                        </div>
+                    );
+                })}
             </Column>
 
             <p>

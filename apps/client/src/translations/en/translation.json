@@ -1884,6 +1884,13 @@
   "local_options": {
     "title": "Per-session Options",
     "note_tabs": "Use local options: Note Tabs",
+    "localtag": "(local)",
+    "servertag": "(server)",
+    "tip_onclient": "You are viewing the option specific to your session.",
+    "tip_onserver": "You are viewing the server-wide option.",
+    "reset_option": "Reset local option",
+    "switch_server": "Go to server option",
+    "switch_client": "Go to client option",
     "note_tabs_description": "Turns on per-session Note Tabs. Tabs you have open in a session will not synchronize to other sessions on other devices, allowing per-session note tabs instead of sharing the same tabs on all clients, turning this off will synchronize tabs to all sessions on all devices.",
     "note_tree_expansion": "Use local options: Note Tree Expansion",
     "note_tree_expansion_description": "Turns on per-session Note Tree expansion. Note tree expansion of a session will not synchronize to other sessions on other devices, allowing per-session note tree states instead of sharing the expanded trees on all clients, turning this off will synchronize note tree expansion on all devices."

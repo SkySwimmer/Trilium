@@ -1,6 +1,6 @@
 {
   "name": "@triliumnext/client",
-  "version": "0.98.0",
+  "version": "0.98.1",
   "description": "JQuery-based client for TriliumNext, used for both web and desktop (via Electron)",
   "private": true,
   "license": "AGPL-3.0-only",
@@ -28,7 +28,7 @@
     "@triliumnext/highlightjs": "workspace:*",
     "@triliumnext/share-theme": "workspace:*",
     "autocomplete.js": "0.38.1",
-    "bootstrap": "5.3.7",
+    "bootstrap": "5.3.8",
     "boxicons": "2.1.4",
     "dayjs": "1.11.13",
     "dayjs-plugin-utc": "0.1.2",

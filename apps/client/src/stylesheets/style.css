@@ -862,8 +862,32 @@ table.promoted-attributes-in-tooltip th {
 
 .aa-dropdown-menu .aa-suggestion {
     cursor: pointer;
-    padding: 5px;
+    padding: 6px 16px;
     margin: 0;
+}
+
+.aa-dropdown-menu .aa-suggestion .icon {
+    display: inline-block;
+    line-height: inherit;
+    vertical-align: top;
+}
+
+.aa-dropdown-menu .aa-suggestion .text {
+    display: inline-block;
+    width: calc(100% - 20px);
+    padding-left: 4px;
+}
+
+.aa-dropdown-menu .aa-suggestion .search-result-title {
+    display: block;
+}
+
+.aa-dropdown-menu .aa-suggestion .search-result-attributes {
+    display: block;
+    font-size: 0.8em;
+    color: var(--muted-text-color);
+    opacity: 0.6;
+    line-height: 1;
 }
 
 .aa-dropdown-menu .aa-suggestion p {
@@ -1826,33 +1850,6 @@ textarea {
 .jump-to-note-results .aa-suggestions {
     padding: 0;
     width: 100%;
-}
-
-.jump-to-note-results .aa-dropdown-menu .aa-suggestion {
-    white-space: normal;
-    padding: 2px 12px !important;
-    line-height: 1.1;
-    position: relative;
-    border-radius: 0;
-    margin: 0 !important;
-}
-
-.jump-to-note-results .note-suggestion {
-    margin: 0;
-    padding: 0;
-    line-height: 1;
-}
-
-.jump-to-note-results .aa-suggestion:not(:last-child)::after {
-    display: none; /* Remove dividers for more compact look */
-}
-
-.jump-to-note-results .aa-suggestion:last-child::after {
-    display: none;
-}
-
-.jump-to-note-results .aa-suggestion.disabled::after {
-    display: none;
 }
 
 .jump-to-note-results .aa-dropdown-menu .aa-suggestion:hover,

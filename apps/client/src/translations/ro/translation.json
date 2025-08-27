@@ -40,7 +40,7 @@
   "add_relation": {
     "add_relation": "Adaugă relație",
     "allowed_characters": "Sunt permise doar caractere alfanumerice, underline și două puncte.",
-    "create_relation_on_all_matched_notes": "Crează relația pentru toate notițele găsite",
+    "create_relation_on_all_matched_notes": "Creează relația pentru toate notițele găsite.",
     "relation_name": "denumirea relației",
     "target_note": "notița destinație",
     "to": "către"
@@ -76,9 +76,9 @@
   "attachment_erasure_timeout": {
     "attachment_auto_deletion_description": "Atașamentele se șterg automat (permanent) dacă nu sunt referențiate de către notița lor părinte după un timp prestabilit de timp.",
     "attachment_erasure_timeout": "Perioadă de ștergere a atașamentelor",
-    "erase_attachments_after": "Erase unused attachments after:",
+    "erase_attachments_after": "Șterge atașamentele neutilizate după:",
     "erase_unused_attachments_now": "Elimină atașamentele șterse acum",
-    "manual_erasing_description": "Șterge acum toate atașamentele nefolosite din notițe",
+    "manual_erasing_description": "Puteți șterge atașamentele nefolosite manual (fără a lua în considerare timpul de mai sus):",
     "unused_attachments_erased": "Atașamentele nefolosite au fost șterse."
   },
   "attachment_list": {
@@ -141,7 +141,7 @@
     "hide_promoted_attributes": "Ascunde lista atributelor promovate pentru această notiță",
     "hide_relations": "lista denumirilor relațiilor ce trebuie ascunse, delimitate prin virgulă. Toate celelalte vor fi afișate.",
     "icon_class": "valoarea acestei etichete este adăugată ca o clasă CSS la iconița notiței din ierarhia notițelor, fapt ce poate ajuta la identificarea vizuală mai rapidă a notițelor. Un exemplu ar fi „bx bx-home” pentru iconițe preluate din boxicons. Poate fi folosită în notițe de tip șablon.",
-    "inbox": "locația implicită în care vor apărea noile notițe atunci când se crează o noitiță utilizând butonul „Crează notiță” din bara laterală, notițele vor fi create în interiorul notiței cu această etichetă.",
+    "inbox": "locația implicită în care vor apărea noile notițe atunci când se crează o noitiță utilizând butonul „Crează notiță” din bara laterală, notițele vor fi create în interiorul notiței marcată cu eticheta <code>#inbox</code>.",
     "inherit": "atributele acestei notițe vor fi moștenite chiar dacă nu există o relație părinte-copil între notițe. A se vedea relația de tip șablon pentru un concept similar. De asemenea, a se vedea moștenirea atributelor în documentație.",
     "inheritable": "Moștenibilă",
     "inheritable_title": "Atributele moștenibile vor fi moștenite de către toți descendenții acestei notițe.",
@@ -177,7 +177,7 @@
     "render_note": "relație ce definește notița (de tip notiță de cod HTML sau script) ce trebuie randată pentru notițele de tip „Randare notiță HTML”",
     "run": "definește evenimentele la care să ruleze scriptul. Valori acceptate:\n<ul>\n<li>frontendStartup - când pornește interfața Trilium (sau este reîncărcată), dar nu pe mobil.</li>\n<li>mobileStartup - când pornește interfața Trilium (sau este reîncărcată), doar pe mobil.</li>\n<li>backendStartup - când pornește serverul Trilium</li>\n<li>hourly - o dată pe oră. Se poate utiliza adițional eticheta <code>runAtHour</code> pentru a specifica ora.</li>\n<li>daily - o dată pe zi</li>\n</ul>",
     "run_at_hour": "La ce oră ar trebui să ruleze. Trebuie folosit împreună cu <code>#run=hourly</code>. Poate fi definit de mai multe ori pentru a rula de mai multe ori în cadrul aceleași zile.",
-    "run_on_attribute_change": "se execută atunci când atributele unei notițe care definește această relație se schimbă. Se apelează și atunci când un atribut este șters",
+    "run_on_attribute_change": " se execută atunci când atributele unei notițe care definește această relație se schimbă. Se apelează și atunci când un atribut este șters",
     "run_on_attribute_creation": "se execută atunci când un nou atribut este creat pentru notița care definește această relație",
     "run_on_branch_change": "se execută atunci când o ramură este actualizată.",
     "run_on_branch_creation": "se execută când o ramură este creată. O ramură este o legătură dintre o notiță părinte și o notiță copil și este creată, spre exemplu, la clonarea sau mutarea unei notițe.",
@@ -198,7 +198,7 @@
     "share_disallow_robot_indexing": "împiedică indexarea conținutului de către roboți utilizând antetul <code>X-Robots-Tag: noindex</code>",
     "share_external_link": "notița va funcționa drept o legătură către un site web extern în ierarhia de partajare",
     "share_favicon": "Notiță ce conține pictograma favicon pentru a fi setată în paginile partajate. De obicei se poate seta în rădăcina ierarhiei de partajare și se poate face moștenibilă. Notița ce conține favicon-ul trebuie să fie și ea în ierarhia de partajare. Considerați și utilizarea „share_hidden_from_tree”.",
-    "share_hidden_from_tree": "notița este ascunsă din arborele de navigație din stânga, dar încă este accesibilă prin intermediul unui URL.",
+    "share_hidden_from_tree": "notița este ascunsă din arborele de navigație din stânga, dar încă este accesibilă prin intermediul unui URL",
     "share_index": "notițele cu această etichetă vor afișa lista tuturor rădăcilor notițelor partajate",
     "share_js": "Notiță JavaScript ce va fi injectată în pagina de partajare. Notița respectivă trebuie să fie și ea în ierarhia de partajare. Considerați utilizarea 'share_hidden_from_tree'.",
     "share_omit_default_css": "CSS-ul implicit pentru pagina de partajare va fi omis. Se poate folosi atunci când se fac schimbări majore de stil la pagină.",
@@ -214,7 +214,7 @@
     "target_note_title": "Relația este o conexiune numită dintre o notiță sursă și o notiță țintă.",
     "template": "Șablon",
     "text": "Text",
-    "title_template": "titlul implicit al notițelor create în interiorul acestei notițe. Valoarea este evaluată ca un șir de caractere JavaScript\n                        și poate fi astfel îmbogățită cu un conținut dinamic prin intermediul variabilelow <code>now</code> și <code>parentNote</code>. Exemple:\n                        \n                        <ul>\n                            <li><code>Lucrările lui ${parentNote.getLabelValue('autor')}</code></li>\n                            <li><code>Jurnal pentru ${now.format('YYYY-MM-DD HH:mm:ss')}</code></li>\n                        </ul>\n                        \n                        A se vedea <a href=\"https://triliumnext.github.io/Docs/Wiki/default-note-title.html\">wiki-ul pentru detalii</a>, documentația API pentru <a href=\"https://zadam.github.io/trilium/backend_api/Note.html\">parentNote</a> și <a href=\"https://day.js.org/docs/en/display/format\">now</a> pentru mai multe informații",
+    "title_template": "titlul implicit al notițelor create în interiorul acestei notițe. Valoarea este evaluată ca un șir de caractere JavaScript\n                        și poate fi astfel îmbogățită cu un conținut dinamic prin intermediul variabilelor <code>now</code> și <code>parentNote</code>. Exemple:\n                        \n                        <ul>\n                            <li><code>Lucrările lui ${parentNote.getLabelValue('autor')}</code></li>\n                            <li><code>Jurnal pentru ${now.format('YYYY-MM-DD HH:mm:ss')}</code></li>\n                        </ul>\n                        \n                        A se vedea <a href=\"https://triliumnext.github.io/Docs/Wiki/default-note-title.html\">wiki-ul pentru detalii</a>, documentația API pentru <a href=\"https://zadam.github.io/trilium/backend_api/Note.html\">parentNote</a> și <a href=\"https://day.js.org/docs/en/display/format\">now</a> pentru mai multe informații.",
     "toc": "<code>#toc</code> sau <code>#toc=show</code> forțează afișarea tabelei de conținut, <code>#toc=hide</code> forțează ascunderea ei. Dacă eticheta nu există, se utilizează setările globale",
     "top": "păstrează notița la începutul listei (se aplică doar pentru notițe sortate automat)",
     "url": "URL",
@@ -369,7 +369,7 @@
   },
   "confirm": {
     "also_delete_note": "Șterge și notița",
-    "are_you_sure_remove_note": "Doriți ștergerea notiței „{{title}}” din harta de relații?",
+    "are_you_sure_remove_note": "Doriți ștergerea notiței „{{title}}” din harta de relații? ",
     "cancel": "Anulează",
     "confirmation": "Confirm",
     "if_you_dont_check": "Dacă această opțiune nu este bifată, notița va fi ștearsă doar din harta de relații.",
@@ -519,8 +519,8 @@
     "export_status": "Starea exportului",
     "export_type_single": "Doar această notiță fără descendenții ei",
     "export_type_subtree": "Această notiță și toți descendenții ei",
-    "format_html_zip": "HTML în arhivă ZIP - recomandat deoarece păstrează toată formatarea",
-    "format_markdown": "Markdown - păstrează majoritatea formatării",
+    "format_html_zip": "HTML în arhivă ZIP - recomandat deoarece păstrează toată formatarea.",
+    "format_markdown": "Markdown - păstrează majoritatea formatării.",
     "format_opml": "OPML - format de interschimbare pentru editoare cu structură ierarhică (outline). Formatarea, imaginile și fișierele nu vor fi incluse.",
     "opml_version_1": "OPML v1.0 - text simplu",
     "opml_version_2": "OPML v2.0 - permite și HTML",
@@ -640,7 +640,7 @@
     "newTabNoteLink": "pe o legătură către o notiță va deschide notița într-un tab nou",
     "notSet": "nesetat",
     "noteNavigation": "Navigarea printre notițe",
-    "numberedList": "<kbd>1.</code> sau <code>1)</code> urmat de spațiu pentru o listă numerotată",
+    "numberedList": "<code>1.</code> sau <code>1)</code> urmat de spațiu pentru o listă numerotată",
     "onlyInDesktop": "Doar pentru desktop (aplicația Electron)",
     "openEmptyTab": "deschide un tab nou",
     "other": "Altele",
@@ -807,7 +807,7 @@
     "dialog_title": "Mută notițele în...",
     "error_no_path": "Nicio cale la care să poată fi mutate.",
     "move_button": "Mută la notița selectată",
-    "move_success_message": "Notițele selectate au fost mutate în",
+    "move_success_message": "Notițele selectate au fost mutate în ",
     "notes_to_move": "Notițe de mutat",
     "search_placeholder": "căutați notița după denumirea ei",
     "target_parent_note": "Notița părinte destinație"
@@ -1058,7 +1058,7 @@
     "download_button": "Descarcă",
     "file_size": "Dimensiune fișier:",
     "help_title": "Informații despre reviziile notițelor",
-    "mime": "MIME:",
+    "mime": "MIME: ",
     "no_revisions": "Nu există încă nicio revizie pentru această notiță...",
     "note_revisions": "Revizii ale notiței",
     "preview": "Previzualizare:",
@@ -1193,7 +1193,7 @@
     "enable": "Activează corectorul ortografic",
     "language_code_label": "Codurile de limbă",
     "language_code_placeholder": "de exemplu „en-US”, „de-AT”",
-    "multiple_languages_info": "Mai multe limbi pot fi separate prin virgulă, e.g. \"en-US, de-DE, cs\".",
+    "multiple_languages_info": "Mai multe limbi pot fi separate prin virgulă, e.g. \"en-US, de-DE, cs\". ",
     "title": "Corector ortografic",
     "restart-required": "Schimbările asupra setărilor corectorului ortografic vor fi aplicate după restartarea aplicației."
   },
@@ -1286,7 +1286,7 @@
   "update_relation_target": {
     "allowed_characters": "Sunt permise doar caractere alfanumerice, underline și două puncte.",
     "change_target_note": "schimbă notița-țintă a unei relații existente",
-    "on_all_matched_notes": "Pentru toate notițele găsite:",
+    "on_all_matched_notes": "Pentru toate notițele găsite",
     "relation_name": "denumirea relației",
     "target_note": "notița destinație",
     "to": "la",
@@ -1314,7 +1314,7 @@
     "use_vim_keybindings_in_code_notes": "Combinații de taste Vim"
   },
   "web_view": {
-    "create_label": "Pentru a începe, creați o etichetă cu adresa URL de încorporat, e.g.  #webViewSrc=\"https://www.google.com\"",
+    "create_label": "Pentru a începe, creați o etichetă cu adresa URL de încorporat, e.g. #webViewSrc=\"https://www.google.com\"",
     "embed_websites": "Notițele de tip „Vizualizare web” permit încorporarea site-urilor web în Trilium.",
     "web_view": "Vizualizare web"
   },
@@ -1863,11 +1863,16 @@
     },
     "create_new_ai_chat": "Crează o nouă discuție cu AI-ul",
     "configuration_warnings": "Sunt câteva probleme la configurația AI-ului. Verificați setările.",
-    "experimental_warning": "Funcția LLM este experimentală!",
+    "experimental_warning": "Funcția LLM este experimentală.",
     "selected_provider": "Furnizor selectat",
     "selected_provider_description": "Selectați furnizorul de AI pentru funcțiile de discuție și completare",
     "select_model": "Selectați modelul...",
-    "select_provider": "Selectați furnizorul..."
+    "select_provider": "Selectați furnizorul...",
+    "ai_enabled": "Funcționalitățile AI au fost activate",
+    "ai_disabled": "Funcționalitățile AI au fost dezactivate",
+    "no_models_found_online": "Nu s-a găsit niciun model. Verificați cheia API și configurația.",
+    "no_models_found_ollama": "Nu s-a găsit niciun model Ollama. Verificați dacă Ollama rulează.",
+    "error_fetching": "Eroare la obținerea modelelor: {{error}}"
   },
   "custom_date_time_format": {
     "title": "Format dată/timp personalizat",
@@ -1998,6 +2003,26 @@
   "call_to_action": {
     "background_effects_title": "Efectele de fundal sunt acum stabile",
     "background_effects_message": "Pe dispozitive cu Windows, efectele de fundal sunt complet stabile. Acestea adaugă un strop de culoare interfeței grafice prin estomparea fundalului din spatele ferestrei. Această tehnică este folosită și în alte aplicații precum Windows Explorer.",
-    "background_effects_button": "Activează efectele de fundal"
+    "background_effects_button": "Activează efectele de fundal",
+    "next_theme_title": "Încercați noua temă Trilium",
+    "next_theme_message": "Utilizați tema clasică, doriți să încercați noua temă?",
+    "next_theme_button": "Testează noua temă",
+    "dismiss": "Treci peste"
+  },
+  "ui-performance": {
+    "title": "Setări de performanță",
+    "enable-motion": "Activează tranzițiile și animațiile",
+    "enable-shadows": "Activează umbrirea elementelor",
+    "enable-backdrop-effects": "Activează efectele de fundal pentru meniuri, popup-uri și panouri"
+  },
+  "settings": {
+    "related_settings": "Setări similare"
+  },
+  "settings_appearance": {
+    "related_code_blocks": "Tema de culori pentru blocuri de cod în notițe de tip text",
+    "related_code_notes": "Tema de culori pentru notițele de tip cod"
+  },
+  "units": {
+    "percentage": "%"
   }
 }

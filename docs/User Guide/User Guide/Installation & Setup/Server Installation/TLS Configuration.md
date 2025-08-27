@@ -27,7 +27,7 @@ keyPath=/[username]/.acme.sh/[hostname]/example.com.key
 
 You can also review the [configuration](../../Advanced%20Usage/Configuration%20\(config.ini%20or%20e.md) file to provide all `config.ini` values as environment variables instead. For example, you can configure TLS using environment variables:
 
-```bash
+```sh
 export TRILIUM_NETWORK_HTTPS=true
 export TRILIUM_NETWORK_CERTPATH=/path/to/cert.pem
 export TRILIUM_NETWORK_KEYPATH=/path/to/key.pem

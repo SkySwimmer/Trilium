@@ -184,6 +184,12 @@ class FrocaImpl implements Froca {
                 const branch = this.branches[branchRow.branchId]
                 if (branch) {
                     // check tree states
+
+                    // check hoisted / root
+                    if (branchRow.noteId === "root") {
+                        branch.isExpanded = true;
+                        continue;
+                    }
                     if (tree[branchRow.branchId] != undefined) {
                         // set state
                         branch.isExpanded = tree[branchRow.branchId];

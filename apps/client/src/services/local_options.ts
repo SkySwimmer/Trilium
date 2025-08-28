@@ -61,7 +61,7 @@ class LocalOptions {
     get(key: string) {
         if (utils.isElectron())
             return options.get(key);
-        if (!this.isAllowedLocal(key) || (!this.isEmptyDefault(key) && !this.has(key)))
+        if (!this.isAllowedLocalCurrent(key) || (!this.isEmptyDefault(key) && !this.has(key)))
             return options.get(key);
         return this.arr?.[key] as string;
     }
@@ -80,7 +80,7 @@ class LocalOptions {
     getJson(key: string) {
         if (utils.isElectron())
             return options.getJson(key);
-        if (!this.isAllowedLocal(key) || (!this.isEmptyDefault(key) && !this.has(key)))
+        if (!this.isAllowedLocalCurrent(key) || (!this.isEmptyDefault(key) && !this.has(key)))
             return options.getJson(key);
         const value = this.arr?.[key];
         if (typeof value !== "string") {
@@ -96,7 +96,7 @@ class LocalOptions {
     getInt(key: string) {
         if (utils.isElectron())
             return options.getInt(key);
-        if (!this.isAllowedLocal(key) || (!this.isEmptyDefault(key) && !this.has(key)))
+        if (!this.isAllowedLocalCurrent(key) || (!this.isEmptyDefault(key) && !this.has(key)))
             return options.getInt(key);
         const value = this.arr?.[key];
         if (typeof value === "number") {
@@ -112,7 +112,7 @@ class LocalOptions {
     getFloat(key: string) {
         if (utils.isElectron())
             return options.getFloat(key);
-        if (!this.isAllowedLocal(key) || (!this.isEmptyDefault(key) && !this.has(key)))
+        if (!this.isAllowedLocalCurrent(key) || (!this.isEmptyDefault(key) && !this.has(key)))
             return options.getFloat(key);
         const value = this.arr?.[key];
         if (typeof value !== "string") {
@@ -124,7 +124,7 @@ class LocalOptions {
     is(key: string) {
         if (utils.isElectron())
             return options.is(key);
-        if (!this.isAllowedLocal(key) || (!this.isEmptyDefault(key) && !this.has(key)))
+        if (!this.isAllowedLocalCurrent(key) || (!this.isEmptyDefault(key) && !this.has(key)))
             return options.is(key);
         return this.arr[key] === "true";
     }
@@ -132,7 +132,7 @@ class LocalOptions {
     set(key: string, value: OptionValue) {
         if (utils.isElectron())
             return options.set(key, value);
-        if (!this.isAllowedLocal(key))
+        if (!this.isAllowedLocalCurrent(key))
             return options.set(key, value);
         this.arr[key] = value;
     }
@@ -157,7 +157,7 @@ class LocalOptions {
     async save(key: string, value: OptionValue) {
         if (utils.isElectron())
             return options.save(key, value);
-        if (!this.isAllowedLocal(key))
+        if (!this.isAllowedLocalCurrent(key))
             return options.save(key, value);
         this.set(key, value);
 
@@ -188,7 +188,7 @@ class LocalOptions {
         const remain: Record<string, OptionValue> = {};
         const updatedOptions: string[] = [];
         for (const key in newValues) {
-            if (!this.isAllowedLocal(key)) {
+            if (!this.isAllowedLocalCurrent(key)) {
                 remain[key] = newValues[key];
                 hasNonLocal = true;
                 continue;
@@ -212,17 +212,25 @@ class LocalOptions {
     async toggle(key: string) {
         if (utils.isElectron())
             return options.toggle(key);
-        if (!this.isAllowedLocal(key))
+        if (!this.isAllowedLocalCurrent(key))
             return options.toggle(key);
         await this.save(key, (!this.is(key)).toString());
     }
 
-    isAllowedLocal(name: string) {
+    isAllowedLocalCurrent(name: string) {
         return ((OPTIONS_ALLOWED_LOCAL as Set<string>).has(name) // FIXME: the options below depend too much on the server right now, nor have we fully implemented user-specific options
             // || name.startsWith("keyboardShortcuts")
             // || name.endsWith("Collapsed")
             // || name.startsWith("hideArchivedNotes")
         ) && options.is("useLocalOption_" + name)
+    }
+
+    isAllowedLocalBase(name: string) {
+        return ((OPTIONS_ALLOWED_LOCAL as Set<string>).has(name) // FIXME: the options below depend too much on the server right now, nor have we fully implemented user-specific options
+            // || name.startsWith("keyboardShortcuts")
+            // || name.endsWith("Collapsed")
+            // || name.startsWith("hideArchivedNotes")
+        )
     }
 
     private isEmptyDefault(name: string) {

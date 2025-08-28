@@ -6,6 +6,7 @@ import NotFoundError from "../../errors/not_found_error.js";
 import type { Request } from "express";
 import type BNote from "../../becca/entities/bnote.js";
 import type { AttributeRow, BranchRow, NoteRow } from "@triliumnext/commons";
+import optionsService from "../../services/options.js";
 
 function getNotesAndBranchesAndAttributes(_noteIds: string[] | Set<string>) {
     const noteIds = new Set(_noteIds);
@@ -182,7 +183,7 @@ function getTree(req: Request) {
 
             const childBranch = becca.getBranchFromChildAndParent(childNote.noteId, parentNote.noteId);
 
-            if (childBranch?.isExpanded) {
+            if (childBranch && (childBranch.isExpanded || optionsService.getOptionBool("useLocalOption_noteTreeExpansion"))) {
                 collect(childBranch.childNote);
             }
         }

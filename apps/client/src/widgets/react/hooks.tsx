@@ -133,7 +133,7 @@ export function useTriliumOption(name: OptionNames, useServerSided: boolean, nee
                 reloadFrontendApp(`option change: ${name}`);
             }
 
-            if (!useServerSided && local_options.hasLocal(name) && local_options.isAllowedLocal(name))
+            if (!useServerSided && local_options.hasLocal(name) && local_options.isAllowedLocalCurrent(name))
                 setValue(newValue.toString());
         }
     }, [name, needsRefresh]);
@@ -152,7 +152,7 @@ export function useTriliumOption(name: OptionNames, useServerSided: boolean, nee
     }, [name]));
     const isDefinedClientsided = useServerSided ? undefined : function () {
         // Check
-        return local_options.hasLocal(name) && local_options.isAllowedLocal(name);
+        return local_options.hasLocal(name) && local_options.isAllowedLocalCurrent(name);
     };
 
     const removeClientsided = useServerSided ? undefined : async function () {
@@ -261,7 +261,7 @@ export function useTriliumOptions<T extends OptionNames>(useServerSided: boolean
     ] as const;
 }
 
-type AutoSidedHandlerContext = { supportsLocal: boolean, isLocal: boolean, hasLocalValue: boolean, resetLocalValue: () => Promise<void>, switchToOtherSide: () => Promise<void>, genSideAwareElements?: (prefixElemGenerator: () => any) => any };
+type AutoSidedHandlerContext = { supportsLocal: boolean, isLocal: boolean, hasLocalValue: boolean, resetLocalValue: () => Promise<void>, switchToOtherSide: () => Promise<void>, genSideAwareElements: (prefixElemGenerator?: () => any) => any };
 type AutoSidedHandler<T, T2> = (value: T2, setValue: (newValue: T2) => Promise<void>, execContext: AutoSidedHandlerContext) => T;
 
 /**
@@ -282,11 +282,17 @@ export function triliumSideAwareOptionInserter<T>(name: OptionNames, handler: Au
         const initialValue = options_framework.get(name);
         const [value, setValue] = useState(initialValue);
         const [localPresent, setLocalPresent] = useState(local_options.hasLocal(name));
+        const [isAllowedLocalCurrent, setAllowedLocalCurrent] = useState(local_options.isAllowedLocalCurrent(name));
 
         useTriliumEvent("entitiesReloaded", useCallback(({ loadResults }) => {
             if (loadResults.getOptionNames().includes(name)) {
                 const newValue = options.get(name);
                 setValue(newValue);
+            } else if (loadResults.getOptionNames().includes("useLocalOption_" + name)) {
+                const newValueUseLocal = options.get("useLocalOption_" + name);
+                setAllowedLocalCurrent(newValueUseLocal === "true");
+                const newValueForOption = local_options.get(name);
+                setValue(newValueForOption);
             }
         }, [name]));
         useTriliumEvent("localOptionsChanged", useCallback(({ updatedOptions }) => {
@@ -297,7 +303,7 @@ export function triliumSideAwareOptionInserter<T>(name: OptionNames, handler: Au
         }, [name]));
 
         const ctx: AutoSidedHandlerContext = {
-            supportsLocal: local_options.isAllowedLocal(name),
+            supportsLocal: isAllowedLocalCurrent,
             hasLocalValue: localPresent,
             isLocal: useLocal,
             resetLocalValue: async function () {

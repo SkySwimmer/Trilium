@@ -287,8 +287,8 @@ function ShareSettings() {
 }
 
 function LocalOptionsSettings() {
-    const [ useLocalOption_openNoteContexts, set_UseLocalOption_openNoteContexts ] = useTriliumOptionBool("useLocalOption_openNoteContexts", true, true);
-    const [ useLocalOption_noteTreeExpansion, set_UseLocalOption_noteTreeExpansion ] = useTriliumOptionBool("useLocalOption_noteTreeExpansion", true, true);
+    const [ useLocalOption_openNoteContexts, set_UseLocalOption_openNoteContexts ] = useTriliumOptionBool("useLocalOption_openNoteContexts", true);
+    const [ useLocalOption_noteTreeExpansion, set_UseLocalOption_noteTreeExpansion ] = useTriliumOptionBool("useLocalOption_noteTreeExpansion", true);
 
     return (
         <OptionsSection title={t("local_options.title")}>

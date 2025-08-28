@@ -68,6 +68,37 @@ export default class TabManager extends Component {
 
     async loadTabs() {
         try {
+            if (!local_options.hasLocal("openNoteContexts") && local_options.isAllowedLocalCurrent("openNoteContexts")) {
+                // Generate default open note
+
+                // Load tree
+                await froca.loadInitialTree();
+                const openNoteContexts = [
+                    {
+                        notePath: "root",
+                        active: true
+                    }
+                ];
+
+                // Find first child note
+                const rootId = treeService.getNoteIdFromUrl("root");
+                if (rootId) {
+                    const rootNote = await froca.getNote(rootId);
+                    if (rootNote) {
+                        if (rootNote.hasChildren()) {
+                            const childNoteId = rootNote.children[0];
+                            if (childNoteId) {
+                                // Assign
+                                openNoteContexts[0].notePath = "root/" + childNoteId;
+                            }
+                        }
+                    }
+                }
+
+                // Save
+                await local_options.save("openNoteContexts", JSON.stringify(openNoteContexts));
+            }
+
             const noteContextsToOpen = (appContext.isMainWindow && local_options.getJson("openNoteContexts")) || [];
 
             // preload all notes at once

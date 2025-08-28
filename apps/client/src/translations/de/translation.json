@@ -207,7 +207,7 @@
   },
   "markdown_import": {
     "dialog_title": "Markdown-Import",
-    "modal_body_text": "Aufgrund der Browser-Sandbox ist es nicht möglich, die Zwischenablage direkt aus JavaScript zu lesen. Bitte füge den zu importierenden Markdown in den Textbereich unten ein und klicke auf die Schaltfläche „Importieren“.",
+    "modal_body_text": "Aufgrund der Browser-Sandbox ist es nicht möglich, die Zwischenablage direkt aus JavaScript zu lesen. Bitte füge den zu importierenden Markdown in den Textbereich unten ein und klicke auf die Schaltfläche „Importieren“",
     "import_button": "Importieren",
     "import_success": "Markdown-Inhalt wurde in das Dokument importiert."
   },
@@ -356,7 +356,7 @@
     "sorted": "Hält untergeordnete Notizen alphabetisch nach Titel sortiert",
     "sort_direction": "ASC (Standard) oder DESC",
     "sort_folders_first": "Ordner (Notizen mit Unternotizen) sollten oben sortiert werden",
-    "top": "Behalte die angegebene Notiz oben in der übergeordneten Notiz (gilt nur für sortierte übergeordnete Notizen).",
+    "top": "Behalte die angegebene Notiz oben in der übergeordneten Notiz (gilt nur für sortierte übergeordnete Notizen)",
     "hide_promoted_attributes": "Heraufgestufte Attribute für diese Notiz ausblenden",
     "read_only": "Der Editor befindet sich im schreibgeschützten Modus. Funktioniert nur für Text- und Codenotizen.",
     "auto_read_only_disabled": "Text-/Codenotizen können automatisch in den Lesemodus versetzt werden, wenn sie zu groß sind. Du kannst dieses Verhalten für jede einzelne Notiz deaktivieren, indem du diese Beschriftung zur Notiz hinzufügst",
@@ -379,10 +379,10 @@
     "inbox": "Standard-Inbox-Position für neue Notizen – wenn du eine Notiz über den \"Neue Notiz\"-Button in der Seitenleiste erstellst, wird die Notiz als untergeordnete Notiz der Notiz erstellt, die mit dem <code>#inbox</code>-Label markiert ist.",
     "workspace_inbox": "Standard-Posteingangsspeicherort für neue Notizen, wenn sie zu einem Vorgänger dieser Arbeitsbereichsnotiz verschoben werden",
     "sql_console_home": "Standardspeicherort der SQL-Konsolennotizen",
-    "bookmark_folder": "Notizen mit dieser Bezeichnung werden in den Lesezeichen als Ordner angezeigt (und ermöglichen den Zugriff auf ihre untergeordneten Ordner).",
+    "bookmark_folder": "Notizen mit dieser Bezeichnung werden in den Lesezeichen als Ordner angezeigt (und ermöglichen den Zugriff auf ihre untergeordneten Ordner)",
     "share_hidden_from_tree": "Diese Notiz ist im linken Navigationsbaum ausgeblendet, kann aber weiterhin über ihre URL aufgerufen werden",
     "share_external_link": "Die Notiz dient als Link zu einer externen Website im Freigabebaum",
-    "share_alias": "Lege einen Alias fest, mit dem die Notiz unter https://your_trilium_host/share/[dein_alias] verfügbar sein wird.",
+    "share_alias": "Lege einen Alias fest, mit dem die Notiz unter https://your_trilium_host/share/[dein_alias] verfügbar sein wird",
     "share_omit_default_css": "Das Standard-CSS für die Freigabeseite wird weggelassen. Verwende es, wenn du umfangreiche Stylingänderungen vornimmst.",
     "share_root": "Markiert eine Notiz, die im /share-Root bereitgestellt wird.",
     "share_description": "Definiere Text, der dem HTML-Meta-Tag zur Beschreibung hinzugefügt werden soll",
@@ -416,7 +416,7 @@
     "run_on_attribute_change": " wird ausgeführt, wenn das Attribut einer Notiz geändert wird, die diese Beziehung definiert. Dies wird auch ausgelöst, wenn das Attribut gelöscht wird",
     "relation_template": "Die Attribute der Notiz werden auch ohne eine Eltern-Kind-Beziehung vererbt. Der Inhalt und der Unterbaum der Notiz werden den Instanznotizen hinzugefügt, wenn sie leer sind. Einzelheiten findest du in der Dokumentation.",
     "inherit": "Die Attribute einer Notiz werden auch ohne eine Eltern-Kind-Beziehung vererbt. Ein ähnliches Konzept findest du unter Vorlagenbeziehung. Siehe Attributvererbung in der Dokumentation.",
-    "render_note": "Notizen vom Typ \"HTML-Notiz rendern\" werden mit einer Code-Notiz (HTML oder Skript) gerendert, und es ist notwendig, über diese Beziehung anzugeben, welche Notiz gerendert werden soll.",
+    "render_note": "Notizen vom Typ \"HTML-Notiz rendern\" werden mit einer Code-Notiz (HTML oder Skript) gerendert, und es ist notwendig, über diese Beziehung anzugeben, welche Notiz gerendert werden soll",
     "widget_relation": "Das Ziel dieser Beziehung wird ausgeführt und als Widget in der Seitenleiste gerendert",
     "share_css": "CSS-Hinweis, der in die Freigabeseite eingefügt wird. Die CSS-Notiz muss sich ebenfalls im gemeinsamen Unterbaum befinden. Erwäge auch die Verwendung von „share_hidden_from_tree“ und „share_omit_default_css“.",
     "share_js": "JavaScript-Hinweis, der in die Freigabeseite eingefügt wird. Die JS-Notiz muss sich ebenfalls im gemeinsamen Unterbaum befinden. Erwäge die Verwendung von „share_hidden_from_tree“.",
@@ -499,9 +499,9 @@
     "to": "nach",
     "target_parent_note": "Ziel-Übergeordnetenotiz",
     "on_all_matched_notes": "Auf allen übereinstimmenden Notizen",
-    "move_note_new_parent": "Verschiebe die Notiz in die neue übergeordnete Notiz, wenn die Notiz nur eine übergeordnete Notiz hat (d. h. der alte Zweig wird entfernt und ein neuer Zweig in die neue übergeordnete Notiz erstellt).",
+    "move_note_new_parent": "Verschiebe die Notiz in die neue übergeordnete Notiz, wenn die Notiz nur eine übergeordnete Notiz hat (d. h. der alte Zweig wird entfernt und ein neuer Zweig in die neue übergeordnete Notiz erstellt)",
     "clone_note_new_parent": "Notiz auf die neue übergeordnete Notiz klonen, wenn die Notiz mehrere Klone/Zweige hat (es ist nicht klar, welcher Zweig entfernt werden soll)",
-    "nothing_will_happen": "Es passiert nichts, wenn die Notiz nicht zur Zielnotiz verschoben werden kann (z.B. wenn dies einen Kreislauf in der Baumstruktur erzeugen würde)."
+    "nothing_will_happen": "Es passiert nichts, wenn die Notiz nicht zur Zielnotiz verschoben werden kann (z.B. wenn dies einen Kreislauf in der Baumstruktur erzeugen würde)"
   },
   "rename_note": {
     "rename_note": "Notiz umbenennen",
@@ -509,7 +509,7 @@
     "new_note_title": "neuer Notiztitel",
     "click_help_icon": "Klicke rechts auf das Hilfesymbol, um alle Optionen anzuzeigen",
     "evaluated_as_js_string": "Der angegebene Wert wird als JavaScript-String ausgewertet und kann somit über die injizierte <code>note</code>-Variable mit dynamischem Inhalt angereichert werden (Notiz wird umbenannt). Beispiele:",
-    "example_note": "<code>Notiz</code> – alle übereinstimmenden Notizen werden in „Notiz“ umbenannt.",
+    "example_note": "<code>Notiz</code> – alle übereinstimmenden Notizen werden in „Notiz“ umbenannt",
     "example_new_title": "<code>NEU: ${note.title}</code> – Übereinstimmende Notiztitel erhalten das Präfix „NEU:“",
     "example_date_prefix": "<code>${note.dateCreatedObj.format('MM-DD:')}: ${note.title}</code> – übereinstimmende Notizen werden mit dem Erstellungsmonat und -datum der Notiz vorangestellt",
     "api_docs": "Siehe API-Dokumente für <a href='https://zadam.github.io/trilium/backend_api/Note.html'>Notiz</a> und seinen <a href='https://day.js.org/ docs/en/display/format'>dateCreatedObj / utcDateCreatedObj properties</a> für Details."
@@ -716,7 +716,7 @@
   "mobile_detail_menu": {
     "insert_child_note": "Untergeordnete Notiz einfügen",
     "delete_this_note": "Diese Notiz löschen",
-    "error_cannot_get_branch_id": "BranchId für notePath „{{notePath}}“ kann nicht abgerufen werden.",
+    "error_cannot_get_branch_id": "BranchId für notePath „{{notePath}}“ kann nicht abgerufen werden",
     "error_unrecognized_command": "Unbekannter Befehl {{command}}"
   },
   "note_icon": {
@@ -845,7 +845,7 @@
     "debug": "debuggen",
     "debug_description": "Debug gibt zusätzliche Debuginformationen in die Konsole aus, um das Debuggen komplexer Abfragen zu erleichtern",
     "action": "Aktion",
-    "search_button": "Suchen <kbd>Eingabetaste</kbd>",
+    "search_button": "Suchen",
     "search_execute": "Aktionen suchen und ausführen",
     "save_to_note": "Als Notiz speichern",
     "search_parameters": "Suchparameter",
@@ -884,7 +884,7 @@
     "include_archived_notes": "Füge archivierte Notizen hinzu"
   },
   "limit": {
-    "limit": "Limit",
+    "limit": "Limitierung",
     "take_first_x_results": "Nehmen Sie nur die ersten X angegebenen Ergebnisse."
   },
   "order_by": {
@@ -1046,7 +1046,7 @@
     "failed": "Synchronisierung fehlgeschlagen: {{message}}"
   },
   "vacuum_database": {
-    "title": "Vakuumdatenbank",
+    "title": "Datenbank aufräumen",
     "description": "Dadurch wird die Datenbank neu erstellt, was normalerweise zu einer kleineren Datenbankdatei führt. Es werden keine Daten tatsächlich geändert.",
     "button_text": "Vakuumdatenbank",
     "vacuuming_database": "Datenbank wird geleert...",
@@ -1117,7 +1117,8 @@
   "code_auto_read_only_size": {
     "title": "Automatische schreibgeschützte Größe",
     "description": "Die automatische schreibgeschützte Notizgröße ist die Größe, ab der Notizen im schreibgeschützten Modus angezeigt werden (aus Leistungsgründen).",
-    "label": "Automatische schreibgeschützte Größe (Codenotizen)"
+    "label": "Automatische schreibgeschützte Größe (Codenotizen)",
+    "unit": "Zeichen"
   },
   "code_mime_types": {
     "title": "Verfügbare MIME-Typen im Dropdown-Menü"
@@ -1136,7 +1137,8 @@
     "download_images_description": "Eingefügter HTML-Code kann Verweise auf Online-Bilder enthalten. Trilium findet diese Verweise und lädt die Bilder herunter, sodass sie offline verfügbar sind.",
     "enable_image_compression": "Bildkomprimierung aktivieren",
     "max_image_dimensions": "Maximale Breite/Höhe eines Bildes in Pixel (die Größe des Bildes wird geändert, wenn es diese Einstellung überschreitet).",
-    "jpeg_quality_description": "JPEG-Qualität (10 – schlechteste Qualität, 100 – beste Qualität, 50 – 85 wird empfohlen)"
+    "jpeg_quality_description": "JPEG-Qualität (10 – schlechteste Qualität, 100 – beste Qualität, 50 – 85 wird empfohlen)",
+    "max_image_dimensions_unit": "Pixel"
   },
   "attachment_erasure_timeout": {
     "attachment_erasure_timeout": "Zeitüberschreitung beim Löschen von Anhängen",
@@ -1168,7 +1170,8 @@
     "note_revisions_snapshot_limit_description": "Das Limit für Notizrevision-Snapshots bezieht sich auf die maximale Anzahl von Revisionen, die für jede Notiz gespeichert werden können. Dabei bedeutet -1, dass es kein Limit gibt, und 0 bedeutet, dass alle Revisionen gelöscht werden. Du kannst das maximale Limit für Revisionen einer einzelnen Notiz über das Label #versioningLimit festlegen.",
     "snapshot_number_limit_label": "Limit der Notizrevision-Snapshots:",
     "erase_excess_revision_snapshots": "Überschüssige Revision-Snapshots jetzt löschen",
-    "erase_excess_revision_snapshots_prompt": "Überschüssige Revision-Snapshots wurden gelöscht."
+    "erase_excess_revision_snapshots_prompt": "Überschüssige Revision-Snapshots wurden gelöscht.",
+    "snapshot_number_limit_unit": "Momentaufnahmen"
   },
   "search_engine": {
     "title": "Suchmaschine",
@@ -1210,19 +1213,29 @@
     "title": "Inhaltsverzeichnis",
     "description": "Das Inhaltsverzeichnis wird in Textnotizen angezeigt, wenn die Notiz mehr als eine definierte Anzahl von Überschriften enthält. Du kannst diese Nummer anpassen:",
     "disable_info": "Du kannst diese Option auch verwenden, um TOC effektiv zu deaktivieren, indem du eine sehr hohe Zahl festlegst.",
-    "shortcut_info": "Du kannst eine Tastenkombination zum schnellen Umschalten des rechten Bereichs (einschließlich Inhaltsverzeichnis) unter Optionen -> Tastenkombinationen konfigurieren (Name „toggleRightPane“)."
+    "shortcut_info": "Du kannst eine Tastenkombination zum schnellen Umschalten des rechten Bereichs (einschließlich Inhaltsverzeichnis) unter Optionen -> Tastenkombinationen konfigurieren (Name „toggleRightPane“).",
+    "unit": "Überschriften"
   },
   "text_auto_read_only_size": {
     "title": "Automatische schreibgeschützte Größe",
     "description": "Die automatische schreibgeschützte Notizgröße ist die Größe, ab der Notizen im schreibgeschützten Modus angezeigt werden (aus Leistungsgründen).",
-    "label": "Automatische schreibgeschützte Größe (Textnotizen)"
+    "label": "Automatische schreibgeschützte Größe (Textnotizen)",
+    "unit": "Zeichen"
   },
   "i18n": {
     "title": "Lokalisierung",
     "language": "Sprache",
     "first-day-of-the-week": "Erster Tag der Woche",
     "sunday": "Sonntag",
-    "monday": "Montag"
+    "monday": "Montag",
+    "first-week-of-the-year": "Erste Woche des Jahres",
+    "first-week-contains-first-day": "Erste Woche enthält den ersten Tag des Jahres",
+    "first-week-contains-first-thursday": "Erste Woche enthält den ersten Donnerstag des Jahres",
+    "first-week-has-minimum-days": "Erste Woche hat Mindestanzahl an Tagen",
+    "min-days-in-first-week": "Mindestanzahl an Tagen in erster Woche",
+    "first-week-info": "Die erste Woche, die den ersten Donnerstag des Jahres enthält, basiert auf dem Standard <a href=\"https://en.wikipedia.org/wiki/ISO_week_date#First_week\">ISO 8601</a>.",
+    "first-week-warning": "Das Ändern der Optionen für die erste Woche kann zu Duplikaten mit bestehenden Wochen-Notizen führen. Bestehende Wochen-Notizen werden nicht entsprechend aktualisiert.",
+    "formatting-locale": "Datums- und Zahlenformat"
   },
   "backup": {
     "automatic_backup": "Automatische Sicherung",
@@ -1687,7 +1700,119 @@
     "openai_settings": "OpenAI Einstellungen",
     "api_key": "API Schlüssel",
     "url": "Basis-URL",
-    "model": "Modell"
+    "model": "Modell",
+    "anthropic_settings": "Anthropic Einstellungen",
+    "partial": "{{ percentage }}% verarbeitet",
+    "anthropic_api_key_description": "Dein Anthropic API-Key für den Zugriff auf Claude Modelle",
+    "anthropic_model_description": "Anthropic Claude Modell für Chat-Vervollständigung",
+    "voyage_settings": "Einstellungen für Voyage AI",
+    "ollama_url_description": "URL für die Ollama API (Standard: http://localhost:11434)",
+    "ollama_model_description": "Ollama Modell für Chat-Vervollständigung",
+    "anthropic_configuration": "Anthropic Konfiguration",
+    "voyage_configuration": "Voyage AI Konfiguration",
+    "voyage_url_description": "Standard: https://api.voyageai.com/v1",
+    "ollama_configuration": "Ollama Konfiguration",
+    "enable_ollama": "Aktiviere Ollama",
+    "enable_ollama_description": "Aktiviere Ollama für lokale KI Modell Nutzung",
+    "ollama_url": "Ollama URL",
+    "ollama_model": "Ollama Modell",
+    "refresh_models": "Aktualisiere Modelle",
+    "refreshing_models": "Aktualisiere...",
+    "enable_automatic_indexing": "Aktiviere automatische Indizierung",
+    "rebuild_index": "Index neu aufbauen",
+    "rebuild_index_error": "Fehler beim Neuaufbau des Index. Prüfe Log für mehr Informationen.",
+    "retry_failed": "Fehler: Notiz konnte nicht erneut eingereiht werden",
+    "max_notes_per_llm_query": "Max. Notizen je Abfrage",
+    "max_notes_per_llm_query_description": "Maximale Anzahl ähnlicher Notizen zum Einbinden als KI Kontext",
+    "active_providers": "Aktive Anbieter",
+    "disabled_providers": "Inaktive Anbieter",
+    "remove_provider": "Entferne Anbieter von Suche",
+    "restore_provider": "Anbieter zur Suche wiederherstellen",
+    "similarity_threshold": "Ähnlichkeitsschwelle",
+    "similarity_threshold_description": "Mindestähnlichkeitswert (0-1) für Notizen, die im Kontext für LLM-Abfragen berücksichtigt werden sollen",
+    "reprocess_index": "Suchindex neu erstellen",
+    "reprocessing_index": "Neuerstellung...",
+    "reprocess_index_started": "Suchindex-Optimierung wurde im Hintergrund gestartet",
+    "reprocess_index_error": "Fehler beim Wiederaufbau des Suchindex",
+    "index_rebuild_progress": "Fortschritt der Index-Neuerstellung",
+    "index_rebuilding": "Optimierung Index ({{percentage}}%)",
+    "index_rebuild_complete": "Index Optimierung abgeschlossen",
+    "index_rebuild_status_error": "Fehler bei Überprüfung Status Index Neuerstellung",
+    "never": "Niemals",
+    "processing": "Verarbeitung ({{percentage}}%)",
+    "refreshing": "Aktualisiere...",
+    "incomplete": "Unvollständig ({{percentage}}%)",
+    "complete": "Abgeschlossen (100%)",
+    "auto_refresh_notice": "Auto-Aktualisierung alle {{seconds}} Sekunden",
+    "note_queued_for_retry": "Notiz in Warteschlange für erneuten Versuch hinzugefügt",
+    "failed_to_retry_note": "Wiederholungsversuch fehlgeschlagen für Notiz",
+    "ai_settings": "KI Einstellungen",
+    "agent": {
+      "processing": "Verarbeite...",
+      "thinking": "Nachdenken...",
+      "loading": "Lade...",
+      "generating": "Generiere..."
+    },
+    "name": "KI",
+    "openai": "OpenAI",
+    "use_enhanced_context": "Benutze verbesserten Kontext",
+    "openai_api_key_description": "Dein OpenAPI-Key für den Zugriff auf den KI-Dienst",
+    "default_model": "Standardmodell",
+    "openai_model_description": "Beispiele: gpt-4o, gpt-4-turbo, gpt-3.5-turbo",
+    "base_url": "Basis URL",
+    "openai_url_description": "Standard: https://api.openai.com/v1",
+    "anthropic_url_description": "Basis URL für Anthropic API (Standard: https://api.anthropic.com)",
+    "ollama_settings": "Ollama Einstellungen",
+    "note_title": "Notiz Titel",
+    "error": "Fehler",
+    "last_attempt": "Letzter Versuch",
+    "actions": "Aktionen",
+    "retry": "Erneut versuchen",
+    "retry_queued": "Notiz für weiteren Versuch eingereiht",
+    "empty_key_warning": {
+      "anthropic": "Anthropic API-Key ist leer. Bitte gültigen API-Key eingeben.",
+      "openai": "OpenAI API-Key ist leer. Bitte gültigen API-Key eingeben.",
+      "voyage": "Voyage API-Key ist leer. Bitte gültigen API-Key eingeben.",
+      "ollama": "Ollama API-Key ist leer. Bitte gültigen API-Key eingeben."
+    },
+    "api_key_tooltip": "API-Key für den Zugriff auf den Dienst",
+    "failed_to_retry_all": "Wiederholungsversuch für Notizen fehlgeschlagen",
+    "all_notes_queued_for_retry": "Alle fehlgeschlagenen Notizen wurden zur Wiederholung in die Warteschlange gestellt",
+    "enhanced_context_description": "Versorgt die KI mit mehr Kontext aus der Notiz und den zugehörigen Notizen, um bessere Antworten zu ermöglichen",
+    "show_thinking": "Zeige Denkprozess",
+    "show_thinking_description": "Zeige den Denkprozess der KI",
+    "enter_message": "Geben Sie Ihre Nachricht ein...",
+    "error_contacting_provider": "Fehler beim Kontaktieren des KI-Anbieters. Bitte überprüfe die Einstellungen und die Internetverbindung.",
+    "error_generating_response": "Fehler beim Generieren der KI Antwort",
+    "index_all_notes": "Indiziere alle Notizen",
+    "index_status": "Indizierungsstatus",
+    "indexed_notes": "Indizierte Notizen",
+    "indexing_stopped": "Indizierung gestoppt",
+    "indexing_in_progress": "Indizierung in Bearbeitung...",
+    "last_indexed": "Zuletzt Indiziert",
+    "note_chat": "Notizen-Chat",
+    "sources": "Quellen",
+    "start_indexing": "Starte Indizierung",
+    "use_advanced_context": "Benutze erweiterten Kontext",
+    "ollama_no_url": "Ollama ist nicht konfiguriert. Bitte trage eine gültige URL ein.",
+    "chat": {
+      "root_note_title": "KI Chats",
+      "root_note_content": "Diese Notiz enthält gespeicherte KI-Chat-Unterhaltungen.",
+      "new_chat_title": "Neuer Chat",
+      "create_new_ai_chat": "Erstelle neuen KI Chat"
+    },
+    "create_new_ai_chat": "Erstelle neuen KI Chat",
+    "configuration_warnings": "Es wurden Probleme mit der KI Konfiguration festgestellt. Bitte überprüfe die Einstellungen.",
+    "experimental_warning": "Die LLM-Funktionen sind aktuell experimentell - sei an dieser Stelle gewarnt.",
+    "selected_provider": "Ausgewählter Anbieter",
+    "selected_provider_description": "Wähle einen KI-Anbieter für Chat- und Vervollständigungsfunktionen",
+    "select_model": "Wähle Modell...",
+    "select_provider": "Wähle Anbieter...",
+    "ai_enabled": "KI Funktionen aktiviert",
+    "ai_disabled": "KI Funktionen deaktiviert",
+    "no_models_found_online": "Keine Modelle gefunden. Bitte überprüfe den API-Key und die Einstellungen.",
+    "no_models_found_ollama": "Kein Ollama Modell gefunden. Bitte prüfe, ob Ollama gerade läuft.",
+    "error_fetching": "Fehler beim Abrufen der Modelle: {{error}}"
   },
   "zen_mode": {
     "button_exit": "Verlasse Zen Modus"
@@ -1697,5 +1822,32 @@
     "enable-motion": "Aktiviere Übergänge und Animationen",
     "enable-shadows": "Aktiviere Schatten",
     "enable-backdrop-effects": "Aktiviere Hintergrundeffekte für Menüs, Pop-up Fenster und Panele"
+  },
+  "code-editor-options": {
+    "title": "Editor"
+  },
+  "custom_date_time_format": {
+    "title": "Benutzerdefiniertes Datums-/Zeitformat",
+    "description": "Passe das Format des Datums und der Uhrzeit an, die über <shortcut /> oder die Symbolleiste eingefügt werden. Die verfügbaren Format-Tokens sind unter <doc>Day.js docs</doc> zu finden.",
+    "format_string": "Format Zeichenfolge:",
+    "formatted_time": "Formatiertes Datum/Uhrzeit:"
+  },
+  "multi_factor_authentication": {
+    "title": "Multi-Faktor-Authentifizierung",
+    "description": "Die Multi-Faktor-Authentifizierung (MFA) bietet Ihrem Konto eine zusätzliche Sicherheitsebene. Anstatt sich lediglich mit einem Passwort anzumelden, müssen bei der MFA ein oder mehrere zusätzliche Nachweise erbracht werden, um die Identität zu bestätigen. Auf diese Weise kann selbst bei Bekanntwerden des Passworts, ohne die zweite Information nicht auf Ihr Konto zugegriffen werden. Das ist so, als würden Sie ein zusätzliches Schloss an einer Tür anbringen, wodurch es für andere viel schwieriger wird, einzubrechen.<br><br>Befolgen Sie bitte die nachstehenden Anweisungen, um MFA zu aktivieren. Wenn Sie die Konfiguration nicht korrekt vornehmen, erfolgt die Anmeldung weiterhin nur mit dem Passwort.",
+    "mfa_enabled": "Aktiviere Multi-Faktor-Authentifizierung",
+    "mfa_method": "MFA Methode",
+    "electron_disabled": "Multi-Faktor-Authentifizierung wird aktuell nicht in der Desktop-Version unterstützt.",
+    "totp_title": "Zeitbasiertes Einmalpasswort (TOTP)",
+    "totp_description": "TOTP (Zeitbasiertes Einmalpasswort) ist eine Sicherheitsfunktion, die einen einzigartigen, temporären Code generiert, der sich alle 30 Sekunden ändert. Sie verwenden diesen Code zusammen mit Ihrem Passwort, um sich bei Ihrem Konto anzumelden, wodurch es für andere Personen wesentlich schwieriger wird, darauf unbefugt zuzugreifen.",
+    "totp_secret_title": "Generiere TOTP Geheimnis",
+    "totp_secret_generate": "Generiere TOTP Geheimnis",
+    "totp_secret_regenerate": "TOTP-Geheimnis neu generieren",
+    "no_totp_secret_warning": "Um TOTP zu aktivieren, muss zunächst ein TOTP Geheimnis generiert werden.",
+    "totp_secret_description_warning": "Nach der Generierung des TOTP Geheimnisses ist eine Neuanmeldung mit dem TOTP Geheimnis erforderlich.",
+    "totp_secret_generated": "TOTP Geheimnis generiert",
+    "totp_secret_warning": "Bitte speichere das TOTP Geheimnis an einem sicheren Ort. Es wird nicht noch einmal angezeigt.",
+    "totp_secret_regenerate_confirm": "Möchten Sie das TOTP-Geheimnis wirklich neu generieren? Dadurch werden das bisherige TOTP-Geheimnis und alle vorhandenen Wiederherstellungscodes ungültig.",
+    "recovery_keys_title": "Einmalige Wiederherstellungsschlüssel"
   }
 }

@@ -6,7 +6,6 @@ import { CSSProperties, memo } from "preact/compat";
 import { useUniqueName } from "./hooks";
 
 interface FormCheckboxProps {
-    id?: string;
     name?: string;
     label: string | ComponentChildren;
     /**
@@ -19,9 +18,9 @@ interface FormCheckboxProps {
     containerStyle?: CSSProperties;
 }
 
-const FormCheckbox = memo(({ name, id: _id, disabled, label, currentValue, onChange, hint, containerStyle }: FormCheckboxProps) => {
-    const id = _id ?? useUniqueName(name);
+const FormCheckbox = memo(({ name, disabled, label, currentValue, onChange, hint, containerStyle }: FormCheckboxProps) => {    
     const labelRef = useRef<HTMLLabelElement>(null);
+    const id = useUniqueName(name);
 
     // Fix: Move useEffect outside conditional
     useEffect(() => {

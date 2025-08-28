@@ -3,7 +3,7 @@ import { getAvailableLocales, t } from "../../../services/i18n";
 import FormSelect from "../../react/FormSelect";
 import OptionsRow from "./components/OptionsRow";
 import OptionsSection from "./components/OptionsSection";
-import { useTriliumOption, useTriliumOptionInt, useTriliumOptionJson } from "../../react/hooks";
+import { useTriliumOption, useTriliumOptionJson } from "../../react/hooks";
 import type { Locale } from "@triliumnext/commons";
 import { isElectron, restartDesktopApp } from "../../../services/utils";
 import FormRadioGroup, { FormInlineRadioGroup } from "../../react/FormRadioGroup";
@@ -118,18 +118,25 @@ function DateSettings() {
 }
 
 function ContentLanguages() {
-    const locales = useMemo(() => getAvailableLocales(), []);
-    const [ languages, setLanguages ] = useTriliumOptionJson<string[]>("languages");
-
     return (
         <OptionsSection title={t("content_language.title")}>
             <FormText>{t("content_language.description")}</FormText>
 
-            <CheckboxList
-                values={locales}
-                keyProperty="id" titleProperty="name"
-                currentValue={languages} onChange={setLanguages}
-            />
+            <ContentLanguagesList />
         </OptionsSection>
+    );
+}
+
+export function ContentLanguagesList() {
+    const locales = useMemo(() => getAvailableLocales(), []);
+    const [ languages, setLanguages ] = useTriliumOptionJson<string[]>("languages");
+
+    return (
+        <CheckboxList
+            values={locales}
+            keyProperty="id" titleProperty="name"
+            currentValue={languages} onChange={setLanguages}
+            columnWidth="300px"
+        />
     );
 }

@@ -732,7 +732,8 @@
     "note_type": "Note type",
     "editable": "Editable",
     "basic_properties": "Basic Properties",
-    "language": "Language"
+    "language": "Language",
+    "configure_code_notes": "Configure code notes..."
   },
   "book_properties": {
     "view_type": "View type",
@@ -848,7 +849,7 @@
     "debug": "debug",
     "debug_description": "Debug will print extra debugging information into the console to aid in debugging complex queries",
     "action": "action",
-    "search_button": "Search <kbd>enter</kbd>",
+    "search_button": "Search",
     "search_execute": "Search & Execute actions",
     "save_to_note": "Save to note",
     "search_parameters": "Search Parameters",

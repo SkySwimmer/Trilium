@@ -2,6 +2,7 @@ import { OptionNames } from "@triliumnext/commons";
 import { OptionValue } from "./options.js";
 import options from "./options.js";
 import utils from "./utils.js";
+import appContext from "../components/app_context.js";
 
 class LocalOptions {
     private arr!: Record<string, OptionValue>;
@@ -170,6 +171,7 @@ class LocalOptions {
             newIndex.push(key);
         }
         localStorage.setItem("options-index", JSON.stringify(newIndex));
+        await appContext.triggerEvent("localOptionsChanged", { updatedOptions: [key] });
         this.index = newIndex;
     }
 
@@ -184,7 +186,7 @@ class LocalOptions {
         // Save entries
         let hasNonLocal = false;
         const remain: Record<string, OptionValue> = {};
-        const newIndex: string[] = [];
+        const updatedOptions: string[] = [];
         for (const key in newValues) {
             if (!this.isAllowedLocal(key)) {
                 remain[key] = newValues[key];
@@ -192,13 +194,18 @@ class LocalOptions {
                 continue;
             }
             this.set(key, newValues[key]);
-            newIndex.push(key);
+            updatedOptions.push(key);
             localStorage.setItem("options-entry-" + key, newValues[key].toString());
+        }
+        const newIndex: string[] = [];
+        for (const key in this.arr) {
+            newIndex.push(key);
         }
         localStorage.setItem("options-index", JSON.stringify(newIndex));
         this.index = newIndex;
         if (hasNonLocal)
             await options.saveMany(remain);
+        await appContext.triggerEvent("localOptionsChanged", { updatedOptions: updatedOptions });
         return;
     }
 

@@ -140,11 +140,16 @@ export function useTriliumOption(name: OptionNames, useServerSided: boolean, nee
 
     useTriliumEvent("entitiesReloaded", useCallback(({ loadResults }) => {
         if (loadResults.getOptionNames().includes(name)) {
-            const newValue = options_framework.get(name);
+            const newValue = options.get(name);
             setValue(newValue);
         }
     }, [name]));
-
+    useTriliumEvent("localOptionsChanged", useCallback(({ updatedOptions }) => {
+        if (updatedOptions.includes(name)) {
+            const newValue = local_options.get(name);
+            setValue(newValue);
+        }
+    }, [name]));
     const isDefinedClientsided = useServerSided ? undefined : function () {
         // Check
         return local_options.hasLocal(name) && local_options.isAllowedLocal(name);
@@ -278,6 +283,19 @@ export function triliumSideAwareOptionInserter<T>(name: OptionNames, handler: Au
         const [value, setValue] = useState(initialValue);
         const [localPresent, setLocalPresent] = useState(local_options.hasLocal(name));
 
+        useTriliumEvent("entitiesReloaded", useCallback(({ loadResults }) => {
+            if (loadResults.getOptionNames().includes(name)) {
+                const newValue = options.get(name);
+                setValue(newValue);
+            }
+        }, [name]));
+        useTriliumEvent("localOptionsChanged", useCallback(({ updatedOptions }) => {
+            if (updatedOptions.includes(name)) {
+                const newValue = local_options.get(name);
+                setValue(newValue);
+            }
+        }, [name]));
+
         const ctx: AutoSidedHandlerContext = {
             supportsLocal: local_options.isAllowedLocal(name),
             hasLocalValue: localPresent,
@@ -301,11 +319,11 @@ export function triliumSideAwareOptionInserter<T>(name: OptionNames, handler: Au
             },
             genSideAwareElements: function () {
                 return (
-                    <div>
+                    <>
                         {ctx.supportsLocal &&
                             <p>
-                            <p/>
-                                {ctx.isLocal ? t("local_options.tip_onclient") : t("local_options.tip_onserver")} {ctx.isLocal && ctx.hasLocalValue &&
+                            <p />
+                                {ctx.isLocal && ctx.hasLocalValue &&
                                     <Button
                                         size="micro" icon="bx bx-eraser"
                                         text={t("local_options.reset_option")}
@@ -319,7 +337,7 @@ export function triliumSideAwareOptionInserter<T>(name: OptionNames, handler: Au
                                 />
                             </p>
                         }
-                    </div>
+                    </>
                 )
             }
         };

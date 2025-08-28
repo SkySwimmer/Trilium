@@ -83,7 +83,7 @@ export default function AppearanceSettings() {
     const [overrideThemeFonts] = useTriliumOption("overrideThemeFonts", false);
 
     return (
-        <div>
+        <>
             {!isMobile() && <LayoutOrientation />}
             <ApplicationTheme />
             {overrideThemeFonts === "true" && <Fonts />}
@@ -100,16 +100,16 @@ export default function AppearanceSettings() {
                     targetPage: "_optionsCodeNotes"
                 }
             ]} />
-        </div>
+        </>
     )
 }
 
 function LayoutOrientation() {
     return (
-        <div>
+        <>
             {triliumSideAwareOptionInserter("layoutOrientation", (layoutOrientation, setLayoutOrientation, ctx) => {
                 return (
-                    <div>
+                    <>
                         <OptionsSection title={t("theme.layout")}>
                             <FormRadioGroup
                                 name="layout-orientation"
@@ -129,10 +129,10 @@ function LayoutOrientation() {
                             />
                             {ctx.supportsLocal && ctx.genSideAwareElements()}
                         </OptionsSection>
-                    </div>
+                    </>
                 );
             }, undefined, true)}
-        </div>
+        </>
     );
 }
 
@@ -153,7 +153,7 @@ function ApplicationTheme() {
             <div className="row">
                 {triliumSideAwareOptionInserter("theme", (theme, setTheme, ctx) => {
                     return (
-                        <div>
+                        <>
                             <FormGroup name="theme" label={t("theme.theme_label")} className="col-md-6" style={{ marginBottom: 0 }}>
                                 <FormSelect
                                     values={themes} currentValue={theme} onChange={setTheme}
@@ -161,20 +161,20 @@ function ApplicationTheme() {
                                 />
                             </FormGroup>
                             {ctx.supportsLocal && ctx.genSideAwareElements()}
-                        </div>
+                        </>
                     );
                 }, undefined, true)}
 
                 {triliumSideAwareOptionBoolInserter("overrideThemeFonts", (overrideThemeFonts, setOverrideThemeFonts, ctx) => {
                     return (
-                        <div>
+                        <>
                             <FormGroup className="side-checkbox col-md-6" name="override-theme-fonts">
                                 <FormCheckbox
                                     label={t("theme.override_theme_fonts_label") + (!ctx.isLocal ? " " + t("local_options.servertag") : (isElectron() || !ctx.supportsLocal ? "" : " " + t("local_options.localtag")))}
                                     currentValue={overrideThemeFonts} onChange={setOverrideThemeFonts} />
                             </FormGroup>
                             {ctx.supportsLocal && ctx.genSideAwareElements()}
-                        </div>
+                        </>
                     );
                 })}
             </div>
@@ -207,7 +207,7 @@ function Font({ title, fontFamilyOption, fontSizeOption }: { title: string, font
             <div className="row">
                 {triliumSideAwareOptionInserter(fontFamilyOption, (fontFamily, setFontFamily, ctx) => {
                     return (
-                        <div>
+                        <>
                             <FormGroup name="font-family" className="col-md-4" label={t("fonts.font_family")}>
                                 <FormSelectWithGroups
                                     values={FONT_FAMILIES}
@@ -216,13 +216,13 @@ function Font({ title, fontFamilyOption, fontSizeOption }: { title: string, font
                                 />
                             </FormGroup>
                             {ctx.supportsLocal && ctx.genSideAwareElements()}
-                        </div>
+                        </>
                     );
                 })}
 
                 {triliumSideAwareOptionInserter(fontSizeOption, (fontSize, setFontSize, ctx) => {
                     return (
-                        <div>
+                        <>
                             <FormGroup name="font-size" className="col-md-6" label={t("fonts.size")}>
                                 <FormTextBoxWithUnit
                                     name="tree-font-size"
@@ -232,7 +232,7 @@ function Font({ title, fontFamilyOption, fontSizeOption }: { title: string, font
                                 />
                             </FormGroup>
                             {ctx.supportsLocal && ctx.genSideAwareElements()}
-                        </div>
+                        </>
                     );
                 })}
             </div>
@@ -280,37 +280,37 @@ function Performance() {
 
         {triliumSideAwareOptionBoolInserter("motionEnabled", (motionEnabled, setMotionEnabled, ctx) => {
             return (
-                <div>
+                <>
                     <FormCheckbox
                         label={t("ui-performance.enable-motion")}
                         currentValue={motionEnabled} onChange={setMotionEnabled}
                     />
                     {ctx.supportsLocal && ctx.genSideAwareElements()}
-                </div>
+                </>
             );
         })}
         
         {triliumSideAwareOptionBoolInserter("shadowsEnabled", (shadowsEnabled, setShadowsEnabled, ctx) => {
             return (
-                <div>
+                <>
                     <FormCheckbox
                         label={t("ui-performance.enable-shadows")}
                         currentValue={shadowsEnabled} onChange={setShadowsEnabled}
                     />
                     {ctx.supportsLocal && ctx.genSideAwareElements()}
-                </div>
+                </>
             );
         })}
         
         {triliumSideAwareOptionBoolInserter("backdropEffectsEnabled", (backdropEffectsEnabled, setBackdropEffectsEnabled, ctx) => {
             return (
-                <div>
+                <>
                     <FormCheckbox
                         label={t("ui-performance.enable-backdrop-effects")}
                         currentValue={backdropEffectsEnabled} onChange={setBackdropEffectsEnabled}
                     />
                     {ctx.supportsLocal && ctx.genSideAwareElements()}
-                </div>
+                </>
             );
         })}
     </OptionsSection>
@@ -325,7 +325,7 @@ function MaxContentWidth() {
             <Column md={6}>
                 {triliumSideAwareOptionInserter("maxContentWidth", (maxContentWidth, setMaxContentWidth, ctx) => {
                     return (
-                        <div>
+                        <>
                             <FormGroup name="max-content-width" label={t("max_content_width.max_width_label")}>
                                 <FormTextBoxWithUnit
                                     type="number" min={MIN_CONTENT_WIDTH} step="10"
@@ -334,7 +334,7 @@ function MaxContentWidth() {
                                 />
                             </FormGroup>
                             {ctx.supportsLocal && ctx.genSideAwareElements()}
-                        </div>
+                        </>
                     );
                 })}
             </Column>

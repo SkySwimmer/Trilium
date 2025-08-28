@@ -395,6 +395,9 @@ type EventMappings = {
     entitiesReloaded: {
         loadResults: LoadResults;
     };
+    localOptionsChanged: {
+        updatedOptions: string[];
+    }
     addNewLabel: CommandData;
     addNewRelation: CommandData;
     sqlQueryResults: CommandData & {

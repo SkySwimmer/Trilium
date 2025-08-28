@@ -77,7 +77,7 @@ function DirectoryLink({ directory, style }: { directory: string, style?: CSSPro
             openService.openDirectory(directory);
         };
 
-        return <a className="tn-link" href="#" onClick={onClick} style={style}></a>
+        return <a className="tn-link" href="#" onClick={onClick} style={style}>{directory}</a>
     } else {
         return <span style={style}>{directory}</span>;
     }

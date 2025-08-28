@@ -536,10 +536,9 @@ body.mobile .dropdown-menu .dropdown-item.submenu-open .dropdown-toggle::after {
 }
 
 /* List item */
-.jump-to-note-dialog .aa-suggestions div,
-.note-detail-empty .aa-suggestions div {
+.jump-to-note-dialog .aa-suggestion,
+.note-detail-empty .aa-suggestion {
     border-radius: 6px;
-    padding: 6px 12px;
     color: var(--menu-text-color);
     cursor: default;
 }

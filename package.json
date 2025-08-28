@@ -1,6 +1,6 @@
 {
   "name": "@triliumnext/source",
-  "version": "0.98.4.1-noai",
+  "version": "0.98.5-noai",
   "description": "Build your personal knowledge base with Trilium Notes",
   "directories": {
     "doc": "docs"
@@ -58,7 +58,7 @@
     "react-refresh": "^0.17.0",
     "rollup-plugin-webpack-stats": "2.1.4",
     "tslib": "^2.3.0",
-    "tsx": "4.20.4",
+    "tsx": "4.20.5",
     "typescript": "~5.9.0",
     "typescript-eslint": "^8.19.0",
     "upath": "2.0.1",

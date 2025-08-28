@@ -24,7 +24,7 @@ import type SearchContext from "../search_context.js";
 import type { TokenData, TokenStructure } from "./types.js";
 import type Expression from "../expressions/expression.js";
 
-function getFulltext(_tokens: TokenData[], searchContext: SearchContext) {
+function getFulltext(_tokens: TokenData[], searchContext: SearchContext, leadingOperator?: string) {
     const tokens: string[] = _tokens.map((t) => removeDiacritic(t.token));
 
     searchContext.highlightedTokens.push(...tokens);
@@ -33,8 +33,19 @@ function getFulltext(_tokens: TokenData[], searchContext: SearchContext) {
         return null;
     }
 
+    // If user specified "=" at the beginning, they want exact match
+    const operator = leadingOperator === "=" ? "=" : "*=*";
+
     if (!searchContext.fastSearch) {
-        return new OrExp([new NoteFlatTextExp(tokens), new NoteContentFulltextExp("*=*", { tokens, flatText: true })]);
+        // For exact match with "=", we need different behavior
+        if (leadingOperator === "=" && tokens.length === 1) {
+            // Exact match on title OR exact match on content
+            return new OrExp([
+                new PropertyComparisonExp(searchContext, "title", "=", tokens[0]),
+                new NoteContentFulltextExp("=", { tokens, flatText: false })
+            ]);
+        }
+        return new OrExp([new NoteFlatTextExp(tokens), new NoteContentFulltextExp(operator, { tokens, flatText: true })]);
     } else {
         return new NoteFlatTextExp(tokens);
     }
@@ -428,9 +439,10 @@ export interface ParseOpts {
     expressionTokens: TokenStructure;
     searchContext: SearchContext;
     originalQuery?: string;
+    leadingOperator?: string;
 }
 
-function parse({ fulltextTokens, expressionTokens, searchContext }: ParseOpts) {
+function parse({ fulltextTokens, expressionTokens, searchContext, leadingOperator }: ParseOpts) {
     let expression: Expression | undefined | null;
 
     try {
@@ -444,7 +456,7 @@ function parse({ fulltextTokens, expressionTokens, searchContext }: ParseOpts) {
     let exp = AndExp.of([
         searchContext.includeArchivedNotes ? null : new PropertyComparisonExp(searchContext, "isarchived", "=", "false"),
         getAncestorExp(searchContext),
-        getFulltext(fulltextTokens, searchContext),
+        getFulltext(fulltextTokens, searchContext, leadingOperator),
         expression
     ]);
 

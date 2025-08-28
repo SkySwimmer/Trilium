@@ -286,7 +286,26 @@
   },
   "hidden_subtree_templates": {
     "table": "Tabelle",
-    "board_status_done": "Erledigt"
+    "board_status_done": "Erledigt",
+    "text-snippet": "Text Ausschnitt",
+    "description": "Beschreibung",
+    "list-view": "Listenansicht",
+    "grid-view": "Gitteransicht",
+    "calendar": "Kalender",
+    "geo-map": "Geokarte",
+    "start-date": "Startdatum",
+    "end-date": "Enddatum",
+    "start-time": "Startzeit",
+    "end-time": "Endzeit",
+    "geolocation": "Geolokation",
+    "built-in-templates": "Integrierte Vorlagen",
+    "board": "Tafel",
+    "status": "Status",
+    "board_note_first": "Erste Notiz",
+    "board_note_second": "Zweite Notiz",
+    "board_note_third": "Dritte Notiz",
+    "board_status_todo": "To-Do",
+    "board_status_progress": "In Bearbeitung"
   },
   "keyboard_action_names": {
     "copy-notes-to-clipboard": "Notizen in Zwischenablage kopieren",
@@ -391,5 +410,17 @@
     "old_version": "Eine direkte Migration von Ihrer aktuellen Version wird nicht unterstützt. Bitte führen Sie zunächst ein Upgrade auf die neueste Version v0.60.4 durch und erst dann auf diese Version.",
     "error_message": "Fehler bei der Migration zu Version {{version}}: {{stack}}",
     "wrong_db_version": "Die Version der Datenbank ({{version}}) ist neuer als die von der Anwendung erwartete Version ({{targetVersion}}), was bedeutet, dass diese mit einer neueren und inkompatiblen Version von Trilium erstellt wurde. Führen Sie ein Upgrade auf die neueste Version von Trilium durch, um dieses Problem zu beheben."
+  },
+  "modals": {
+    "error_title": "Fehler"
+  },
+  "share_theme": {
+    "site-theme": "Webseite Stil",
+    "search_placeholder": "Suche...",
+    "image_alt": "Artikel Bild",
+    "last-updated": "Zuletzt aktualisiert am {{- date}}",
+    "subpages": "Unterseiten:",
+    "on-this-page": "Auf dieser Seite",
+    "expand": "Erweitern"
   }
 }

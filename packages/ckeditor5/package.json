@@ -39,6 +39,6 @@
     "ckeditor5-premium-features": "46.0.2"
   },
   "devDependencies": {
-    "@types/jquery": "3.5.32"
+    "@types/jquery": "3.5.33"
   }
 }

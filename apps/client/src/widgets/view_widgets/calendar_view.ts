@@ -1,4 +1,4 @@
-import type { Calendar, DateSelectArg, DatesSetArg, EventChangeArg, EventDropArg, EventInput, EventSourceFunc, EventSourceFuncArg, EventSourceInput, PluginDef } from "@fullcalendar/core";
+import type { Calendar, DateSelectArg, DatesSetArg, EventChangeArg, EventDropArg, EventInput, EventSourceFunc, EventSourceFuncArg, EventSourceInput, LocaleInput, PluginDef } from "@fullcalendar/core";
 import froca from "../../services/froca.js";
 import ViewMode, { type ViewModeArgs } from "./view_mode.js";
 import type FNote from "../../entities/fnote.js";
@@ -15,7 +15,23 @@ import type { EventImpl } from "@fullcalendar/core/internal";
 import debounce, { type DebouncedFunction } from "debounce";
 import type { TouchBarItem } from "../../components/touch_bar.js";
 import type { SegmentedControlSegment } from "electron";
+import { LOCALE_IDS } from "@triliumnext/commons";
 import ws from "../../services/ws.js";
+
+// Here we hard-code the imports in order to ensure that they are embedded by webpack without having to load all the languages.
+const LOCALE_MAPPINGS: Record<LOCALE_IDS, (() => Promise<{ default: LocaleInput }>) | null> = {
+    de: () => import("@fullcalendar/core/locales/de"),
+    es: () => import("@fullcalendar/core/locales/es"),
+    fr: () => import("@fullcalendar/core/locales/fr"),
+    cn: () => import("@fullcalendar/core/locales/zh-cn"),
+    tw: () => import("@fullcalendar/core/locales/zh-tw"),
+    ro: () => import("@fullcalendar/core/locales/ro"),
+    ru: () => import("@fullcalendar/core/locales/ru"),
+    ja: () => import("@fullcalendar/core/locales/ja"),
+    "pt_br": () => import("@fullcalendar/core/locales/pt-br"),
+    uk: () => import("@fullcalendar/core/locales/uk"),
+    en: null
+};
 
 const TPL = /*html*/`
 <div class="calendar-view">
@@ -662,31 +678,11 @@ export default class CalendarView extends ViewMode<{}> {
 
 }
 
-export async function getFullCalendarLocale(locale: string) {
-    // Here we hard-code the imports in order to ensure that they are embedded by webpack without having to load all the languages.
-    switch (locale) {
-        case "de":
-            return (await import("@fullcalendar/core/locales/de")).default;
-        case "es":
-            return (await import("@fullcalendar/core/locales/es")).default;
-        case "fr":
-            return (await import("@fullcalendar/core/locales/fr")).default;
-        case "cn":
-            return (await import("@fullcalendar/core/locales/zh-cn")).default;
-        case "tw":
-            return (await import("@fullcalendar/core/locales/zh-tw")).default;
-        case "ro":
-            return (await import("@fullcalendar/core/locales/ro")).default;
-        case "ru":
-            return (await import("@fullcalendar/core/locales/ru")).default;
-        case "ja":
-            return (await import("@fullcalendar/core/locales/ja")).default;
-        case "pt_br":
-            return (await import("@fullcalendar/core/locales/pt-br")).default;
-        case "uk":
-            return (await import("@fullcalendar/core/locales/uk")).default;
-        case "en":
-        default:
-            return undefined;
+export async function getFullCalendarLocale(locale: LOCALE_IDS) {
+    const correspondingLocale = LOCALE_MAPPINGS[locale];
+    if (correspondingLocale) {
+        return (await correspondingLocale()).default;
+    } else {
+        return undefined;
     }
 }

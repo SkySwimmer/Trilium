@@ -30,6 +30,14 @@ function AddLinkDialogComponent() {
         setShown(true);
     });
 
+    useEffect(() => {
+        if (hasSelection) {
+            setLinkType("hyper-link");
+        } else {
+            setLinkType("reference-link");
+        }
+    }, [ hasSelection ])
+
     async function setDefaultLinkTitle(noteId: string) {
         const noteTitle = await tree.getNoteTitle(noteId);
         setLinkTitle(noteTitle);

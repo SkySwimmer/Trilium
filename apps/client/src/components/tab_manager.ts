@@ -88,8 +88,11 @@ export default class TabManager extends Component {
                         if (rootNote.hasChildren()) {
                             const childNoteId = rootNote.children[0];
                             if (childNoteId) {
-                                // Assign
-                                openNoteContexts[0].notePath = "root/" + childNoteId;
+                                const childNote = await froca.getNote(childNoteId);
+                                if (childNote && !childNote.isHiddenCompletely()) {
+                                    // Assign
+                                    openNoteContexts[0].notePath = "root/" + childNoteId;
+                                }
                             }
                         }
                     }

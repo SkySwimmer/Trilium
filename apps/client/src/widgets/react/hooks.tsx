@@ -261,7 +261,7 @@ export function useTriliumOptions<T extends OptionNames>(useServerSided: boolean
     ] as const;
 }
 
-type AutoSidedHandlerContext = { supportsLocal: boolean, isLocal: boolean, hasLocalValue: boolean, resetLocalValue: () => Promise<void>, switchToOtherSide: () => Promise<void>, genSideAwareElements: () => any };
+type AutoSidedHandlerContext = { supportsLocal: boolean, isLocal: boolean, hasLocalValue: boolean, resetLocalValue: () => Promise<void>, switchToOtherSide: () => Promise<void>, genSideAwareElements?: (prefixElemGenerator: () => any) => any };
 type AutoSidedHandler<T, T2> = (value: T2, setValue: (newValue: T2) => Promise<void>, execContext: AutoSidedHandlerContext) => T;
 
 /**
@@ -317,12 +317,12 @@ export function triliumSideAwareOptionInserter<T>(name: OptionNames, handler: Au
                 setSideState(!useLocal);
                 setValue((!useLocal ? local_options : options).get(name))
             },
-            genSideAwareElements: function () {
+            genSideAwareElements: function (prefixElemGenerator?: () => any) {
                 return (
                     <>
                         {ctx.supportsLocal &&
                             <p>
-                            <p />
+                                { prefixElemGenerator && prefixElemGenerator() }
                                 {ctx.isLocal && ctx.hasLocalValue &&
                                     <Button
                                         size="micro" icon="bx bx-eraser"

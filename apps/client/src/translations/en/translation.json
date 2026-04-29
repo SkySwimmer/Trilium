@@ -1620,7 +1620,13 @@
     "connection-toast-lost": "Connection to server was lost! Please reconnect prior to making further edits.",
     "connection-toast-autherror": "Connection to server was lost!\n\nYour session has expired and Trilium was unable to automatically refresh the session, please copy your changes and refresh the page manually.",
     "connection-toast-unavailable": "Server connection unavailable",
-    "connection-toast-reloadfailed-protectedsession": "The protected session has been closed since the application reconnected, unable to reload!\n\nThere are unsaved protected notes that have not been able to synchronize to the server, please copy the changes and refresh the application.\n\nTrilium is currently not able to upload changed protected notes if the server-sided session has ended."
+    "connection-toast-reloadfailed-protectedsession": "The protected session has been closed since the application reconnected, unable to reload!\n\nThere are unsaved protected notes that have not been able to synchronize to the server, please copy the changes and refresh the application.\n\nTrilium is currently not able to upload changed protected notes if the server-sided session has ended.",
+    "notesync": {
+      "finished-title": "Save Finished",
+      "finished-message": "Notes have been saved successfully!",
+      "busy-title": "Note Save In-progress",
+      "busy-message": "Notes are taking longer than expected to save, please wait while Trilium is saving..."
+    }
   },
   "hoisted_note": {
     "confirm_unhoisting": "Requested note '{{requestedNote}}' is outside of hoisted note '{{hoistedNote}}' subtree and you must unhoist to access the note. Do you want to proceed with unhoisting?"

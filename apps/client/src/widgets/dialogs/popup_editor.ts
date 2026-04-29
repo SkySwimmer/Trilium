@@ -152,6 +152,11 @@ export default class PopupEditorDialog extends Container<BasicWidget> {
     handleEventInChildren<T extends EventNames>(name: T, data: EventData<T>): Promise<unknown[] | unknown> | null {
         // Avoid events related to the current tab interfere with our popup.
         if (["noteSwitched", "noteSwitchedAndActivated"].includes(name)) {
+            // Note has switched, close popup
+            if (this.isVisible())
+                this.$widget.modal('toggle');
+
+            // Return
             return Promise.resolve();
         }
 

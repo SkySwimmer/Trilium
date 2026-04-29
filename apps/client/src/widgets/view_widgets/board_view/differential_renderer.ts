@@ -5,6 +5,7 @@ import FNote from "../../../entities/fnote";
 import ViewModeStorage from "../view_mode_storage";
 import { BoardData } from "./config";
 import { t } from "../../../services/i18n.js";
+import froca from "../../../services/froca";
 
 export interface BoardState {
     columns: { [key: string]: { note: any; branch: any }[] };
@@ -405,7 +406,23 @@ export class DifferentialBoardRenderer {
         }
 
         $noteEl.prepend($iconEl);
-        $noteEl.on("click", () => appContext.triggerCommand("openInPopup", { noteIdOrPath: note.noteId }));
+        $noteEl.on("click", () => { 
+            // Check type
+            if (note.type == "book" && note.getLabelValue("viewType") === "board") {
+                // Open right here
+                const ctx = appContext.tabManager.getActiveContext();
+                if (ctx) {
+                    // Open in current tab
+                    ctx.setNote((ctx.noteId ? ctx.noteId + "/" : "") + note.noteId);
+                } else {
+                    // Open in popup
+                    appContext.triggerCommand("openInPopup", { noteIdOrPath: note.noteId });
+                }
+            } else {
+                // Open in popup
+                appContext.triggerCommand("openInPopup", { noteIdOrPath: note.noteId });
+            }
+        });
 
         // Setup drag functionality
         this.dragHandler.setupNoteDrag($noteEl, note, branch);
@@ -522,7 +539,29 @@ export class DifferentialBoardRenderer {
             $card.prepend($newIcon);
 
             // Re-attach click handler for quick edit (for existing cards)
-            $card.on('click', () => appContext.triggerCommand("openInPopup", { noteIdOrPath: noteId }));
+            $card.on('click', () => {
+                // Check type
+                froca.getNote(noteId, true).then(note => {
+                    // Check type
+                    if (note && note.type == "book" && note.getLabelValue("viewType") === "board") {
+                        // Open right here
+                        const ctx = appContext.tabManager.getActiveContext();
+                        if (ctx) {
+                            // Open in current tab
+                            ctx.setNote((ctx.noteId ? ctx.noteId + "/" : "") + noteId);
+                        } else {
+                            // Open in popup
+                            appContext.triggerCommand("openInPopup", { noteIdOrPath: noteId });
+                        }
+                    } else {
+                        // Open in popup
+                        appContext.triggerCommand("openInPopup", { noteIdOrPath: noteId });
+                    }
+                }).catch(() => { 
+                    // Open anyways
+                    appContext.triggerCommand("openInPopup", { noteIdOrPath: noteId });
+                });
+            });
         };
 
         $input.on('blur', () => finishEdit(true));

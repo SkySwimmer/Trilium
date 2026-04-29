@@ -68,7 +68,7 @@ async function recursiveGroupBy(branches: FBranch[], byColumn: ColumnMap, groupB
             continue;
         }
 
-        if (note.hasChildren()) {
+        if (note.hasChildren() && !(note.type == 'book' && note.getLabelValue("viewType") === "board")) {
             await recursiveGroupBy(note.getChildBranches(), byColumn, groupByColumn);
         }
 

@@ -104,22 +104,32 @@ export default class NoteDetailWidget extends NoteContextAwareWidget {
 
         this.typeWidgets = {};
 
-        this.spacedUpdate = new SpacedUpdate(async () => {
+        this.spacedUpdate = new SpacedUpdate(() => new Promise<void>((resolve, reject) => {
+            // Check context
             if (!this.noteContext) {
+                resolve();
                 return;
             }
 
+            // Check validity
             const { note } = this.noteContext;
             if (!note) {
                 return;
             }
 
+            // Inform the webservice we are syncing
+            ws.addBusyUpload();
+            
+            // Note information
             const { noteId } = note;
 
-            const data: any = await this.getTypeWidget().getData();
-
+            // Serialize data
+            const data = this.getTypeWidget().getData();
+            
             // for read only notes
             if (data === undefined) {
+                resolve();
+                ws.finishBusyUpload();
                 return;
             }
 
@@ -134,23 +144,42 @@ export default class NoteDetailWidget extends NoteContextAwareWidget {
             // Update shouldnt be attempted at all if the connection isnt available
             if (ws.isConnected()) {
                 // Update on server
-                const blob = await server.put<FBlobRow>(`notes/${noteId}/data`, data, this.componentId);
-                if (blob != null)
-                {
+                server.put<FBlobRow>(`notes/${noteId}/data`, data, this.componentId).then(blob => {
                     // Update note sync data to match server
                     note.lastLocalData = blob.content;
                     note.lastLocalEdits = Date.parse(blob.utcDateModified);
                     note.lastRemoteData = blob.content;
                     note.lastRemoteEdits = Date.parse(blob.utcDateModified);
-                }
+
+                    // Call data saved
+                    this.getTypeWidget().dataSaved();
+
+                    // Mark edit metadata available
+                    note.lastEditsDataAvailable = true;
+
+                    // Done
+                    resolve();
+                    ws.finishBusyUpload();
+                    return;
+                }).catch(err => {
+                    // Fail
+                    reject(err);
+                    ws.finishBusyUpload();
+                    return;
+                });
+            } else {
+                // Call data saved
+                this.getTypeWidget().dataSaved();
+
+                // Mark edit metadata available
+                note.lastEditsDataAvailable = true;
+
+                // Done
+                resolve();
+                ws.finishBusyUpload();
+                return;
             }
-
-            // Call data saved
-            this.getTypeWidget().dataSaved();
-
-            // Mark edit metadata available
-            note.lastEditsDataAvailable = true;
-        });
+        }), 1500);
 
         appContext.addBeforeUnloadListener(this);
     }

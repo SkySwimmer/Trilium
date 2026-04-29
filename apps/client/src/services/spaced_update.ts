@@ -2,14 +2,20 @@ type Callback = () => Promise<void> | void;
 
 export default class SpacedUpdate {
     private updater: Callback;
+    private updateRunner: Promise<void> | undefined;
     private lastUpdated: number;
     private changed: boolean;
+    private requireRefresh: boolean;
+    private busyUpdating: boolean;
     private updateInterval: number;
     private changeForbidden?: boolean;
 
     constructor(updater: Callback, updateInterval = 1000) {
         this.updater = updater;
+        this.updateRunner = undefined;
         this.lastUpdated = Date.now();
+        this.requireRefresh = false;
+        this.busyUpdating = false;
         this.changed = false;
         this.updateInterval = updateInterval;
     }
@@ -26,17 +32,28 @@ export default class SpacedUpdate {
             this.changed = false; // optimistic...
 
             try {
+                if (this.isBusyUpdating())
+                    await this.updateRunner;
                 await this.updater();
             } catch (e) {
                 this.changed = true;
+                this.requireRefresh = true;
 
                 throw e;
             }
         }
     }
 
+    isBusyUpdating() {
+        return this.busyUpdating;
+    }
+
+    getUpdaterPromise() {
+        return this.updateRunner;
+    }
+
     isAllSavedAndTriggerUpdate() {
-        const allSaved = !this.changed;
+        const allSaved = !this.changed && !this.busyUpdating && !this.requireRefresh;
 
         this.updateNowIfNecessary();
 
@@ -49,6 +66,7 @@ export default class SpacedUpdate {
      */
     resetUpdateTimer() {
         this.lastUpdated = Date.now();
+        this.requireRefresh = true;
     }
 
     /**
@@ -65,12 +83,63 @@ export default class SpacedUpdate {
         }
 
         if (Date.now() - this.lastUpdated > this.updateInterval) {
-            this.updater();
-            this.lastUpdated = Date.now();
-            this.changed = false;
+            // Check update
+            if (this.busyUpdating) {
+                // Require refresh
+                this.requireRefresh = true;
+                this.lastUpdated = Date.now();
+                this.changed = false;
+                return;
+            } else {
+                // Run updater
+                this.lastUpdated = Date.now();
+                this.changed = false;
+                this.requireRefresh = false;
+                this.runUpdate();
+                return;
+            }
         } else {
             // update isn't triggered but changes are still pending, so we need to schedule another check
             this.scheduleUpdate();
+        }
+    }
+
+    private runUpdate() {
+        this.busyUpdating = true;
+        this.updateRunner = new Promise((resolve, reject) => {
+            this.runUpdateInner();
+            resolve();
+            this.updateRunner = undefined;
+        });
+    }
+
+    private runUpdateInner() {
+        const prom = this.updater();
+        if (prom && prom instanceof Promise) {
+            // Its a promise, wait for it to finish
+            prom.then(() => { 
+                // Done
+                // Check if another refresh is needed
+                if (this.requireRefresh) { 
+                    // Run the updater again
+                    this.requireRefresh = false;
+                    this.runUpdate();
+                } else {
+                    // Done
+                    this.busyUpdating = false;
+                }
+            });
+        } else {
+            // Done
+            // Check if another refresh is needed
+            if (this.requireRefresh) { 
+                // Run the updater again
+                this.requireRefresh = false;
+                this.runUpdate();
+            } else {
+                // Done
+                this.busyUpdating = false;
+            }
         }
     }
 

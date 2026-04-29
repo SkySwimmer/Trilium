@@ -51,7 +51,7 @@ export default abstract class TypeWidget extends NoteContextAwareWidget {
     }
 
     /** @returns {Promise<Object>|*} promise resolving note data. Note data is an object with content. */
-    getData() {}
+    getData() : any | null {}
 
     focus() {}
 

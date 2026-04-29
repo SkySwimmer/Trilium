@@ -18,6 +18,10 @@ const reconnectHandlers: ConnectionHandler[] = [];
 const preconnectHandshakeHandlers: PreconnectHandshakeHandler[] = [];
 const prereconnectHandshakeHandlers: PreconnectHandshakeHandler[] = [];
 
+let busyUploads: number = 0;
+let warnedUploadBusy: boolean = false;
+let uploadBusyLastStart: number = 0;
+
 let ws: WebSocket;
 let lastAcceptedEntityChangeId = window.glob.maxEntityChangeIdAtLoad;
 let lastAcceptedEntityChangeSyncId = window.glob.maxEntityChangeSyncIdAtLoad;
@@ -318,7 +322,7 @@ async function verifyAuth() {
                 icon: "alert",
                 message: t("ws.connection-toast-autherror"),
                 preventUserClose: true,
-                color: "red"
+                color: "#b71b00"
             });
             return false;
         }
@@ -499,7 +503,7 @@ async function sendPing() {
                             icon: "alert",
                             message: t("ws.connection-toast-lost"),
                             preventUserClose: true,
-                            color: "red"
+                            color: "#b71b00"
                         });
                     }
                 }
@@ -540,7 +544,7 @@ async function sendPing() {
                     icon: "alert",
                     message: t("ws.connection-toast-lost"),
                     preventUserClose: true,
-                    color: "red"
+                    color: "#b71b00"
                 });
             } else {
                 // This is a reconnect
@@ -558,7 +562,7 @@ async function sendPing() {
                                 icon: "alert",
                                 message: t("ws.connection-toast-lost"),
                                 preventUserClose: true,
-                                color: "red"
+                                color: "#b71b00"
                             });
                         }
                     }
@@ -600,6 +604,53 @@ setTimeout(async () => {
     setTimeout(pingerTimer, 1000);
 }, 0);
 
+async function syncStatusAlertTimer() {
+    // Check busy uploads
+    if (busyUploads == 0) {
+        // All finished, close toats if needed
+        if (warnedUploadBusy) {
+            // Close warning
+            toastService.closePersistent("noteSyncSaveBusy");
+
+            // Show reestablished
+            toastService.toast({
+                id: "noteSyncSaveFinished",
+                title: t("ws.notesync.finished-title"),
+                icon: "alert",
+                message: t("ws.notesync.finished-message"),
+                autohide: true,
+                closeAfter: 3,
+                color: "green"
+            });
+
+            // Reset
+            warnedUploadBusy = false;
+        }
+
+        // Reset
+        uploadBusyLastStart = 0;
+    } else {
+        // There are unfinished uploads
+        if (uploadBusyLastStart == 0)
+            uploadBusyLastStart = Date.now();
+        if (Date.now() - uploadBusyLastStart > 1500) {
+            // Taking logner than normal, warn
+            if (!warnedUploadBusy) {
+                warnedUploadBusy = true;
+                toastService.showPersistent({
+                    id: "noteSyncSaveBusy",
+                    title: t("ws.notesync.busy-title"),
+                    icon: "alert",
+                    message: t("ws.notesync.busy-message"),
+                    preventUserClose: true,
+                    color: "#0662adff"
+                });
+            }
+        }
+    }
+}
+setInterval(syncStatusAlertTimer, 500);
+
 async function pingerTimer() {
     // Alternate implementation for the ping interval
     // As otherwise the pinger will be re-called while the connection is still being re-established, this will cause issues and double connection attempts while one remains unfinished
@@ -626,6 +677,8 @@ export function throwError(message: string) {
 }
 
 export default {
+    addBusyUpload() { busyUploads++; },
+    finishBusyUpload() { busyUploads--; },
     logError,
     subscribeToMessages,
     subscribeToConnect,

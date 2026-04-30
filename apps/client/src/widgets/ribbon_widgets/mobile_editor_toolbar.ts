@@ -123,6 +123,10 @@ export default class MobileEditorToolbar extends NoteContextAwareWidget {
         return true;
     }
 
+    async readOnlyTemporarilyDisabledEvent() {
+        this.toggleExt(await this.#shouldDisplay());
+    }
+
     async refreshWithNote() {
         this.toggleExt(await this.#shouldDisplay());
     }

@@ -1,3 +1,5 @@
+import type SidebarContainer from "../../mobile_widgets/sidebar_container";
+import appContext from "../../../components/app_context.js";
 import branchService from "../../../services/branches";
 import BoardApi from "./api";
 import { DragContext, BaseDragHandler } from "./drag_types";
@@ -100,35 +102,61 @@ export class NoteDragHandler implements BaseDragHandler {
 
     private setupTouchDrag($noteEl: JQuery<HTMLElement>, note: any, branch: any) {
         let isDragging = false;
+        let dragStarted = false;
         let startY = 0;
         let startX = 0;
-        let dragThreshold = 10; // Minimum distance to start dragging
+        let dragThreshold = 25; // Minimum distance to start dragging
         let $dragPreview: JQuery<HTMLElement> | null = null;
+        let dragStartTime = 0;
 
         $noteEl.on("touchstart", (e) => {
             const touch = (e.originalEvent as TouchEvent).touches[0];
             startX = touch.clientX;
             startY = touch.clientY;
+            dragStartTime = Date.now();
             isDragging = false;
+            dragStarted = true;
             $dragPreview = null;
         });
 
         $noteEl.on("touchmove", (e) => {
             e.preventDefault(); // Prevent scrolling
+            if (!dragStarted)
+                return; // Ignore cancelled drags
             const touch = (e.originalEvent as TouchEvent).touches[0];
             const deltaX = Math.abs(touch.clientX - startX);
             const deltaY = Math.abs(touch.clientY - startY);
 
-            // Start dragging if we've moved beyond threshold
-            if (!isDragging && (deltaX > dragThreshold || deltaY > dragThreshold)) {
-                isDragging = true;
-                this.context.draggedNote = note;
-                this.context.draggedBranch = branch;
-                this.context.draggedNoteElement = $noteEl;
+            // Check if minimum amount of time is passed for touch drag
+            let timeSinceStart = Date.now() - dragStartTime;
+            if (timeSinceStart >= 250) {
+                // Mark dragging
                 $noteEl.addClass("dragging");
 
-                // Create drag preview
-                $dragPreview = this.createDragPreview($noteEl, touch.clientX, touch.clientY);
+                // Start dragging if we've moved beyond threshold
+                if (!isDragging && (deltaX > dragThreshold || deltaY > dragThreshold)) {
+                    // Start dragging
+                    isDragging = true;
+                    this.context.draggedNote = note;
+                    this.context.draggedBranch = branch;
+                    this.context.draggedNoteElement = $noteEl;
+
+                    // Create drag preview
+                    $dragPreview = this.createDragPreview($noteEl, touch.clientX, touch.clientY);
+                }
+            } else {
+                // Check if still valid to drag, if the side bar opened, then no
+                let sidebarWrapper: HTMLElement = document.querySelector("#mobile-sidebar-wrapper") as HTMLElement;
+                if (sidebarWrapper) {
+                    // Get sidebar
+                    let sidebar: SidebarContainer = appContext.getComponentByEl(sidebarWrapper) as SidebarContainer;
+
+                    // Check if open or opening
+                    if (sidebar && (sidebarWrapper.classList.contains('show') || sidebar.getDragState() == 2)) {
+                        // Avoid dragging stuff
+                        dragStarted = false;
+                    }
+                }
             }
 
             if (isDragging && $dragPreview) {
@@ -160,6 +188,10 @@ export class NoteDragHandler implements BaseDragHandler {
         });
 
         $noteEl.on("touchend", async (e) => {
+            if (dragStarted && $noteEl.hasClass("dragging")) {
+                // Clean up
+                $noteEl.removeClass("dragging");
+            }
             if (isDragging) {
                 const touch = (e.originalEvent as TouchEvent).changedTouches[0];
                 const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
@@ -175,7 +207,6 @@ export class NoteDragHandler implements BaseDragHandler {
                 }
 
                 // Clean up
-                $noteEl.removeClass("dragging");
                 this.context.draggedNote = null;
                 this.context.draggedBranch = null;
                 this.context.draggedNoteElement = null;
@@ -189,6 +220,7 @@ export class NoteDragHandler implements BaseDragHandler {
                 }
             }
             isDragging = false;
+            dragStarted = false;
         });
     }
 

@@ -51,7 +51,7 @@ export default class SidebarContainer extends FlexContainer<BasicWidget> {
         const x = "touches" in e ? e.touches[0].clientX : e.clientX;
         this.startX = x;
 
-        if (x > 30 && this.currentTranslate === -100) {
+        if (x > 50 && this.currentTranslate === -100) {
             return;
         }
 
@@ -158,6 +158,10 @@ export default class SidebarContainer extends FlexContainer<BasicWidget> {
 
         this.currentTranslate = isOpen ? 0 : -100;
         this.dragState = DRAG_STATE_NONE;
+    }
+
+    getDragState() {
+        return this.dragState;
     }
 
     activeScreenChangedEvent({ activeScreen }: EventData<"activeScreenChanged">) {

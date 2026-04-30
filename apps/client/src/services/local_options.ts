@@ -19,7 +19,7 @@ class LocalOptions {
 
         // Load data
         await options.initializedPromise;
-        if (localStorage) {
+        if (localStorage && localStorage.getItem) {
             const index = localStorage.getItem("options-index");
             if (index) {
                 // Load index
@@ -53,13 +53,13 @@ class LocalOptions {
     }
 
     load(arr: Record<string, OptionValue>) {
-        if (utils.isElectron())
+        if (utils.isElectron() || !localStorage || !localStorage.getItem)
             return;
         this.arr = arr;
     }
 
     get(key: string) {
-        if (utils.isElectron())
+        if (utils.isElectron() || !localStorage || !localStorage.getItem)
             return options.get(key);
         if (!this.isAllowedLocalCurrent(key) || (!this.isEmptyDefault(key) && !this.has(key)))
             return options.get(key);
@@ -67,7 +67,7 @@ class LocalOptions {
     }
 
     getNames() {
-        if (utils.isElectron())
+        if (utils.isElectron() || !localStorage || !localStorage.getItem)
             return options.getNames();
         const keys = Object.keys(this.arr || []);
         for (const key in options.getNames()) {
@@ -78,7 +78,7 @@ class LocalOptions {
     }
 
     getJson(key: string) {
-        if (utils.isElectron())
+        if (utils.isElectron() || !localStorage || !localStorage.getItem)
             return options.getJson(key);
         if (!this.isAllowedLocalCurrent(key) || (!this.isEmptyDefault(key) && !this.has(key)))
             return options.getJson(key);
@@ -94,7 +94,7 @@ class LocalOptions {
     }
 
     getInt(key: string) {
-        if (utils.isElectron())
+        if (utils.isElectron() || !localStorage || !localStorage.getItem)
             return options.getInt(key);
         if (!this.isAllowedLocalCurrent(key) || (!this.isEmptyDefault(key) && !this.has(key)))
             return options.getInt(key);
@@ -110,7 +110,7 @@ class LocalOptions {
     }
 
     getFloat(key: string) {
-        if (utils.isElectron())
+        if (utils.isElectron() || !localStorage || !localStorage.getItem)
             return options.getFloat(key);
         if (!this.isAllowedLocalCurrent(key) || (!this.isEmptyDefault(key) && !this.has(key)))
             return options.getFloat(key);
@@ -122,7 +122,7 @@ class LocalOptions {
     }
 
     is(key: string) {
-        if (utils.isElectron())
+        if (utils.isElectron() || !localStorage || !localStorage.getItem)
             return options.is(key);
         if (!this.isAllowedLocalCurrent(key) || (!this.isEmptyDefault(key) && !this.has(key)))
             return options.is(key);
@@ -130,7 +130,7 @@ class LocalOptions {
     }
 
     set(key: string, value: OptionValue) {
-        if (utils.isElectron())
+        if (utils.isElectron() || !localStorage || !localStorage.getItem)
             return options.set(key, value);
         if (!this.isAllowedLocalCurrent(key))
             return options.set(key, value);
@@ -138,7 +138,7 @@ class LocalOptions {
     }
 
     remove(key: string) {
-        if (!this.hasLocal(key))
+        if (!this.hasLocal(key) || !localStorage || !localStorage.getItem)
             return;
 
         // Remove
@@ -155,7 +155,7 @@ class LocalOptions {
     }
 
     async save(key: string, value: OptionValue) {
-        if (utils.isElectron())
+        if (utils.isElectron() || !localStorage || !localStorage.getItem)
             return options.save(key, value);
         if (!this.isAllowedLocalCurrent(key))
             return options.save(key, value);
@@ -180,7 +180,7 @@ class LocalOptions {
      * @param newValues the record of keys and values.
      */
     async saveMany<T extends OptionNames>(newValues: Record<T, OptionValue>) {
-        if (utils.isElectron())
+        if (utils.isElectron() || !localStorage || !localStorage.getItem)
             return options.saveMany(newValues);
 
         // Save entries
@@ -210,7 +210,7 @@ class LocalOptions {
     }
 
     async toggle(key: string) {
-        if (utils.isElectron())
+        if (utils.isElectron() || !localStorage || !localStorage.getItem)
             return options.toggle(key);
         if (!this.isAllowedLocalCurrent(key))
             return options.toggle(key);

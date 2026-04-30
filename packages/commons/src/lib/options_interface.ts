@@ -135,6 +135,9 @@ export interface OptionDefinitions extends KeyboardShortcutsOptions<KeyboardActi
 
     seenCallToActions: boolean;
 
+    // Note tree
+    noteTreeExpansion: string;
+
     // Local options
     useLocalOption_openNoteContexts: boolean;
     useLocalOption_noteTreeExpansion: boolean;

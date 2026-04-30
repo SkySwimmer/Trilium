@@ -1,4 +1,4 @@
-import { OptionNames } from "@triliumnext/commons";
+import type { OptionNames } from "@triliumnext/commons";
 import { OptionValue } from "./options.js";
 import options from "./options.js";
 import utils from "./utils.js";

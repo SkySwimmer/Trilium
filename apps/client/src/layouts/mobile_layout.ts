@@ -128,6 +128,7 @@ export default class MobileLayout {
                         new SidebarContainer("tree", "column")
                             .class("d-md-flex d-lg-flex d-xl-flex col-12 col-sm-5 col-md-4 col-lg-3 col-xl-3")
                             .id("mobile-sidebar-wrapper")
+                            .css("transform", "translateX(-100%)")
                             .css("max-height", "100%")
                             .css("padding-left", "0")
                             .css("padding-right", "0")
@@ -137,6 +138,7 @@ export default class MobileLayout {
                     .child(
                         new ScreenContainer("detail", "column")
                             .id("detail-container")
+                            .css("padding-top", "0.5em")
                             .class("d-sm-flex d-md-flex d-lg-flex d-xl-flex col-12 col-sm-7 col-md-8 col-lg-9")
                             .child(
                                 new FlexContainer("row")

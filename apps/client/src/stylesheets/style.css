@@ -1516,7 +1516,7 @@ body:not(.mobile) #launcher-pane.horizontal .dropdown-submenu > .dropdown-menu {
         bottom: 0;
         width: 85vw;
         padding-top: env(safe-area-inset-top);
-        transition: transform 250ms ease-in-out;
+        transition: transform 200ms ease-in-out;
         background: var(--main-background-color);
         z-index: 2000;
     }

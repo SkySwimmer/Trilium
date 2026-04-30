@@ -1329,7 +1329,7 @@ div#center-pane .floating-buttons-children {
     background: var(--floating-button-background-color);
     backdrop-filter: blur(10px) saturate(6);
     border-radius: 6px;
-    transition: transform 250ms ease-out,
+    transition: transform 200ms ease-in-out,
                 opacity 250ms ease-out;
 }
 

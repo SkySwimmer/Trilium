@@ -18,7 +18,6 @@ function moveBranchToNote(branchToMove: BBranch, targetParentNoteId: string) {
 
     const newBranch = branchToMove.createClone(targetParentNoteId, newNotePos);
     newBranch.save();
-
     branchToMove.markAsDeleted();
 
     return {

@@ -8,6 +8,13 @@ import TypeWidget from "../type_widgets/type_widget.js";
 const TPL = /*html*/`\
 <div class="popup-editor-dialog modal fade mx-auto" tabindex="-1" role="dialog">
     <style>
+        /* Tablet mode should not interfere */
+        @media (max-width: 992px) {
+            body.mobile .modal-dialog {
+                --bs-modal-width: 100%;
+            }
+        }
+        
         body.desktop .modal.popup-editor-dialog .modal-dialog {
             max-width: 75vw;
         }

@@ -1455,6 +1455,14 @@ export default class NoteTreeWidget extends NoteContextAwareWidget {
         // for some reason, node update cannot be in the batchUpdate() block (node is not re-rendered)
         for (const noteId of refreshCtx.noteIdsToUpdate) {
             for (const node of this.getNodesByNoteId(noteId)) {
+                // Check if missing
+                if (!froca.getBranch(node.data.branchId, true)) {
+                    // Remove
+                    node.remove();
+                    continue;
+                }
+
+                // Update
                 await this.updateNode(node);
             }
         }

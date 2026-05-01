@@ -14,11 +14,33 @@
             "type": "node"
         },
         {
+            "name": "Launch server",
+            "port": 9229,
+            "request": "attach",
+            "preLaunchTask": "launchServer",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "node"
+        },
+        {
             "name": "Launch client",
             "request": "launch",
             "type": "chrome",
             "url": "http://localhost:8080",
             "webRoot": "${workspaceFolder}/apps/client"
-        }        
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Debug Trilium",
+            "configurations": [
+                "Attach to server",
+                "Launch client"
+            ],
+            "preLaunchTask": "launchServer",
+            "stopAll": true,
+
+        }
     ]
 }

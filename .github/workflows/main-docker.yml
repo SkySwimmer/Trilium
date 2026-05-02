@@ -2,10 +2,7 @@ name: "Docker build"
 
 on:
   push:
-    branches:
-      - "main"
-      - "feature/update**"
-      - "feature/server_esm**"
+    branches: [ main, "lts-*", "major-*", "major-next", "**-experimental", "**-staging", "**-testing", "**-develop", "develop", "staging", "testing", "experimental", "stable" ]
     paths-ignore:
       - "docs/**"
       - "bin/**"
@@ -195,7 +192,9 @@ jobs:
       #     registry: ${{ env.DOCKERHUB_REGISTRY }}
       #     username: ${{ secrets.DOCKERHUB_USERNAME }}
       #     password: ${{ secrets.DOCKERHUB_TOKEN }}
-
+      - name: Prepare build
+        run: |
+          mkdir -p /tmp/iamges
       - name: Build and push by digest
         id: build
         uses: docker/build-push-action@v6
@@ -203,8 +202,10 @@ jobs:
           context: apps/server
           file: apps/server/${{ matrix.dockerfile }}
           platforms: ${{ matrix.platform }}
-          labels: ${{ steps.meta.outputs.labels }}
-          outputs: type=image,name=${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }},push-by-digest=true,name-canonical=true,push=true
+          labels: ${{ steps.meta.outputs.labels }} 
+          outputs: | # FIXME: labels
+            type=image,name=${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }},push-by-digest=true,name-canonical=true,push=true
+            type=local,name=${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }},name-canonical=true,dest=/tmp/images/image.tar
 
       - name: Export digest
         run: |
@@ -212,13 +213,20 @@ jobs:
           digest="${{ steps.build.outputs.digest }}"
           touch "/tmp/digests/${digest#sha256:}"
 
-      - name: Upload digest
+      - name: Upload digest artifact
         uses: actions/upload-artifact@v4
         with:
           name: digests-${{ env.PLATFORM_PAIR }}
           path: /tmp/digests/*
           if-no-files-found: error
           retention-days: 1
+
+      - name: Upload image artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: digests-${{ env.PLATFORM_PAIR }}
+          path: /tmp/images/*
+          if-no-files-found: error
 
   merge:
     name: Merge manifest lists

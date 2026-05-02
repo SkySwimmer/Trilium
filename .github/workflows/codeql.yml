@@ -13,9 +13,9 @@ name: "CodeQL Advanced"
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "lts-*", "major-*", "major-next", "**-experimental", "**-staging", "**-testing", "**-develop", "develop", "staging", "testing", "experimental", "stable" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "lts-*", "major-*", "major-next", "**-experimental", "**-staging", "**-testing", "**-develop", "develop", "staging", "testing", "experimental", "stable" ]
   schedule:
     - cron: '20 7 * * 0'
   # This can be used to allow manually triggering nightlies from the web interface

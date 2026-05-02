@@ -2,8 +2,7 @@ name: playwright
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main, "lts-*", "major-*", "major-next", "**-experimental", "**-staging", "**-testing", "**-develop", "develop", "staging", "testing", "experimental", "stable" ]
   pull_request:
   # This can be used to allow manually triggering nightlies from the web interface
   workflow_dispatch:

@@ -91,12 +91,11 @@ jobs:
           tag_name: nightly
           name: Nightly Build
 
-      - name: Publish artifacts
+      - name: Upload the artifact
         uses: actions/upload-artifact@v4
-        if: ${{ github.event_name == 'pull_request' }}
         with:
-          name: TriliumNotes ${{ matrix.os.name }} ${{ matrix.arch }}
-          path: apps/desktop/upload
+          name: release-desktop-${{ matrix.os.name }}-${{ matrix.arch }}
+          path: apps/desktop/upload/*.*
 
   nightly-server:
     if: github.repository == ${{ vars.REPO_MAIN }}
@@ -119,6 +118,12 @@ jobs:
         with:
           os: linux
           arch: ${{ matrix.arch }}
+
+      - name: Upload the artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-server-linux-${{ matrix.arch }}
+          path: upload/*.*
 
       - name: Publish release
         uses: softprops/action-gh-release@v2.3.2

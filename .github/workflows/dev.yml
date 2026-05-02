@@ -1,9 +1,9 @@
 name: Dev
 on:
   push:
-    branches: [ main ]
+    branches: [ main, "lts-*", "major-*", "major-next", "**-experimental", "**-staging", "**-testing", "**-develop", "develop", "staging", "testing", "experimental", "stable" ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, "lts-*", "major-*", "major-next", "**-experimental", "**-staging", "**-testing", "**-develop", "develop", "staging", "testing", "experimental", "stable" ]
   # This can be used to allow manually triggering nightlies from the web interface
   workflow_dispatch:
 
@@ -152,3 +152,90 @@ jobs:
       - name: Print entire log
         if: always()
         run: journalctl -u docker CONTAINER_NAME=trilium_local --no-pager
+
+  build-electron:
+    if: github.repository == ${{ vars.REPO_MAIN }}
+    name: Build electron client
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [x64, arm64]
+        os:
+          # FIXME: macos cannot be built at this moment
+          # - name: macos
+          #   image: macos-latest
+          #   shell: bash
+          #   forge_platform: darwin
+          - name: linux
+            image: ubuntu-22.04
+            shell: bash
+            forge_platform: linux
+          - name: windows
+            image: windows-latest
+            shell: cmd
+            forge_platform: win32
+    runs-on: ${{ matrix.os.image }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - name: Set up node & dependencies
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: 'pnpm'
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - uses: nrwl/nx-set-shas@v4
+      - name: Update nightly version
+        run: npm run chore:ci-update-nightly-version
+      - name: Run the build
+        uses: ./.github/actions/build-electron
+        with:
+          os: ${{ matrix.os.name }}
+          arch: ${{ matrix.arch }}
+          shell: ${{ matrix.os.shell }}
+          forge_platform: ${{ matrix.os.forge_platform }}
+        env:
+          APPLE_APP_CERTIFICATE_BASE64: ${{ secrets.APPLE_APP_CERTIFICATE_BASE64 }}
+          APPLE_APP_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_APP_CERTIFICATE_PASSWORD }}
+          APPLE_INSTALLER_CERTIFICATE_BASE64: ${{ secrets.APPLE_INSTALLER_CERTIFICATE_BASE64 }}
+          APPLE_INSTALLER_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_INSTALLER_CERTIFICATE_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
+          WINDOWS_SIGN_EXECUTABLE: ${{ vars.WINDOWS_SIGN_EXECUTABLE }}
+          # GPG_SIGNING_KEY: ${{ secrets.GPG_SIGN_KEY }}
+
+      - name: Upload the artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-desktop-${{ matrix.os.name }}-${{ matrix.arch }}
+          path: apps/desktop/upload/*.*
+
+  build-server:
+    if: github.repository == ${{ vars.REPO_MAIN }}
+    name: Build dedicated server
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [x64, arm64]
+        include:
+          - arch: x64
+            runs-on: ubuntu-22.04
+          - arch: arm64
+            runs-on: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runs-on }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Run the build
+        uses: ./.github/actions/build-server
+        with:
+          os: linux
+          arch: ${{ matrix.arch }}
+
+      - name: Upload the artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-server-linux-${{ matrix.arch }}
+          path: upload/*.*

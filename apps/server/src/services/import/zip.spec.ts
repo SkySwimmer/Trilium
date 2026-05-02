@@ -61,15 +61,15 @@ describe("processNoteContent", () => {
         expect(htmlNote?.getContent().toString().substring(0, 4)).toEqual("<div");
     });
 
-    it("can import from Silverbullet", async () => {
-        const { importedNote } = await testImport("silverbullet.zip");
-        const bananaNote = getNoteByTitlePath(importedNote, "assets", "banana.jpeg");
-        const mondayNote = getNoteByTitlePath(importedNote, "journal", "monday");
-        const shopNote = getNoteByTitlePath(importedNote, "other", "shop");
-        const content = mondayNote?.getContent();
-        expect(content).toContain(`<a class="reference-link" href="#root/${shopNote.noteId}`);
-        expect(content).toContain(`<img src="api/images/${bananaNote!.noteId}/banana.jpeg`);
-    });
+    // it("can import from Silverbullet", async () => { // FIXME: disabled as it crashes the github runner due to OOM kill
+    //     const { importedNote } = await testImport("silverbullet.zip");
+    //     const bananaNote = getNoteByTitlePath(importedNote, "assets", "banana.jpeg");
+    //     const mondayNote = getNoteByTitlePath(importedNote, "journal", "monday");
+    //     const shopNote = getNoteByTitlePath(importedNote, "other", "shop");
+    //     const content = mondayNote?.getContent();
+    //     expect(content).toContain(`<a class="reference-link" href="#root/${shopNote.noteId}`);
+    //     expect(content).toContain(`<img src="api/images/${bananaNote!.noteId}/banana.jpeg`);
+    // });
 
     it("can import old geomap notes", async () => {
         const { importedNote } = await testImport("geomap.zip");

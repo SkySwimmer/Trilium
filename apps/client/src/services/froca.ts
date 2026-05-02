@@ -35,6 +35,21 @@ interface SearchNoteResponse {
  * Backend has a similar cache called Becca
  */
 class FrocaImpl implements Froca {
+    checkUnsavedNotes() {
+        // Check if any note hasnt been uploaded
+        for (const noteID in froca.notes) {
+            // Get note
+            const note = froca.notes[noteID];
+            if (note == null)
+                continue;
+
+            // Check desync
+            if (note.lastLocalData !== note.lastRemoteData)
+                return false; // Browser should not close
+        }
+        return true;
+    }
+
     initializedPromise: Promise<void>;
 
     notes!: Record<string, FNote>;

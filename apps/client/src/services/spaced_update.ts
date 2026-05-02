@@ -128,7 +128,11 @@ export default class SpacedUpdate {
                     // Done
                     this.busyUpdating = false;
                 }
-            });
+            }).catch(err => {
+                // Error
+                logError(err);
+                this.busyUpdating = false;
+            })
         } else {
             // Done
             // Check if another refresh is needed

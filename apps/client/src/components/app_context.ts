@@ -685,6 +685,10 @@ $(window).on("beforeunload", () => {
         }
     }
 
+    // Check unsynced notes....we cant do that elsewhere due to the unload listeners being typed and froca shouldnt be a component
+    if (!froca.checkUnsavedNotes())
+        allSaved = false;
+
     if (!allSaved) {
         return "some string";
     }
@@ -701,5 +705,10 @@ $(window).on("hashchange", function () {
         appContext.triggerCommand("searchNotes", { searchString });
     }
 });
+
+setInterval(() => { 
+    // Clear unbound handlers
+    appContext.beforeUnloadListeners = appContext.beforeUnloadListeners.filter((wr) => !!wr.deref());
+}, 1000);
 
 export default appContext;

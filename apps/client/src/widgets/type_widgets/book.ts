@@ -54,7 +54,8 @@ export default class BookTypeWidget extends TypeWidget {
     }
 
     entitiesReloadedEvent({ loadResults }: EventData<"entitiesReloaded">) {
-        if (loadResults.getAttributeRows().find((attr) => attr.noteId === this.noteId && attr.name === "viewType")) {
+        if (loadResults.getAttributeRows().find((attr) => attr.noteId === this.noteId && attr.name === "viewType")
+                || loadResults.getNoteIds().find(t => t == this.note?.noteId || this.note?.getChildBranches().find(t2 => t2.noteId === t))) {
             this.refresh();
         }
     }

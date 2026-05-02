@@ -236,7 +236,10 @@ export default class EditableTextTypeWidget extends AbstractTextTypeWidget {
     }
 
     async doRefresh(note: FNote) {
-        const blob = await note.getBlob();
+        const blob = await froca.getBlob("notes", note.noteId);
+        if (blob && Date.parse(blob.utcDateModified) <= note.lastLocalEdits && this.watchdog.editor?.getData() === blob.content) {
+            return;
+        }
 
         await this.spacedUpdate.allowUpdateWithoutChange(async () => {
             const data = blob?.content || "";

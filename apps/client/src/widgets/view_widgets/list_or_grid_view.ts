@@ -7,6 +7,9 @@ import utils from "../../services/utils.js";
 import type FNote from "../../entities/fnote.js";
 import ViewMode, { type ViewModeArgs } from "./view_mode.js";
 import type { ViewTypeOptions } from "../../services/note_list_renderer.js";
+import { EventData } from "../../components/app_context.js";
+import NoteListWidget from "../note_list.js";
+import SpacedUpdate from "../../services/spaced_update.js";
 
 const TPL = /*html*/`
 <div class="note-list">
@@ -167,6 +170,8 @@ class ListOrGridView extends ViewMode<{}> {
     private showNotePath?: boolean;
     private highlightRegex?: RegExp | null;
 
+    private spacedUpdate: SpacedUpdate;
+
     /*
      * We're using noteIds so that it's not necessary to load all notes at once when paging
      */
@@ -187,6 +192,81 @@ class ListOrGridView extends ViewMode<{}> {
         this.$noteList.addClass(`${this.viewType}-view`);
 
         this.showNotePath = args.showNotePath;
+
+        this.spacedUpdate = new SpacedUpdate(async () => {
+            // Entities reloaded
+            const includedNoteIds = this.getIncludedNoteIds();
+            this.filteredNoteIds = this.noteIds.filter((noteId) => !includedNoteIds.has(noteId) && noteId !== "_hidden");
+            if (this.filteredNoteIds.length === 0 || !this.page || !this.pageSize) {
+                this.$noteList.hide();
+                return;
+            }
+
+            // Check if the entire container needs re-rendering (eg. new or removed entities)
+            const $container = this.$noteList.find(".note-list-container");
+            const startIdx = (this.page - 1) * this.pageSize;
+            const endIdx = startIdx + this.pageSize;
+            const pageNoteIds = this.filteredNoteIds.slice(startIdx, Math.min(endIdx, this.filteredNoteIds.length));
+            const pageNotes = await froca.getNotes(pageNoteIds);
+            let reloadFull = false;
+            if ($container.children().length != this.filteredNoteIds.length) {
+                // The count no longer matches, do full reload
+                reloadFull = true;
+            } else {
+                // Check if full reload is needed as counts match
+                for (let i = 0; i < $container.children().length; i++) {
+                    const card = $container.children().get(i);
+                    if (card) {
+                        const noteId = $(card).attr("data-note-id");
+                        if (pageNoteIds[i] !== noteId) {
+                            reloadFull = true;
+                        }
+                    }
+                }
+            }
+
+            // Check result
+            if (reloadFull) {
+                const widget = this.$noteList.closest(".component").prop("component") as NoteListWidget;
+                widget.refresh();
+                widget.checkRenderStatus();
+            }
+
+            // Update cards
+            for (let i = 0; i < $container.children().length; i++) {
+                const card = $container.children().get(i);
+                if (card) {
+                    const noteId = $(card).attr("data-note-id") as string;
+                    const note = await froca.getNote(noteId, true);
+                    if (note) {
+                        // Refresh note
+                        let title = $(card).find(".note-book-title");
+                        if (title) {
+                            // Find label of link
+                            if (this.viewType === "list") {
+                                const a = title.find("a");
+                                if (a)
+                                    title = a;
+                            }
+
+                            // Set text
+                            title.text(note.title);
+                        }
+
+                        // Refresh content
+                        let contentHolder = $(card).find(".note-book-content");
+                        if (contentHolder.length != 0) {
+                            // Content loaded, refresh it
+                            let parent = contentHolder.parent();
+                            const newCh = await this.renderNoteContent(note);
+                            contentHolder.remove();
+                            parent.append(newCh);
+                        }
+                    }
+                }
+            }
+        }, 1000);
+
     }
 
     /** @returns {Set<string>} list of noteIds included (images, included notes) in the parent note and which
@@ -195,6 +275,10 @@ class ListOrGridView extends ViewMode<{}> {
         const includedLinks = this.parentNote ? this.parentNote.getRelations().filter((rel) => rel.name === "imageLink" || rel.name === "includeNoteLink") : [];
 
         return new Set(includedLinks.map((rel) => rel.value));
+    }
+
+    async onEntitiesReloaded(e: EventData<"entitiesReloaded">): Promise<boolean | void> {
+        this.spacedUpdate.scheduleUpdate();   
     }
 
     async beforeRender() {

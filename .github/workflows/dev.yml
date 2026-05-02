@@ -235,7 +235,7 @@ jobs:
           arch: ${{ matrix.arch }}
 
       - name: Upload the artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
-          name: release-server-linux-${{ matrix.arch }}
           path: upload/*.*
+          archive: false

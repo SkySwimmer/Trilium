@@ -226,11 +226,11 @@ jobs:
           retention-days: 1
 
       - name: Upload image artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
-          name: digests-${{ env.PLATFORM_PAIR }}
           path: /tmp/images/*
           if-no-files-found: error
+          archive: false
 
   merge:
     name: Merge manifest lists

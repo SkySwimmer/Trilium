@@ -94,7 +94,7 @@ runs:
     shell: ${{ inputs.shell }}
     run: |
       echo "Signing DMG file..."
-      dmg_file=$(find ./apps/desktop/dist -name "*.dmg" -print -quit)
+      dmg_file=$(find ./apps/desktop/upload -name "*.dmg" -print -quit)
       if [ -n "$dmg_file" ]; then
         echo "Found DMG: $dmg_file"
         # Get the first valid signing identity from the keychain
@@ -122,7 +122,7 @@ runs:
 
       # First check the .app bundle
       echo "Looking for .app bundle..."
-      app_bundle=$(find ./apps/desktop/dist -name "*.app" -print -quit)
+      app_bundle=$(find ./apps/desktop/upload -name "*.app" -print -quit)
       if [ -n "$app_bundle" ]; then
         echo "Found app bundle: $app_bundle"
         echo "Verifying app bundle signing..."
@@ -141,7 +141,7 @@ runs:
 
       # Then check DMG if it exists
       echo "Looking for DMG..."
-      dmg_file=$(find ./apps/desktop/dist -name "*.dmg" -print -quit)
+      dmg_file=$(find ./apps/desktop/upload -name "*.dmg" -print -quit)
       if [ -n "$dmg_file" ]; then
         echo "Found DMG: $dmg_file"
         echo "Verifying DMG signing..."
@@ -157,7 +157,7 @@ runs:
 
       # Finally check ZIP if it exists
       echo "Looking for ZIP..."
-      zip_file=$(find ./apps/desktop/dist -name "*.zip" -print -quit)
+      zip_file=$(find ./apps/desktop/upload -name "*.zip" -print -quit)
       if [ -n "$zip_file" ]; then
         echo "Found ZIP: $zip_file"
         echo "Note: ZIP files are not code signed, but their contents should be"

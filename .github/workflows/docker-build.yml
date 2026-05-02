@@ -198,7 +198,7 @@ jobs:
       #     password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Prepare build
         run: |
-          mkdir -p /tmp/iamges
+          mkdir -p /tmp/dockerimages
       - name: Build and push by digest
         id: build
         uses: docker/build-push-action@v6
@@ -209,7 +209,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }} 
           outputs: | # FIXME: labels
             type=image,name=${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }},push-by-digest=true,name-canonical=true,push=true
-            type=local,name=${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }},name-canonical=true,dest=/tmp/images/${{env.IMAGE_NAME}}-${{ matrix.platform }}-${{ matrix.arch }}.tar
+            type=local,name=${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }},name-canonical=true,dest=/tmp/dockerimages/${{env.IMAGE_NAME}}-${{ matrix.platform }}-${{ matrix.arch }}.tar
 
       - name: Export digest
         run: |
@@ -228,7 +228,7 @@ jobs:
       - name: Upload image artifact
         uses: actions/upload-artifact@v7
         with:
-          path: /tmp/images/*
+          path: /tmp/dockerimages/${{env.IMAGE_NAME}}-${{ matrix.platform }}-${{ matrix.arch }}.tar
           if-no-files-found: error
           archive: false
 

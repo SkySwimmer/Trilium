@@ -23,7 +23,7 @@ permissions:
 
 jobs:
   test_docker:
-    name: Check Docker build
+    name: Attempt and test Docker Build
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -208,8 +208,8 @@ jobs:
           platforms: ${{ matrix.platform }}
           labels: ${{ steps.meta.outputs.labels }} 
           outputs: | # FIXME: labels
+            type=docker,name=${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }},name-canonical=true,dest=/tmp/dockerimages/${{env.IMAGE_NAME}}-${{ matrix.platform }}-${{ matrix.arch }}.tar
             type=image,name=${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }},push-by-digest=true,name-canonical=true,push=true
-            type=local,name=${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }},name-canonical=true,dest=/tmp/dockerimages/${{env.IMAGE_NAME}}-${{ matrix.platform }}-${{ matrix.arch }}.tar
 
       - name: Export digest
         run: |

@@ -112,19 +112,15 @@ jobs:
         include:
           - dockerfile: Dockerfile.alpine
             platform: linux/amd64
-            arch: amd64
             image: ubuntu-latest
           - dockerfile: Dockerfile
             platform: linux/arm64
-            arch: arm64
             image: ubuntu-24.04-arm
           - dockerfile: Dockerfile
             platform: linux/arm/v7
-            arch: armv7
             image: ubuntu-24.04-arm
           - dockerfile: Dockerfile
             platform: linux/arm/v8
-            arch: armv8
             image: ubuntu-24.04-arm
     runs-on: ${{ matrix.image }}
     needs:
@@ -208,7 +204,7 @@ jobs:
           platforms: ${{ matrix.platform }}
           labels: ${{ steps.meta.outputs.labels }} 
           outputs: | # FIXME: labels
-            type=docker,name=${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }},name-canonical=true,dest=/tmp/dockerimages/${{env.IMAGE_NAME}}-${{ matrix.platform }}-${{ matrix.arch }}.tar
+            type=docker,name=${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }},name-canonical=true,dest=/tmp/dockerimages/${{env.IMAGE_NAME}}-${{ env.PLATFORM_PAIR }}-${{ matrix.arch }}.tar
             type=image,name=${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }},push-by-digest=true,name-canonical=true,push=true
 
       - name: Export digest
@@ -228,7 +224,7 @@ jobs:
       - name: Upload image artifact
         uses: actions/upload-artifact@v7
         with:
-          path: /tmp/dockerimages/${{env.IMAGE_NAME}}-${{ matrix.platform }}-${{ matrix.arch }}.tar
+          path: /tmp/dockerimages/${{env.IMAGE_NAME}}-${{ env.PLATFORM_PAIR }}-${{ matrix.arch }}.tar
           if-no-files-found: error
           archive: false
 

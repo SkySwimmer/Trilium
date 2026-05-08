@@ -352,6 +352,30 @@ jobs:
               # docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
               #   -t ${{ env.DOCKERHUB_REGISTRY }}/${{ env.IMAGE_NAME }}:lts \
               #   $(printf '${{ env.DOCKERHUB_REGISTRY }}/${{ env.IMAGE_NAME }}@sha256:%s ' *)
+          elif [[ "$REF_NAME" =~ "major-next-"* ]]; then
+              # Release as latest branched (eg. develop, testing, staging, experimental)
+
+              # Create tags
+              docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
+                -t ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }}:${REF_NAME//major-next-/} \
+                $(printf '${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }}@sha256:%s ' *)
+
+              # FIXME We currently have no dockerhub
+              # docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
+              #   -t ${{ env.DOCKERHUB_REGISTRY }}/${{ env.IMAGE_NAME }}:${REF_NAME//major-next-/} \
+              #   $(printf '${{ env.DOCKERHUB_REGISTRY }}/${{ env.IMAGE_NAME }}@sha256:%s ' *)
+          elif [[ "$REF_NAME" =~ "lts-next-"* ]]; then
+              # Release as LTS branched (eg. lts-develop, lts-testing, lts-staging, lts-experimental)
+
+              # Create tags
+              docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
+                -t ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }}:lts-${REF_NAME//lts-next-/} \
+                $(printf '${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }}@sha256:%s ' *)
+
+              # FIXME We currently have no dockerhub
+              # docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
+              #   -t ${{ env.DOCKERHUB_REGISTRY }}/${{ env.IMAGE_NAME }}:lts-${REF_NAME//lts-next-/} \
+              #   $(printf '${{ env.DOCKERHUB_REGISTRY }}/${{ env.IMAGE_NAME }}@sha256:%s ' *)
           else
               # Any other builds are uploaded to the named branch
               # Eg. you can always depend on `major-0.95` as the latest for that specific major build

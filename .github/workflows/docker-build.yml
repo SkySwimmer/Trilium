@@ -203,7 +203,7 @@ jobs:
           file: apps/server/${{ matrix.dockerfile }}
           platforms: ${{ matrix.platform }}
           labels: ${{ steps.meta.outputs.labels }} 
-          outputs: | # FIXME: labels
+          outputs: |
             type=docker,name=${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }},name-canonical=true,dest=/tmp/dockerimages/${{env.IMAGE_NAME}}-${{ env.PLATFORM_PAIR }}.tar
             type=image,name=${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }},push-by-digest=true,name-canonical=true,push=true
 
@@ -279,42 +279,92 @@ jobs:
           # Extract the branch or tag name from the ref
           REF_NAME=$(echo "${GITHUB_REF}" | sed 's/refs\/heads\///' | sed 's/refs\/tags\///')
 
-          # Create and push the manifest list with both the branch/tag name and the commit SHA
-          docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
-            -t ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }}:${REF_NAME} \
-            $(printf '${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }}@sha256:%s ' *)
+          # For any stable release its major-*, for LTS its lts-*, both without subbranches
+          # Any tag uploaded should be latest stable, unless its an LTS build, lts tags are formatted `v...-lts`
+          # 
+          # Furthermore we have a few more branches, namely any of the major version and its subdirectories
+          #
+          # Mastersheet Branches:
+          # - major-next-develop - latest/next development build, major-next branches are used as a latest branch, and the starting point for a new major version
+          # - major-next-testing - latest/next testing build, major-next branches are used as a latest branch, and the starting point for a new major version
+          # - major-next-staging - latest/next staging build, major-next branches are used as a latest branch, and the starting point for a new major version
+          # - major-next-experimental - latest/next experimental build, major-next branches are used as a latest branch, and the starting point for a new major version
+          # - major-next - latest/next stable build, major-next branches are used as a latest branch, and the starting point for a new major version
+          # - lts-next-develop - latest/next development build
+          # - lts-next-testing - latest/next testing build
+          # - lts-next-staging - latest/next staging build
+          # - lts-next-experimental - latest/next experimental build
+          # - lts-next - latest/next stable build
+          # - major-*-develop - a development build of a specific major version
+          # - major-*-testing - a testing build of a specific major version
+          # - major-*-staging - a staging build of a specific major version
+          # - major-*-experimental - a experimental build of a specific major version
+          # - major-* - the stable build of a specific major version
+          # - lts-*-develop - a development build of a specific lts version
+          # - lts-*-testing - a testing build of a specific lts version
+          # - lts-*-staging - a staging build of a specific lts version
+          # - lts-*-experimental - a experimental build of a specific lts version
+          # - lts-* - the stable build of a specific lts version
+          #
+          # Masterlist Tags:
+          # - `v*` - general release build
+          # - `v*-lts` - LTS build
+          # Tags arent fully refined yet haha, working on that, i think theyll be named following the structure i had planned in my other projects, for now ill leave it as it was
+          # 
+          # Note: LTS versions automatically push to both major and lts branches, thanks to autoff
 
-          # FIXME We currently do not have dockerhub
-          # docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
-          #   -t ${{ env.DOCKERHUB_REGISTRY }}/${{ env.IMAGE_NAME }}:${REF_NAME} \
-          #   $(printf '${{ env.DOCKERHUB_REGISTRY }}/${{ env.IMAGE_NAME }}@sha256:%s ' *)
+          # Check if latest stable (major-next)
+          # Builds that are truly latest are automatically pushed to the major-next branch thanks to the development process structure (done by autoff.json in the root of the repo)
+          if [ "$REF_NAME" == "major-next" ]; then
+              # Release as stable and latest
 
-          # If the ref is a tag, also tag the image as stable as this is part of a 'release'
-          # and only go in the `if` if there is NOT a `-` in the tag's name, due to tagging of `-alpha`, `-beta`, etc...
-          if [[ "${GITHUB_REF}" == refs/tags/* && ! "${REF_NAME}" =~ - ]]; then
-            # First create stable tags
-            docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
-              -t ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }}:stable \
-              $(printf '${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }}@sha256:%s ' *)
+              # First create stable tags
+              docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
+                -t ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }}:stable \
+                $(printf '${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }}@sha256:%s ' *)
 
-            # FIXME We currently have no dockerhub
-            # docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
-            #   -t ${{ env.DOCKERHUB_REGISTRY }}/${{ env.IMAGE_NAME }}:stable \
-            #   $(printf '${{ env.DOCKERHUB_REGISTRY }}/${{ env.IMAGE_NAME }}@sha256:%s ' *)
+              # FIXME We currently have no dockerhub
+              # docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
+              #   -t ${{ env.DOCKERHUB_REGISTRY }}/${{ env.IMAGE_NAME }}:stable \
+              #   $(printf '${{ env.DOCKERHUB_REGISTRY }}/${{ env.IMAGE_NAME }}@sha256:%s ' *)
 
-            # Small delay to ensure stable tag is fully propagated
-            sleep 5
+              # Small delay to ensure stable tag is fully propagated
+              sleep 5
 
-            # Now update latest tags
-            docker buildx imagetools create \
-              -t ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }}:latest \
-              ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }}:stable
+              # Now update latest tags
+              docker buildx imagetools create \
+                -t ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }}:latest \
+                ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }}:stable
 
-            # FIXME We currently have no dockerhub
-            # docker buildx imagetools create \
-            #   -t ${{ env.DOCKERHUB_REGISTRY }}/${{ env.IMAGE_NAME }}:latest \
-            #   ${{ env.DOCKERHUB_REGISTRY }}/${{ env.IMAGE_NAME }}:stable
+              # FIXME We currently have no dockerhub
+              # docker buildx imagetools create \
+              #   -t ${{ env.DOCKERHUB_REGISTRY }}/${{ env.IMAGE_NAME }}:latest \
+              #   ${{ env.DOCKERHUB_REGISTRY }}/${{ env.IMAGE_NAME }}:stable
+          elif [ "$REF_NAME" == "lts-next" ]; then
+              # Release as LTS
 
+              # Create LTS tags
+              docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
+                -t ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }}:lts \
+                $(printf '${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }}@sha256:%s ' *)
+
+              # FIXME We currently have no dockerhub
+              # docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
+              #   -t ${{ env.DOCKERHUB_REGISTRY }}/${{ env.IMAGE_NAME }}:lts \
+              #   $(printf '${{ env.DOCKERHUB_REGISTRY }}/${{ env.IMAGE_NAME }}@sha256:%s ' *)
+          else
+              # Any other builds are uploaded to the named branch
+              # Eg. you can always depend on `major-0.95` as the latest for that specific major build
+
+              # Create and push the manifest list with both the branch/tag name and the commit SHA
+              docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
+                -t ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }}:${REF_NAME} \
+                $(printf '${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }}@sha256:%s ' *)
+
+              # FIXME We currently do not have dockerhub
+              # docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
+              #   -t ${{ env.DOCKERHUB_REGISTRY }}/${{ env.IMAGE_NAME }}:${REF_NAME} \
+              #   $(printf '${{ env.DOCKERHUB_REGISTRY }}/${{ env.IMAGE_NAME }}@sha256:%s ' *)
           fi
 
       - name: Inspect image

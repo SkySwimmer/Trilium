@@ -7,6 +7,7 @@
         {
             "name": "Attach to server",
             "port": 9229,
+            "timeout": 30000,
             "request": "attach",
             "skipFiles": [
                 "<node_internals>/**"
@@ -16,6 +17,7 @@
         {
             "name": "Launch server",
             "port": 9229,
+            "timeout": 30000,
             "request": "attach",
             "preLaunchTask": "launchServer",
             "skipFiles": [
@@ -39,8 +41,7 @@
                 "Launch client"
             ],
             "preLaunchTask": "launchServer",
-            "stopAll": true,
-
+            "stopAll": true
         }
     ]
 }

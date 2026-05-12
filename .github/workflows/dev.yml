@@ -218,7 +218,7 @@ jobs:
           for file in apps/desktop/upload/**; do
             name=$(basename "$file")
             echo "Uploading $name, file: $file"
-            gh-actions-artifact-client.js upload "${name}"
+            cat "$file" | gh-actions-artifact-client.js upload "${name}"
           done
 
   build-server:

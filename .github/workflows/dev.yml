@@ -94,7 +94,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
   test_docker:
-    name: Check Docker build
+    name: Test Docker image
     runs-on: ubuntu-latest
     needs:
       - build_docker

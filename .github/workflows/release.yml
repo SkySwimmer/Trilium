@@ -109,10 +109,10 @@ jobs:
             docs/Release Notes
 
       - name: Download all artifacts
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
+          skip-decompress: true
           merge-multiple: true
-          pattern: release-*
           path: upload
 
       - name: Publish stable release

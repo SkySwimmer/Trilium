@@ -206,11 +206,16 @@ jobs:
           WINDOWS_SIGN_EXECUTABLE: ${{ vars.WINDOWS_SIGN_EXECUTABLE }}
           # GPG_SIGNING_KEY: ${{ secrets.GPG_SIGN_KEY }}
 
-      - name: Upload the artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: release-desktop-${{ matrix.os.name }}-${{ matrix.arch }}
-          path: apps/desktop/upload/*.*
+      - name: Setup gh actions artifact client
+        uses: lhotari/gh-actions-artifact-client@v2
+
+      - name: Upload artifacts
+        run: |
+          find apps/desktop/upload/ -type f | while read -r file; do
+            name=$(basename "$file")
+            echo "Uploading $name, file: $file"
+            gh-actions-artifact-client.js upload "${name}"
+          done
 
   build-server:
     if: github.repository == ${{ vars.REPO_MAIN }}
@@ -234,7 +239,7 @@ jobs:
           os: linux
           arch: ${{ matrix.arch }}
 
-      - name: Upload the artifact
+      - name: Upload artifacts
         uses: actions/upload-artifact@v7
         with:
           path: upload/*.*

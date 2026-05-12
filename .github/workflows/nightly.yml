@@ -61,7 +61,7 @@ jobs:
       - uses: nrwl/nx-set-shas@v4
       - name: Update nightly version
         run: npm run chore:ci-update-nightly-version
-      - name: Run the build
+      - name: Build electron client
         uses: ./.github/actions/build-electron
         with:
           os: ${{ matrix.os.name }}
@@ -83,6 +83,7 @@ jobs:
         uses: lhotari/gh-actions-artifact-client@v2
 
       - name: Upload artifacts
+        shell: bash
         run: |
           find apps/desktop/upload/ -type f | while read -r file; do
             name=$(basename "$file")
@@ -118,7 +119,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      - name: Run the build
+      - name: Build server
         uses: ./.github/actions/build-server
         with:
           os: linux

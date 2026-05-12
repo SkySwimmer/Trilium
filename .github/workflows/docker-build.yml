@@ -280,7 +280,7 @@ jobs:
           REF_NAME=$(echo "${GITHUB_REF}" | sed 's/refs\/heads\///' | sed 's/refs\/tags\///')
 
           # For any stable release its major-*, for LTS its lts-*, both without subbranches
-          # Any tag uploaded should be latest stable, unless its an LTS build, lts tags are formatted `v...-lts`
+          # Tags are uploaded to their own named docker tag, the branches do the rest
           # 
           # Furthermore we have a few more branches, namely any of the major version and its subdirectories
           #
@@ -306,11 +306,6 @@ jobs:
           # - lts-*-experimental - a experimental build of a specific lts version
           # - lts-* - the stable build of a specific lts version
           #
-          # Masterlist Tags:
-          # - `v*` - general release build
-          # - `v*-lts` - LTS build
-          # Tags arent fully refined yet haha, working on that, i think theyll be named following the structure i had planned in my other projects, for now ill leave it as it was
-          # 
           # Note: LTS versions automatically push to both major and lts branches, thanks to autoff
 
           # Check if latest stable (major-next)

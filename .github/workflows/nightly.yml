@@ -140,7 +140,13 @@ jobs:
           merge-multiple: true
           path: upload
 
-      - name: Publish stable release
+      - name: Delete tag
+        run: gh release delete nightly --cleanup-tag
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: Publish nightly release
         uses: softprops/action-gh-release@v2.3.2
         with:
           make_latest: true

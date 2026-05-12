@@ -85,7 +85,7 @@ jobs:
       - name: Upload artifacts
         shell: bash
         run: |
-          find apps/desktop/upload/ -type f | while read -r file; do
+          for file in apps/desktop/upload/**; do
             name=$(basename "$file")
             echo "Uploading $name, file: $file"
             gh-actions-artifact-client.js upload "${name}"
@@ -137,7 +137,6 @@ jobs:
         uses: actions/download-artifact@v5
         with:
           merge-multiple: true
-          pattern: *
           path: upload
 
       - name: Publish stable release

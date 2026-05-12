@@ -156,6 +156,11 @@ jobs:
   build-electron:
     if: github.repository == ${{ vars.REPO_MAIN }}
     name: Build electron client
+    needs:
+      - check-affected
+      - test_dev
+      - build_docker
+      - test_docker
     strategy:
       fail-fast: false
       matrix:
@@ -221,6 +226,11 @@ jobs:
   build-server:
     if: github.repository == ${{ vars.REPO_MAIN }}
     name: Build dedicated server
+    needs:
+      - check-affected
+      - test_dev
+      - build_docker
+      - test_docker
     strategy:
       fail-fast: false
       matrix:

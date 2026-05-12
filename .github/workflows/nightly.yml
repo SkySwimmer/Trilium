@@ -91,18 +91,6 @@ jobs:
             gh-actions-artifact-client.js upload "${name}"
           done
 
-      - name: Publish release
-        uses: softprops/action-gh-release@v2.3.2
-        if: ${{ github.event_name != 'pull_request' }}
-        with:
-          make_latest: true
-          prerelease: true
-          draft: false
-          fail_on_unmatched_files: true
-          files: apps/desktop/upload/*.*
-          tag_name: nightly
-          name: Nightly Build
-
   nightly-server:
     if: github.repository == ${{ vars.REPO_MAIN }}
     name: Deploy server nightly
@@ -130,10 +118,30 @@ jobs:
         with:
           path: upload/*.*
           archive: false
-          
-      - name: Publish release
+
+  publish-release:
+    name: Publish release
+    runs-on: ubuntu-latest
+    needs:
+      - nightly-electron
+      - nightly-server
+    steps:
+      - run: mkdir upload
+
+      - uses: actions/checkout@v5
+        with:
+          sparse-checkout: |
+            docs/Release Notes
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v5
+        with:
+          merge-multiple: true
+          pattern: *
+          path: upload
+
+      - name: Publish stable release
         uses: softprops/action-gh-release@v2.3.2
-        if: ${{ github.event_name != 'pull_request' }}
         with:
           make_latest: true
           prerelease: true

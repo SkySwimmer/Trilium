@@ -82,7 +82,7 @@ jobs:
               # Create missing branches
               echo "Creating missing LTS release staging branches..."
               echo "Creating pusher commit avoiding workflow runs..."
-              git commit --allow-empty -m "[skip ci] Create missing release staging branches" || exit 1
+              git commit --allow-empty -m "[skip ci] Create missing LTS release staging branches" || exit 1
               git push || exit 1
               if ! git rev-parse "origin/lts-next" &>/dev/null; then
                    echo "Creating missing LTS stable build release staging branches..."

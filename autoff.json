@@ -9,6 +9,7 @@
         // Its possible to disable the formatters using `RAW:...`
 
         // Major-next
+        "major-next-develop": [],
         "major-next-testing": [
             "major-next-develop"
         ],
@@ -23,6 +24,7 @@
         ],
 
         // LTS-next
+        "lts-next-develop": [],
         "lts-next-testing": [
             "lts-next-develop"
         ],

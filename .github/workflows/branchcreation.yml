@@ -24,6 +24,15 @@ jobs:
         shell: bash
         run: |
           git pull
+      - name: Prepare staging commit for creating missing branches
+        shell: bash
+        run: |
+          if ! git rev-parse "origin/major-next" &>/dev/null || ! git rev-parse "origin/lts-next" &>/dev/null; then
+              # Create missing branches
+              echo "Creating missing release staging branches..."
+              echo "Creating pusher commit avoiding workflow runs..."
+              git commit --allow-empty -m "[skip ci] Create missing release staging branches" || exit 1
+          fi
       - name: Create central release staging branches if absent
         shell: bash
         run: |
@@ -36,9 +45,6 @@ jobs:
           if ! git rev-parse "origin/major-next" &>/dev/null; then
               # Create missing branches
               echo "Creating missing release staging branches..."
-              echo "Creating pusher commit avoiding workflow runs..."
-              git commit --allow-empty -m "[skip ci] Create missing release staging branches" || exit 1
-              git push || exit 1
               if ! git rev-parse "origin/major-next" &>/dev/null; then
                    echo "Creating missing stable build release staging branches..."
                    git checkout -b "major-next" || exit 1
@@ -81,9 +87,6 @@ jobs:
           if ! git rev-parse "origin/lts-next" &>/dev/null; then
               # Create missing branches
               echo "Creating missing LTS release staging branches..."
-              echo "Creating pusher commit avoiding workflow runs..."
-              git commit --allow-empty -m "[skip ci] Create missing LTS release staging branches" || exit 1
-              git push || exit 1
               if ! git rev-parse "origin/lts-next" &>/dev/null; then
                    echo "Creating missing LTS stable build release staging branches..."
                    git checkout -b "lts-next" || exit 1

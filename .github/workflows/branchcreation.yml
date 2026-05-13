@@ -20,7 +20,6 @@ jobs:
         run: |
           git config user.name "GitHub Actions Bot"
           git config user.email "<>"
-
       - name: Create central release staging branches if absent
         shell: bash
         run: |
@@ -65,6 +64,51 @@ jobs:
           else
               # No branches to create
               echo "Branches for release staging already exist, skipped"
+          fi
+      - name: Create LTS release staging branches if absent
+        shell: bash
+        run: |
+          # Get major version
+          version="$(cat package.json | jq '."version"' -r)"
+          prettyversion="$(cat package.json | jq '."version-pretty"' -r)"
+          majorversion="$(cat package.json | jq '."major-version"' -r)"
+
+          # Check if branches exist
+          if ! git rev-parse "origin/lts-next" &>/dev/null; then
+              # Create missing branches
+              echo "Creating missing LTS release staging branches..."
+              echo "Creating pusher commit avoiding workflow runs..."
+              git commit --allow-empty -m "[skip ci] Create missing release staging branches" || exit 1
+              git push || exit 1
+              if ! git rev-parse "origin/lts-next" &>/dev/null; then
+                   echo "Creating missing LTS stable build release staging branches..."
+                   git checkout -b "lts-next" || exit 1
+                   git push --set-upstream origin "lts-next" || exit 1
+              fi
+              if ! git rev-parse "origin/lts-next-experimental" &>/dev/null; then
+                   echo "Creating missing LTS experimental build release staging branches..."
+                   git checkout -b "lts-next-experimental" || exit 1
+                   git push --set-upstream origin "lts-next-experimental" || exit 1
+              fi
+              if ! git rev-parse "origin/lts-next-staging" &>/dev/null; then
+                   echo "Creating missing LTS staging build release staging branches..."
+                   git checkout -b "lts-next-staging" || exit 1
+                   git push --set-upstream origin "lts-next-staging" || exit 1
+              fi
+              if ! git rev-parse "origin/lts-next-testing" &>/dev/null; then
+                   echo "Creating missing LTS testing build release staging branches..."
+                   git checkout -b "lts-next-testing" || exit 1
+                   git push --set-upstream origin "lts-next-testing" || exit 1
+              fi
+              if ! git rev-parse "origin/lts-next-develop" &>/dev/null; then
+                   echo "Creating missing LTS develop build release staging branches..."
+                   git checkout -b "lts-next-develop" || exit 1
+                   git push --set-upstream origin "lts-next-develop" || exit 1
+              fi
+              echo Done.
+          else
+              # No branches to create
+              echo "Branches for LTS release staging already exist, skipped"
           fi
       - name: Create major build branches if absent
         if: ${{ github.ref_name == 'major-next-staging' }}

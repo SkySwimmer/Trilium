@@ -20,6 +20,7 @@ jobs:
         run: |
           git config user.name "GitHub Actions Bot"
           git config user.email "<>"
+
       - name: Create central release staging branches if absent
         shell: bash
         run: |
@@ -35,30 +36,30 @@ jobs:
               echo "Creating pusher commit avoiding workflow runs..."
               git commit --allow-empty -m "[skip ci] Create missing release staging branches" || exit 1
               git push || exit 1
-              if ! git rev-parse "origin/major-next-develop" &>/dev/null; then
-                   echo "Creating missing develop build release staging branches..."
-                   git checkout -b "major-next-develop" || exit 1
-                   git push --set-upstream origin "major-next-develop" || exit 1
-              fi
-              if ! git rev-parse "origin/major-next-testing" &>/dev/null; then
-                   echo "Creating missing testing build release staging branches..."
-                   git checkout -b "major-next-testing" || exit 1
-                   git push --set-upstream origin "major-next-testing" || exit 1
-              fi
-              if ! git rev-parse "origin/major-next-staging" &>/dev/null; then
-                   echo "Creating missing staging build release staging branches..."
-                   git checkout -b "major-next-staging" || exit 1
-                   git push --set-upstream origin "major-next-staging" || exit 1
+              if ! git rev-parse "origin/major-next" &>/dev/null; then
+                   echo "Creating missing stable build release staging branches..."
+                   git checkout -b "major-next" || exit 1
+                   git push --set-upstream origin "major-next" || exit 1
               fi
               if ! git rev-parse "origin/major-next-experimental" &>/dev/null; then
                    echo "Creating missing experimental build release staging branches..."
                    git checkout -b "major-next-experimental" || exit 1
                    git push --set-upstream origin "major-next-experimental" || exit 1
               fi
-              if ! git rev-parse "origin/major-next" &>/dev/null; then
-                   echo "Creating missing stable build release staging branches..."
-                   git checkout -b "major-next" || exit 1
-                   git push --set-upstream origin "major-next" || exit 1
+              if ! git rev-parse "origin/major-next-staging" &>/dev/null; then
+                   echo "Creating missing staging build release staging branches..."
+                   git checkout -b "major-next-staging" || exit 1
+                   git push --set-upstream origin "major-next-staging" || exit 1
+              fi
+              if ! git rev-parse "origin/major-next-testing" &>/dev/null; then
+                   echo "Creating missing testing build release staging branches..."
+                   git checkout -b "major-next-testing" || exit 1
+                   git push --set-upstream origin "major-next-testing" || exit 1
+              fi
+              if ! git rev-parse "origin/major-next-develop" &>/dev/null; then
+                   echo "Creating missing develop build release staging branches..."
+                   git checkout -b "major-next-develop" || exit 1
+                   git push --set-upstream origin "major-next-develop" || exit 1
               fi
               echo Done.
           else
@@ -81,21 +82,21 @@ jobs:
               echo "Creating pusher commit avoiding workflow runs..."
               git commit --allow-empty -m "[skip ci] Create missing major build branches" || exit 1
               git push || exit 1
-              echo "Creating missing develop branch for $majorversion..."
-              git checkout -b "major-$majorversion-develop" || exit 1
-              git push --set-upstream origin "major-$majorversion-develop" || exit 1
-              echo "Creating missing testing branch for $majorversion..."
-              git checkout -b "major-$majorversion-testing" || exit 1
-              git push --set-upstream origin "major-$majorversion-testing" || exit 1
-              echo "Creating missing staging branch for $majorversion..."
-              git checkout -b "major-$majorversion-staging" || exit 1
-              git push --set-upstream origin "major-$majorversion-staging" || exit 1
-              echo "Creating missing experimental branch for $majorversion..."
-              git checkout -b "major-$majorversion-experimental" || exit 1
-              git push --set-upstream origin "major-$majorversion-experimental" || exit 1
               echo "Creating missing stable branch for $majorversion..."
               git checkout -b "major-$majorversion" || exit 1
               git push --set-upstream origin "major-$majorversion" || exit 1
+              echo "Creating missing experimental branch for $majorversion..."
+              git checkout -b "major-$majorversion-experimental" || exit 1
+              git push --set-upstream origin "major-$majorversion-experimental" || exit 1
+              echo "Creating missing staging branch for $majorversion..."
+              git checkout -b "major-$majorversion-staging" || exit 1
+              git push --set-upstream origin "major-$majorversion-staging" || exit 1
+              echo "Creating missing testing branch for $majorversion..."
+              git checkout -b "major-$majorversion-testing" || exit 1
+              git push --set-upstream origin "major-$majorversion-testing" || exit 1
+              echo "Creating missing develop branch for $majorversion..."
+              git checkout -b "major-$majorversion-develop" || exit 1
+              git push --set-upstream origin "major-$majorversion-develop" || exit 1
               echo Done.
           else
               # No branches to create

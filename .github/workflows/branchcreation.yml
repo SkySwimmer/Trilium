@@ -16,7 +16,10 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v5
-        
+      - name: Setup git client
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "<>"
       - name: Create central release staging branches if absent
         shell: bash
         run: |

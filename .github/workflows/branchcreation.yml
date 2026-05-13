@@ -21,6 +21,7 @@ jobs:
           git config user.name "GitHub Actions Bot"
           git config user.email "<>"
       - name: Pull latest changes
+        shell: bash
         run: |
           git pull
       - name: Create central release staging branches if absent

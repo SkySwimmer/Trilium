@@ -1,10 +1,16 @@
 {
   "name": "@triliumnext/source",
-  "version": "0.98.5-noai",
   "description": "Build your personal knowledge base with Trilium Notes",
+
+  "version": "0.98.5-noai",
+  "major-version": "0.98",
+  "version-pretty": "0.98.5",
+  "upstream-version": "0.98.1",
+
   "directories": {
     "doc": "docs"
   },
+
   "scripts": {
     "client:test": "nx test client",
     "client:build": "nx build client",

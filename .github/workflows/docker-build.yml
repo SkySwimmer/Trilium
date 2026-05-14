@@ -11,6 +11,11 @@ on:
   # This can be used to allow manually triggering nightlies from the web interface
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+  queue: max
+
 env:
   GHCR_REGISTRY: ghcr.io
   DOCKERHUB_REGISTRY: docker.io

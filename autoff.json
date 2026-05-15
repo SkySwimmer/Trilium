@@ -151,5 +151,42 @@
             "lts-{1}-experimental",
             "major-{1}"
         ]
+    },
+
+    "hardMergeStrategies": {
+        "major-next-testing": "forcedff",
+        "major-next-staging": "forcedff",
+        "major-next-experimental": "forcedff",
+        "major-next": "forcedff",
+
+        "lts-next-testing": "forcedff",
+        "lts-next-staging": "forcedff",
+        "lts-next-experimental": "forcedff",
+        "lts-next": "forcedff",
+
+        "major-*-testing": "forcedff",
+        "major-*-staging": "forcedff",
+        "major-*-experimental": "forcedff",
+        "major-*": "forcedff",
+
+        "lts-*-develop": {
+            "major-{1}-develop": "forcedff"
+        },
+        "lts-*-testing": {
+            "lts-{1}-develop": "forcedff",
+            "major-{1}-testing": "merge"
+        },
+        "lts-*-staging": {
+            "lts-{1}-testing": "forcedff",
+            "major-{1}-staging": "merge"
+        },
+        "lts-*-experimental": {
+            "lts-{1}-staging": "forcedff",
+            "major-{1}-experimental": "merge"
+        },
+        "lts-*": {
+            "lts-{1}-experimental": "forcedff",
+            "major-{1}": "merge"
+        }
     }
 }

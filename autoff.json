@@ -154,11 +154,15 @@
     },
 
     // Set merge strategies
+    //
     // Accepts for the INPUT branch
     // Accepts either a map or merge strat
+    //
     // For map, it selects the matching PATTERN that was used as target branch and a merge strat
     // For map, the key '*' is used as fallback when the merge strat isnt configured
-    // Valid merge srats are: ff, merge, rebase, forceff (forceff resets commit history as long as the branch is directly behind and contents match even if the commit history does not match, useful for eg. merging down squash commits)
+    //
+    // Valid merge srats are: ff, merge, rebase, forceff 
+    // The mode forceff is an alternate rebase-like mode that, if the contents match between two branches, ditches the commit history and syncs up forcefully, useful for fast-forwarding squash commits
     "hardMergeStrategies": {
         "major-next-testing": "forceff",
         "major-next-staging": "forceff",

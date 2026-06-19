@@ -176,7 +176,7 @@
         "major-*": "forceff",
 
         "lts-*-develop": {
-            "major-{1}-develop": "forceff"
+            "major-{1}-develop": "merge"
         },
         "lts-*-testing": {
             "lts-{1}-develop": "forceff",
